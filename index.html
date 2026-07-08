@@ -624,21 +624,6 @@
   </div>
 </section>
 
-<!-- 작년 명예의 전당 -->
-<section>
-  <div class="sec-head">
-    <div class="kicker">Hall of Fame</div>
-    <h2>작년 복숭아 랭킹 🍑</h2>
-    <p>올해 마감 후 새 랭킹으로 갱신됩니다. 1등 자리를 노려보세요.</p>
-  </div>
-  <div class="hof">
-    <div class="col"><div class="medal">2위</div><div class="nick">닉네임</div><div class="boxes">0박스</div></div>
-    <div class="col first"><div class="medal">👑 1위</div><div class="nick">닉네임</div><div class="boxes">0박스</div></div>
-    <div class="col"><div class="medal">3위</div><div class="nick">닉네임</div><div class="boxes">0박스</div></div>
-  </div>
-  <p class="hof-note">* 닉네임 기준 · 본인 요청 시 익명 처리</p>
-</section>
-
 <!-- 후기 -->
 <section>
   <div class="sec-head">
@@ -771,27 +756,48 @@
   }
   tick();
 
-  /* ── 실시간 주문 개수 (구글 Apps Script JSONP) ──
-     배포한 Apps Script /exec 주소를 ORDER_COUNT_URL 에 넣으면 켜져요.
-     주소가 비어있으면 카운터는 자동으로 숨겨집니다. */
-  var ORDER_COUNT_URL = '';
+  /* ── 실시간 주문 개수 ──
+     기본: 무설정 자동 카운터(Abacus)로 '페이지에서 완료된 주문 수'를 셉니다.
+     정확한 시트 개수를 쓰려면, 배포한 Apps Script /exec 주소를 ORDER_COUNT_URL 에 넣으세요. */
+  var ORDER_COUNT_URL = '';              /* 있으면 우선 사용(정확한 시트 개수) */
+  var COUNTER_BASE = 0;                   /* 기존 주문 보정값 (원하면 숫자 조정) */
+  var COUNTER_NS = 'gabbu-peach';
+  var COUNTER_KEY = 'orders-2026';
+  var ABACUS = 'https://abacus.jasoncameron.dev';
   var liveOrders = document.getElementById('liveOrders');
   var orderCount = document.getElementById('orderCount');
-  window.__peachOrders = function(data){
-    if(!data || typeof data.orders !== 'number') return;
-    orderCount.textContent = data.orders.toLocaleString('ko-KR');
+
+  function setDisplay(total){
+    if(typeof total !== 'number' || isNaN(total)) return;
+    orderCount.textContent = total.toLocaleString('ko-KR');
     liveOrders.hidden = false;
-  };
-  function fetchOrders(){
-    if(!ORDER_COUNT_URL) return;
+  }
+  /* (1) Apps Script(JSONP) 모드 — 정확한 시트 개수 */
+  window.__peachOrders = function(d){ if(d && typeof d.orders === 'number') setDisplay(d.orders); };
+  function fetchViaScript(){
     var s = document.createElement('script');
     s.src = ORDER_COUNT_URL + (ORDER_COUNT_URL.indexOf('?')>-1?'&':'?') + 'callback=__peachOrders&_=' + Date.now();
-    s.onload = function(){ s.remove(); };
-    s.onerror = function(){ s.remove(); };
+    s.onload = s.onerror = function(){ s.remove(); };
     document.body.appendChild(s);
   }
-  fetchOrders();
-  setInterval(fetchOrders, 60000); /* 1분마다 갱신 */
+  /* (2) 자동 카운터 모드 — 무설정 */
+  function fetchViaAbacus(){
+    fetch(ABACUS + '/get/' + COUNTER_NS + '/' + COUNTER_KEY)
+      .then(function(r){ return r.json(); })
+      .then(function(d){ if(d && typeof d.value === 'number') setDisplay(COUNTER_BASE + d.value); })
+      .catch(function(){});
+  }
+  function bumpOrders(){ /* 주문 완료 시 +1 (자동 카운터 모드에서만) */
+    if(ORDER_COUNT_URL) return;
+    fetch(ABACUS + '/hit/' + COUNTER_NS + '/' + COUNTER_KEY)
+      .then(function(r){ return r.json(); })
+      .then(function(d){ if(d && typeof d.value === 'number') setDisplay(COUNTER_BASE + d.value); })
+      .catch(function(){});
+  }
+  (function initCounter(){
+    if(ORDER_COUNT_URL){ fetchViaScript(); setInterval(fetchViaScript, 60000); }
+    else { fetchViaAbacus(); setInterval(fetchViaAbacus, 60000); }
+  })();
 
   /* ── 수량/합계 ── */
   var qty = {'3kg':0,'4kg':0};
@@ -901,6 +907,7 @@
   function showDone(){
     document.getElementById('dAmount').textContent = money();
     pForm.hidden = true; pDone.hidden = false;
+    bumpOrders(); /* 실시간 주문 카운터 +1 */
   }
 
   document.getElementById('doOrder').addEventListener('click',function(){

@@ -380,6 +380,11 @@
     box-shadow:0 6px 18px rgba(255,90,54,.3);
   }
   .orderbar .order-btn:active{transform:scale(.97);}
+  .orderbar .order-btn.off{
+    background:#D9D7D0;color:#8A8A84;
+    box-shadow:none;cursor:default;
+  }
+  .orderbar .order-btn.off:active{transform:none;}
   .orderbar .order-btn:focus-visible{outline:2.5px solid var(--ink);outline-offset:2px;}
   .orderbar .order-btn.hot{background:linear-gradient(135deg,#FF5A36,#FF4E63);}
 
@@ -705,8 +710,10 @@
     totalPrice.textContent = sum().toLocaleString('ko-KR') + '원';
     totalLabel.textContent = boxes()>0 ? '총 '+boxes()+'박스 · 무료배송' : '수량을 골라주세요';
     goForm.classList.toggle('hot', boxes()>0);
+    goForm.classList.toggle('off', boxes()===0);
+    goForm.setAttribute('aria-disabled', boxes()===0 ? 'true' : 'false');
     goForm.textContent = boxes()>0 ? '이대로 주문하기' : '주문서 작성';
-    goForm.href = formUrl();
+    goForm.href = boxes()>0 ? formUrl() : '#';
     document.getElementById('item3').classList.toggle('active', qty['3kg']>0);
     document.getElementById('item4').classList.toggle('active', qty['4kg']>0);
   }
@@ -741,8 +748,8 @@
   function money(){ return sum().toLocaleString('ko-KR') + '원'; }
 
   goForm.addEventListener('click',function(e){
-    if(boxes()===0) return; /* 수량 없으면 그냥 빈 폼 열기 */
     e.preventDefault();
+    if(boxes()===0) return; /* 수량 0이면 아무 동작 안 함 (페이지 그대로) */
     document.getElementById('pAmount').textContent = money();
     pForm.hidden = false; pDone.hidden = true;
     sheet.hidden = false;

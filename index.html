@@ -112,6 +112,23 @@
     text-wrap:pretty; /* 마지막 줄 외톨이 단어 방지 */
   }
   .hero .lede b{font-weight:700;}
+  /* 히어로 강조 배지: 같은 품질 · 당도 대박 */
+  .hero-badge{
+    display:flex;align-items:center;gap:11px;
+    margin-top:18px;padding:13px 15px;
+    background:rgba(255,241,236,.92);
+    border:1px solid rgba(255,90,54,.16);
+    border-radius:14px;
+    font-size:14px;font-weight:600;color:#4A4A46;line-height:1.5;
+    box-shadow:0 6px 18px rgba(255,90,54,.08);
+  }
+  .hero-badge .hb-ico{font-size:22px;flex:none;line-height:1;}
+  .hero-badge b{font-weight:800;color:var(--ink);}
+  .hero-badge .pop{
+    background:linear-gradient(92deg,#FF7A54,#FF4E8D);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    font-weight:800;
+  }
 
   /* ── 카운트다운 ── */
   .count-wrap{padding:0 24px;}
@@ -145,6 +162,7 @@
     text-wrap:balance; /* 제목 줄바꿈 균형 */
   }
   .sec-head p{font-size:14px;color:var(--sub);margin-top:6px;text-wrap:pretty;}
+  .sec-head p b{color:var(--accent);font-weight:800;}
 
   /* ── 신뢰 지표 (수상) ── */
   .cred{
@@ -473,6 +491,10 @@
   <span class="eyebrow">🍑 여름마다 돌아오는 그 맛</span>
   <h1>올해도,<br>그 복숭아.<br><span class="grad">갑부농원에서 바로.</span></h1>
   <p class="lede">한 번 먹어본 사람은 여름마다 찾는 조치원 복숭아. 농가에서 <b>수확 후 바로 발송</b>합니다.</p>
+  <div class="hero-badge">
+    <span class="hb-ico" aria-hidden="true">🍯</span>
+    <span>매년 <b>같은 품질</b> 그대로,<br><b class="pop">당도는 항상 대박</b>이에요 🍑</span>
+  </div>
 </header>
 
 <!-- 카운트다운 -->
@@ -488,6 +510,7 @@
   <div class="sec-head">
     <div class="kicker">Why this peach</div>
     <h2>맛은 이미 검증 끝</h2>
+    <p>수상 이력도, <b>당도도 매년 그대로</b>예요.</p>
   </div>
   <div class="cred">
     <div class="cred-card">

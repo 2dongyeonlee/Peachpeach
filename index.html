@@ -345,14 +345,39 @@
   }
   .panel .submit:active{transform:scale(.98);}
   .p-hint{font-size:12px;color:var(--sub);text-align:center;margin-top:10px;line-height:1.7;}
-  .p-done{text-align:center;font-size:17px;font-weight:800;padding:10px 0;}
-  .p-done .pay-line{margin-top:16px;text-align:left;}
-  .p-done button{
-    border:2px solid var(--accent);background:#fff;color:var(--accent);
-    font-weight:800;font-size:14px;font-family:inherit;
-    padding:12px 20px;border-radius:12px;cursor:pointer;margin-top:4px;
+  /* ── 주문 완료 화면 (리디자인) ── */
+  .p-done{text-align:center;padding:6px 2px 2px;}
+  .p-done .check{
+    width:60px;height:60px;margin:8px auto 0;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(135deg,#FF8A5C,#FF5A36);
+    color:#fff;font-size:30px;line-height:1;
+    box-shadow:0 10px 26px rgba(255,90,54,.34);
   }
-  .p-done p{font-size:13px;font-weight:500;color:var(--sub);margin-top:12px;line-height:1.7;}
+  .p-done .done-title{
+    font-family:'Paperlogy','Pretendard Variable',Pretendard,sans-serif;
+    font-size:21px;font-weight:800;letter-spacing:-0.02em;margin-top:16px;
+  }
+  .p-done .done-sub{font-size:13.5px;color:var(--sub);margin-top:7px;line-height:1.65;text-wrap:pretty;}
+  .amount-card{
+    margin:20px 0 16px;padding:16px 18px;
+    background:rgba(255,255,255,.72);
+    border:1px solid rgba(255,255,255,.95);border-radius:16px;
+    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+    box-shadow:0 6px 22px rgba(70,80,95,.07);
+  }
+  .amount-card .lab{font-size:12px;color:var(--sub);font-weight:600;letter-spacing:.02em;}
+  .amount-card .amt{
+    font-family:'Paperlogy','Pretendard Variable',Pretendard,sans-serif;
+    font-size:34px;font-weight:800;color:var(--accent);
+    font-variant-numeric:tabular-nums;line-height:1.15;margin-top:3px;
+  }
+  .p-done .copy-amt{
+    margin-top:2px;background:none;border:none;cursor:pointer;font-family:inherit;
+    font-size:12.5px;font-weight:600;color:var(--sub);
+    text-decoration:underline;text-underline-offset:3px;
+  }
+  .p-done .copy-amt:focus-visible{outline:2.5px solid var(--accent);outline-offset:2px;border-radius:4px;}
   /* ── 카카오페이 송금 버튼 ── */
   .kakao-btns{display:flex;flex-direction:column;gap:8px;margin:14px 0 6px;}
   .kakao-send{
@@ -586,10 +611,9 @@
     <h2>주문 전에 딱 3가지만</h2>
   </div>
   <ul class="notes">
-    <li>이번 차수는 <b>말랑이 백도</b>예요. 다음은 딱딱이 백도, 이후 황도가 이어질 예정입니다.</li>
-    <li>7월 20일부터 <b>주문 순서대로 순차 발송</b>돼요.</li>
-    <li>택배 눌림 방지를 위해 약간 단단한 상태로 발송돼요. 2~3일 후숙하면 가장 맛있어요.</li>
-    <li>송금은 <b>작년에 보냈던 카카오페이로</b> 해주세요. 송금 확인 후 주문이 확정돼요.</li>
+    <li>이번 차수는 <b>말랑이 백도</b>예요.</li>
+    <li><b>7월 20일부터</b> 주문 순서대로 순차 발송돼요.</li>
+    <li>단단하게 보내드리니 <b>2~3일 후숙</b> 후 드세요.</li>
   </ul>
 </section>
 
@@ -602,23 +626,23 @@
   </div>
   <details>
     <summary>복숭아 언제 도착해요?</summary>
-    <div class="a">7월 20일부터 <b>주문 순서대로</b> 순차 발송돼요. 발송되면 보통 1~2일 안에 도착합니다.</div>
+    <div class="a">7월 20일부터 <b>주문 순서대로</b> 발송돼요. 발송 후 보통 1~2일이면 도착해요.</div>
   </details>
   <details>
     <summary>받았는데 좀 딱딱해요</summary>
-    <div class="a">정상이에요! 택배 눌림 방지를 위해 일부러 단단한 상태로 보내드려요. 실온에 <b>2~3일 후숙</b>하면 말랑하고 가장 달아집니다.</div>
+    <div class="a">정상이에요! 눌림 방지로 단단하게 보내드려요. 실온에 <b>2~3일 후숙</b>하면 가장 달아요.</div>
   </details>
   <details>
     <summary>보관은 어떻게 해요?</summary>
-    <div class="a">후숙 전엔 <b>실온 보관</b>이 기본이에요. 말랑해진 뒤에 냉장 보관하고, 먹기 1~2시간 전에만 차게 하면 향이 제일 좋아요.</div>
+    <div class="a">후숙 전엔 <b>실온 보관</b>. 말랑해지면 냉장하고, 먹기 1~2시간 전 차게 하면 향이 좋아요.</div>
   </details>
   <details>
     <summary>입금은 어디로 해요?</summary>
-    <div class="a"><b>작년에 보냈던 카카오페이</b> 그대로 보내주시면 돼요. 처음 주문이시면 주문서 작성 후 송금 방법을 안내드립니다.</div>
+    <div class="a"><b>작년 그 카카오페이</b> 그대로 보내주시면 돼요. 처음이시면 주문 후 안내드려요.</div>
   </details>
   <details>
     <summary>눌리거나 상한 게 왔어요</summary>
-    <div class="a">수령 <b>당일에 박스째 사진</b>을 찍어 단톡방에 올려주세요. 확인 후 처리 방법을 안내드릴게요.</div>
+    <div class="a">수령 <b>당일에 박스째 사진</b>을 단톡방에 올려주세요. 확인 후 안내드릴게요.</div>
   </details>
 </section>
 
@@ -656,11 +680,15 @@
       <p class="p-hint" id="pHint">주문 완료 후, 작년에 보냈던 카카오페이로 송금해주세요.<br>송금 확인 후 주문이 확정됩니다.</p>
     </div>
     <div class="p-done" id="pDone" hidden>
-      ✅ 주문이 접수됐어요!
-      <div class="pay-line"><span>카카오페이 송금 금액</span><b id="dAmount">0원</b></div>
+      <div class="check">✓</div>
+      <div class="done-title">주문이 접수됐어요</div>
+      <div class="done-sub" id="doneSub">아래 금액을 카카오페이로 보내주시면<br>확인 후 주문이 확정돼요 🍑</div>
+      <div class="amount-card">
+        <div class="lab">보낼 금액</div>
+        <div class="amt" id="dAmount">0원</div>
+      </div>
       <div class="kakao-btns" id="kakaoBtns"></div>
-      <button type="button" id="copyAmt">💰 금액만 복사하기</button>
-      <p>송금 버튼을 누르면 <b>금액이 자동 복사</b>돼요.<br>카카오페이에서 붙여넣어 송금하시면<br>확인 후 주문이 확정됩니다 🍑</p>
+      <button type="button" class="copy-amt" id="copyAmt">금액만 복사하기</button>
     </div>
   </div>
 </div>
@@ -833,16 +861,16 @@
     if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(txt); }
     window.open(formUrl(), '_blank');
     showDone();
-    document.querySelector('#pDone p').innerHTML =
-      '주문 내용이 <b>자동 복사</b>됐어요 — 열린 주문서에 붙여넣어 제출해주세요.<br>그 후 카카오페이로 송금하시면 확정됩니다 🍑';
+    var sub = document.getElementById('doneSub');
+    if(sub) sub.innerHTML = '주문 내용이 <b>자동 복사</b>됐어요.<br>열린 주문서에 붙여넣어 제출한 뒤<br>카카오페이로 송금하시면 확정돼요 🍑';
   }
 
   document.getElementById('copyAmt').addEventListener('click',function(){
     var btn = this;
     if(navigator.clipboard && navigator.clipboard.writeText){
       navigator.clipboard.writeText(String(sum())).then(function(){
-        btn.textContent = '✅ 복사됨! 카카오페이에 붙여넣으세요';
-        setTimeout(function(){ btn.textContent = '💰 금액만 복사하기'; }, 2200);
+        btn.textContent = '✅ 복사됐어요!';
+        setTimeout(function(){ btn.textContent = '금액만 복사하기'; }, 2000);
       });
     }
   });

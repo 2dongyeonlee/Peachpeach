@@ -36,6 +36,8 @@
     margin:0 auto;
     line-height:1.6;
     letter-spacing:-0.01em;
+    word-break:keep-all;      /* 한글은 단어 단위로 줄바꿈 */
+    overflow-wrap:break-word; /* 긴 단어는 넘치지 않게 */
     padding-bottom:96px; /* 하단 고정바 공간 */
   }
   /* 화면 고정 배경 레이어: 클린 베이스 + 상단 오로라 + 노이즈 */
@@ -107,6 +109,7 @@
     margin-top:16px;
     font-size:15.5px;
     color:#4A4A46;
+    text-wrap:pretty; /* 마지막 줄 외톨이 단어 방지 */
   }
   .hero .lede b{font-weight:700;}
 
@@ -139,8 +142,9 @@
   }
   .sec-head h2{
     font-size:23px;font-weight:800;letter-spacing:-0.02em;margin-top:6px;
+    text-wrap:balance; /* 제목 줄바꿈 균형 */
   }
-  .sec-head p{font-size:14px;color:var(--sub);margin-top:6px;}
+  .sec-head p{font-size:14px;color:var(--sub);margin-top:6px;text-wrap:pretty;}
 
   /* ── 신뢰 지표 (수상) ── */
   .cred{
@@ -684,7 +688,7 @@
 
   /* ── 폼 연동 설정: entry 번호를 받으면 여기만 채우면 완전 연동됨 ── */
   var FORM_BASE = 'https://docs.google.com/forms/d/e/1FAIpQLSe6js7fVaEZGCjnm-mlFn5JmZpMLBTXfFDYSBZ1E-zZ2ReZwA/viewform';
-  var FORM_ENTRIES = { qty3:'', qty4:'' }; // 예: qty3:'entry.123456789'
+  var FORM_ENTRIES = { qty3:'entry.1475999037', qty4:'entry.1402244674' }; // 수량 자동선택 연동 완료
 
   function sum(){ return qty['3kg']*price['3kg'] + qty['4kg']*price['4kg']; }
   function boxes(){ return qty['3kg'] + qty['4kg']; }
@@ -727,7 +731,7 @@
 
   /* ── 주문 시트 로직 ── */
   /* entry 번호를 받으면 아래만 채우면 완전 자동 제출로 전환됨 */
-  var ENTRY = { buyer:'', recv:'', addr:'', qty3:'', qty4:'', payer:'' }; /* 예: buyer:'entry.123456' */
+  var ENTRY = { buyer:'', recv:'', addr:'', qty3:'entry.1475999037', qty4:'entry.1402244674', payer:'' }; /* buyer·recv·addr·payer 번호를 받으면 완전 자동 전환 */
   var FORM_ACTION = FORM_BASE.replace('/viewform','/formResponse');
   var sheet = document.getElementById('sheet');
   var pForm = document.getElementById('pForm');
@@ -803,11 +807,11 @@
     }
   });
 
-  /* entry 번호 없을 때: 전체 내용 자동 복사 + 폼 열기 */
+  /* entry 번호 없을 때: 전체 내용 자동 복사 + 수량이 미리 선택된 폼 열기 */
   function fallbackSubmit(){
     var txt = fullOrderText();
     if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(txt); }
-    window.open(FORM_BASE, '_blank');
+    window.open(formUrl(), '_blank');
     showDone();
     document.querySelector('#pDone p').innerHTML =
       '주문 내용이 <b>자동 복사</b>됐어요 — 열린 주문서에 붙여넣어 제출해주세요.<br>그 후 카카오페이로 송금하시면 확정됩니다 🍑';

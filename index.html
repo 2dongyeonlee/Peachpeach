@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="light only">
+<meta name="theme-color" content="#FBFAF7">
+<title>갑부농원 복숭아 — 7.20 발송 시작</title>
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css">
+<style>
+  :root{
+    --bg:#FBFAF7;
+    --ink:#26282B;
+    --sub:#84878C;
+    --line:#E5E5DF;
+    --accent:#FF5A36;
+    --accent-soft:#FFF1EC;
+    --card:#FFFFFF;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;color-scheme:light only;background:#FBFAF7;}
+  @media (prefers-color-scheme: dark){
+    html,body{background-color:#FBFAF7;color:#26282B;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{animation:none!important;transition:none!important;}
+    html{scroll-behavior:auto;}
+  }
+  body{
+    font-family:'Pretendard Variable',Pretendard,-apple-system,'Noto Sans KR',sans-serif;
+    background:#FBFAF7;
+    color:var(--ink);
+    max-width:480px;
+    margin:0 auto;
+    line-height:1.6;
+    letter-spacing:-0.01em;
+    padding-bottom:96px; /* 하단 고정바 공간 */
+  }
+  /* 화면 고정 배경 레이어: 클린 베이스 + 상단 오로라 + 노이즈 */
+  .bg{
+    position:fixed;
+    inset:0;
+    z-index:-1;
+    pointer-events:none;
+    background:#FBFAF7;
+    overflow:hidden;
+  }
+  .bg::before{
+    content:'';
+    position:absolute;
+    top:-24vh;left:-12vw;right:-12vw;height:64vh;
+    background:
+      radial-gradient(42vmax 30vmax at 18% 4%, rgba(255,122,84,.20) 0%, rgba(255,122,84,0) 62%),
+      radial-gradient(46vmax 32vmax at 82% 0%, rgba(255,78,141,.14) 0%, rgba(255,78,141,0) 62%),
+      radial-gradient(38vmax 26vmax at 52% 12%, rgba(138,124,255,.11) 0%, rgba(138,124,255,0) 62%);
+    filter:blur(28px);
+  }
+  .bg::after{
+    content:'';
+    position:absolute;inset:0;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+    opacity:.05;
+    mix-blend-mode:multiply;
+  }
+
+  h1,h2,.count .timer,.orderbar .total b,.hof .medal{
+    font-family:'Paperlogy','Pretendard Variable',Pretendard,sans-serif;
+  }
+
+  /* ── 상단 얇은 공지 ── */
+  .topbar{
+    background:linear-gradient(90deg,#FF7A54,#FF5A36);
+    color:#fff;
+    font-size:12.5px;
+    font-weight:600;
+    text-align:center;
+    padding:9px 16px;
+    letter-spacing:0;
+  }
+  .topbar b{color:#FFE9DF;font-weight:800;}
+
+  /* ── 히어로 ── */
+  .hero{padding:52px 24px 40px;}
+  .hero .eyebrow{
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:12.5px;font-weight:700;color:var(--accent);
+    background:var(--accent-soft);
+    padding:6px 12px;border-radius:999px;
+    margin-bottom:20px;
+  }
+  .hero h1{
+    font-size:40px;
+    font-weight:800;
+    line-height:1.22;
+    letter-spacing:-0.03em;
+  }
+  .hero h1 .thin{font-weight:400;color:var(--sub);}
+  .hero h1 .grad{
+    background:linear-gradient(92deg,#FF7A54 0%,#FF4E8D 55%,#8A7CFF 100%);
+    -webkit-background-clip:text;background-clip:text;
+    color:transparent;
+    font-weight:800;
+  }
+  .hero .lede{
+    margin-top:16px;
+    font-size:15.5px;
+    color:#4A4A46;
+  }
+  .hero .lede b{font-weight:700;}
+
+  /* ── 카운트다운 ── */
+  .count-wrap{padding:0 24px;}
+  .count{
+    background:linear-gradient(135deg,#FF8A5C 0%,#FF5A36 60%,#FF4E63 100%);
+    color:#fff;
+    border-radius:20px;
+    padding:22px 24px;
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .count .label{font-size:13px;color:#FFDDD0;font-weight:600;}
+  .count .label b{display:block;color:#fff;font-size:15px;font-weight:700;margin-top:2px;}
+  .count .timer{
+    font-variant-numeric:tabular-nums;
+    font-size:26px;font-weight:800;letter-spacing:0;
+    text-align:right;
+  }
+  .count .timer small{
+    display:block;font-size:11px;color:#FFDDD0;font-weight:600;letter-spacing:.04em;
+  }
+
+  /* ── 섹션 공통 ── */
+  section{padding:44px 24px 0;}
+  .sec-head{margin-bottom:20px;}
+  .sec-head .kicker{
+    font-size:12px;font-weight:700;color:var(--accent);
+    letter-spacing:.08em;text-transform:uppercase;
+  }
+  .sec-head h2{
+    font-size:23px;font-weight:800;letter-spacing:-0.02em;margin-top:6px;
+  }
+  .sec-head p{font-size:14px;color:var(--sub);margin-top:6px;}
+
+  /* ── 신뢰 지표 (수상) ── */
+  .cred{
+    display:grid;grid-template-columns:1fr 1fr;gap:12px;
+  }
+  .cred-card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:18px 16px;
+  }
+  .cred-card .big{font-size:19px;font-weight:800;letter-spacing:-0.02em;}
+  .cred-card .small{font-size:12.5px;color:var(--sub);margin-top:4px;line-height:1.5;}
+  .cred .cred-card:nth-child(1){background:rgba(255,235,224,.78);}
+  .cred .cred-card:nth-child(2){background:rgba(222,243,232,.78);}
+  .cred .cred-card:nth-child(3){background:rgba(233,229,251,.78);}
+  .cred .cred-card:nth-child(4){background:rgba(223,237,251,.78);}
+
+  /* ── 상품/주문 ── */
+  .item{
+    background:var(--card);
+    border:1.5px solid var(--line);
+    border-radius:18px;
+    padding:20px;
+    margin-bottom:12px;
+    transition:border-color .15s ease;
+  }
+  .item.active{border-color:var(--ink);}
+  .item .row1{display:flex;justify-content:space-between;align-items:baseline;}
+  .item .name{font-size:17px;font-weight:800;}
+  .item .price{font-size:17px;font-weight:800;font-variant-numeric:tabular-nums;}
+  .item .meta{font-size:13px;color:var(--sub);margin-top:3px;}
+  .item .row2{
+    display:flex;justify-content:space-between;align-items:center;
+    margin-top:16px;padding-top:14px;border-top:1px solid var(--line);
+  }
+  .item .free{font-size:12.5px;font-weight:700;color:var(--accent);}
+  .qty{display:flex;align-items:center;gap:14px;}
+  .qty button{
+    width:34px;height:34px;border-radius:50%;
+    border:1.5px solid var(--line);background:#fff;
+    font-size:18px;font-weight:600;color:var(--ink);
+    cursor:pointer;line-height:1;
+    transition:border-color .12s ease;
+  }
+  .qty button:active{border-color:var(--ink);}
+  .qty button:focus-visible{outline:2.5px solid var(--accent);outline-offset:2px;}
+  .qty .num{
+    min-width:20px;text-align:center;
+    font-size:17px;font-weight:800;font-variant-numeric:tabular-nums;
+  }
+
+  /* ── 후기: 말풍선 ── */
+  .chat{display:flex;flex-direction:column;gap:10px;}
+  .bubble{
+    max-width:86%;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:18px;
+    border-top-left-radius:6px;
+    padding:13px 16px;
+    font-size:14.5px;
+  }
+  .bubble .who{
+    display:block;font-size:12px;color:var(--sub);font-weight:600;margin-top:6px;
+  }
+  .bubble.me{
+    align-self:flex-end;
+    background:var(--accent-soft);
+    border-color:#FFD9CC;
+    border-radius:18px;
+    border-top-right-radius:6px;
+  }
+
+  /* ── 안내 ── */
+  .notes{list-style:none;}
+  .notes li{
+    position:relative;
+    padding:12px 0 12px 22px;
+    font-size:14px;color:#4A4A46;
+    border-bottom:1px solid var(--line);
+  }
+  .notes li::before{
+    content:'';position:absolute;left:2px;top:20px;
+    width:6px;height:6px;border-radius:50%;background:var(--accent);
+  }
+
+  /* ── FAQ 아코디언 ── */
+  .faq details{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    margin-bottom:10px;
+    overflow:hidden;
+  }
+  .faq summary{
+    list-style:none;
+    cursor:pointer;
+    padding:16px 18px;
+    font-size:15px;font-weight:700;
+    display:flex;justify-content:space-between;align-items:center;
+    -webkit-tap-highlight-color:transparent;
+  }
+  .faq summary::-webkit-details-marker{display:none;}
+  .faq summary::after{
+    content:'+';font-size:20px;font-weight:400;color:var(--sub);
+    transition:transform .15s ease;
+  }
+  .faq details[open] summary::after{transform:rotate(45deg);}
+  .faq summary:focus-visible{outline:2.5px solid var(--accent);outline-offset:-2px;}
+  .faq .a{
+    padding:0 18px 16px;
+    font-size:14px;color:#4A4A46;line-height:1.7;
+  }
+
+  /* ── 피그마풍 글래스 카드 오버라이드 ── */
+  .cred-card,.item,.bubble,.faq details{
+    background:rgba(255,255,255,.72);
+    border-color:rgba(255,255,255,.95);
+    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+    box-shadow:0 6px 22px rgba(70,80,95,.07);
+  }
+  .item.active{border-color:var(--ink);}
+  .bubble.me{background:rgba(255,236,226,.75);border-color:rgba(255,255,255,.95);}
+  .count{box-shadow:0 12px 30px rgba(255,90,54,.22);}
+  .qty button{background:rgba(255,255,255,.9);}
+
+  /* ── 시즌 로드맵 ── */
+  .roadmap{display:flex;flex-direction:column;gap:0;}
+  .rm{
+    display:flex;gap:14px;align-items:flex-start;
+    padding:14px 0;
+  }
+  .rm + .rm{border-top:1px dashed var(--line);}
+  .rm .dot{
+    flex:none;width:34px;height:34px;border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    font-size:13px;font-weight:800;color:#fff;
+    background:linear-gradient(135deg,#FF8A5C,#FF5A36);
+    margin-top:2px;
+  }
+  .rm.soon .dot{background:linear-gradient(135deg,#B9AFF5,#8A7CFF);}
+  .rm.later .dot{background:linear-gradient(135deg,#9BC8F0,#6FA8E8);}
+  .rm .t{font-size:15px;font-weight:800;}
+  .rm .t .tag{
+    display:inline-block;margin-left:6px;
+    font-size:10.5px;font-weight:800;color:var(--accent);
+    background:var(--accent-soft);border-radius:999px;padding:2px 8px;
+    vertical-align:2px;
+  }
+  .rm .d{font-size:13px;color:var(--sub);margin-top:2px;}
+
+  /* ── 하단 고정 주문바 ── */
+  .orderbar{
+    position:fixed;bottom:0;left:50%;transform:translateX(-50%);
+    width:100%;max-width:480px;
+    background:rgba(250,250,246,.86);
+    -webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);
+    border-top:1px solid rgba(255,255,255,.95);
+    box-shadow:0 -6px 22px rgba(70,80,95,.08);
+    padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+    display:flex;align-items:center;gap:12px;
+    z-index:50;
+  }
+  .orderbar .total{flex:1;line-height:1.3;}
+  .orderbar .total small{display:block;font-size:11.5px;color:var(--sub);font-weight:600;}
+  .orderbar .total b{font-size:19px;font-weight:800;font-variant-numeric:tabular-nums;}
+  .orderbar .order-btn{
+    flex:1.3;
+    display:block;text-align:center;text-decoration:none;
+    background:linear-gradient(135deg,#FF8A5C,#FF5A36);
+    color:#fff;
+    font-size:15.5px;font-weight:700;
+    padding:15px 10px;border-radius:14px;
+    transition:transform .08s ease;
+    box-shadow:0 6px 18px rgba(255,90,54,.3);
+  }
+  .orderbar .order-btn:active{transform:scale(.97);}
+  .orderbar .order-btn:focus-visible{outline:2.5px solid var(--ink);outline-offset:2px;}
+  .orderbar .order-btn.hot{background:linear-gradient(135deg,#FF5A36,#FF4E63);}
+
+  /* ── 작년 명예의 전당 ── */
+  .hof{display:flex;align-items:flex-end;gap:10px;}
+  .hof .col{
+    flex:1;text-align:center;
+    background:rgba(255,255,255,.66);
+    border:1px solid rgba(255,255,255,.9);
+    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+    border-radius:16px 16px 0 0;
+    padding:16px 8px 14px;
+    box-shadow:0 6px 22px rgba(70,80,95,.07);
+  }
+  .hof .col.first{padding-top:26px;background:rgba(255,241,234,.85);}
+  .hof .medal{font-size:26px;font-weight:800;color:var(--accent);}
+  .hof .nick{font-size:14.5px;font-weight:800;margin-top:6px;}
+  .hof .boxes{font-size:12px;color:var(--sub);font-weight:600;margin-top:2px;}
+  .hof-note{font-size:12px;color:var(--sub);text-align:center;margin-top:10px;}
+
+  .copy-line{
+    text-align:center;
+    padding:22px 24px 8px;
+  }
+  .copy-line button{
+    background:none;border:none;cursor:pointer;
+    font-size:13px;font-weight:600;color:var(--sub);
+    text-decoration:underline;text-underline-offset:3px;
+    font-family:inherit;
+  }
+  .copy-line button:focus-visible{outline:2.5px solid var(--accent);outline-offset:2px;}
+
+  footer{
+    margin-top:40px;
+    padding:28px 24px 36px;
+    border-top:1px solid var(--line);
+    font-size:12.5px;color:var(--sub);line-height:2;
+  }
+  footer b{color:var(--ink);font-weight:700;}
+</style>
+</head>
+<body>
+<div class="bg" aria-hidden="true"></div>
+
+<div class="topbar">7월 20일 발송 시작 · <b>물량 소진 시 조기 마감</b></div>
+
+<!-- 히어로 -->
+<header class="hero">
+  <span class="eyebrow">🍑 여름마다 돌아오는 그 맛</span>
+  <h1>올해도,<br>그 복숭아.<br><span class="grad">갑부농원에서 바로.</span></h1>
+  <p class="lede">한 번 먹어본 사람은 여름마다 찾는 조치원 복숭아. 농가에서 <b>수확 후 바로 발송</b>합니다.</p>
+</header>
+
+<!-- 카운트다운 -->
+<div class="count-wrap">
+  <div class="count">
+    <div class="label">발송 시작까지<b>7월 20일 (월)</b></div>
+    <div class="timer"><span id="dday">D-00</span><small id="hms">00:00:00</small></div>
+  </div>
+</div>
+
+<!-- 신뢰 지표 -->
+<section>
+  <div class="sec-head">
+    <div class="kicker">Why this peach</div>
+    <h2>맛은 이미 검증 끝</h2>
+  </div>
+  <div class="cred">
+    <div class="cred-card">
+      <div class="big">부문 1위</div>
+      <div class="small">대한민국 대표과일<br>선발대회 복숭아 부문</div>
+    </div>
+    <div class="cred-card">
+      <div class="big">대상 수상</div>
+      <div class="small">조치원 복숭아축제<br>품평회</div>
+    </div>
+    <div class="cred-card">
+      <div class="big">3년 연속</div>
+      <div class="small">단골들이 다시 찾는<br>여름 재주문</div>
+    </div>
+    <div class="cred-card">
+      <div class="big">산지 직송</div>
+      <div class="small">갑부농원에서<br>수확 후 바로 발송</div>
+    </div>
+  </div>
+</section>
+
+<!-- 상품 선택 -->
+<section>
+  <div class="sec-head">
+    <div class="kicker">Select</div>
+    <h2>수량을 골라주세요</h2>
+    <p>고르면 아래 주문 버튼에 합계가 바로 반영돼요.</p>
+  </div>
+
+  <div class="item" id="item3">
+    <div class="row1"><span class="name">3kg 박스</span><span class="price">30,000원</span></div>
+    <div class="meta">말랑이 백도 특사이즈 · 13과 내외 · 최대 3박스</div>
+    <div class="row2">
+      <span class="free">무료배송</span>
+      <div class="qty">
+        <button type="button" data-item="3kg" data-d="-1" aria-label="3kg 수량 줄이기">−</button>
+        <span class="num" id="qty3">0</span>
+        <button type="button" data-item="3kg" data-d="1" aria-label="3kg 수량 늘리기">+</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="item" id="item4">
+    <div class="row1"><span class="name">4kg 박스</span><span class="price">40,000원</span></div>
+    <div class="meta">말랑이 백도 특사이즈 · 15과 내외 · 최대 3박스</div>
+    <div class="row2">
+      <span class="free">무료배송</span>
+      <div class="qty">
+        <button type="button" data-item="4kg" data-d="-1" aria-label="4kg 수량 줄이기">−</button>
+        <span class="num" id="qty4">0</span>
+        <button type="button" data-item="4kg" data-d="1" aria-label="4kg 수량 늘리기">+</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 시즌 로드맵 -->
+<section>
+  <div class="sec-head">
+    <div class="kicker">Season</div>
+    <h2>올여름 복숭아 순서 🍑</h2>
+    <p>차수마다 품종이 달라요. 놓치면 다음 여름까지 기다려야 해요.</p>
+  </div>
+  <div class="roadmap">
+    <div class="rm">
+      <div class="dot">1차</div>
+      <div>
+        <div class="t">말랑이 백도 <span class="tag">지금 주문중</span></div>
+        <div class="d">3kg 13과 내외 30,000원 · 4kg 15과 내외 40,000원</div>
+      </div>
+    </div>
+    <div class="rm soon">
+      <div class="dot">2차</div>
+      <div>
+        <div class="t">딱딱이 백도</div>
+        <div class="d">알이 굵어져요 · 3kg 11과 내외 35,000원 · 4kg 40,000원</div>
+      </div>
+    </div>
+    <div class="rm later">
+      <div class="dot">3차</div>
+      <div>
+        <div class="t">황도 외</div>
+        <div class="d">이후 순차 예정 · 상세는 추후 안내</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 작년 명예의 전당 -->
+<section>
+  <div class="sec-head">
+    <div class="kicker">Hall of Fame</div>
+    <h2>작년 복숭아 랭킹 🍑</h2>
+    <p>올해 마감 후 새 랭킹으로 갱신됩니다. 1등 자리를 노려보세요.</p>
+  </div>
+  <div class="hof">
+    <div class="col"><div class="medal">2위</div><div class="nick">닉네임</div><div class="boxes">0박스</div></div>
+    <div class="col first"><div class="medal">👑 1위</div><div class="nick">닉네임</div><div class="boxes">0박스</div></div>
+    <div class="col"><div class="medal">3위</div><div class="nick">닉네임</div><div class="boxes">0박스</div></div>
+  </div>
+  <p class="hof-note">* 닉네임 기준 · 본인 요청 시 익명 처리</p>
+</section>
+
+<!-- 후기 -->
+<section>
+  <div class="sec-head">
+    <div class="kicker">From the chat</div>
+    <h2>단톡방에서 있었던 일</h2>
+  </div>
+  <div class="chat">
+    <div class="bubble">복숭아가 이렇게 달아도 되는 건가요 애들이 순삭했어요<span class="who">2년차 단골</span></div>
+    <div class="bubble me">작년에 먹고 못 잊어서 오픈만 기다렸어요 🍑<span class="who">3년차 단골</span></div>
+    <div class="bubble">택배 열자마자 향이 확… 부모님댁에 한 박스 더 보냈습니다<span class="who">재주문 단골</span></div>
+  </div>
+</section>
+
+<!-- 안내 -->
+<section>
+  <div class="sec-head">
+    <div class="kicker">Info</div>
+    <h2>주문 전에 딱 3가지만</h2>
+  </div>
+  <ul class="notes">
+    <li>이번 차수는 <b>말랑이 백도</b>예요. 다음은 딱딱이 백도, 이후 황도가 이어질 예정입니다.</li>
+    <li>7월 20일부터 <b>주문 순서대로 순차 발송</b>돼요.</li>
+    <li>택배 눌림 방지를 위해 약간 단단한 상태로 발송돼요. 2~3일 후숙하면 가장 맛있어요.</li>
+    <li>송금은 <b>작년에 보냈던 카카오페이로</b> 해주세요. 송금 확인 후 주문이 확정돼요.</li>
+  </ul>
+</section>
+
+<!-- FAQ -->
+<section class="faq">
+  <div class="sec-head">
+    <div class="kicker">FAQ</div>
+    <h2>매년 나오는 질문 모음</h2>
+    <p>궁금한 건 아마 여기 다 있어요.</p>
+  </div>
+  <details>
+    <summary>복숭아 언제 도착해요?</summary>
+    <div class="a">7월 20일부터 <b>주문 순서대로</b> 순차 발송돼요. 발송되면 보통 1~2일 안에 도착합니다.</div>
+  </details>
+  <details>
+    <summary>받았는데 좀 딱딱해요</summary>
+    <div class="a">정상이에요! 택배 눌림 방지를 위해 일부러 단단한 상태로 보내드려요. 실온에 <b>2~3일 후숙</b>하면 말랑하고 가장 달아집니다.</div>
+  </details>
+  <details>
+    <summary>보관은 어떻게 해요?</summary>
+    <div class="a">후숙 전엔 <b>실온 보관</b>이 기본이에요. 말랑해진 뒤에 냉장 보관하고, 먹기 1~2시간 전에만 차게 하면 향이 제일 좋아요.</div>
+  </details>
+  <details>
+    <summary>입금은 어디로 해요?</summary>
+    <div class="a"><b>작년에 보냈던 카카오페이</b> 그대로 보내주시면 돼요. 처음 주문이시면 주문서 작성 후 송금 방법을 안내드립니다.</div>
+  </details>
+  <details>
+    <summary>눌리거나 상한 게 왔어요</summary>
+    <div class="a">수령 <b>당일에 박스째 사진</b>을 찍어 단톡방에 올려주세요. 확인 후 처리 방법을 안내드릴게요.</div>
+  </details>
+</section>
+
+<div class="copy-line">
+  <button id="copyOrder" type="button">주문 내용만 복사하기 (단톡방 공유용)</button>
+</div>
+
+<footer>
+  <b>🤍 이 페이지는 그냥 이웃 공유용이에요</b><br>
+  저는 수수료나 마진 없이 맛있어서 알리는 것뿐이라,<br>
+  <b>갑부농원에 직접 문의해서 주문하셔도</b> 전혀 상관없어요.<br>
+  갑부농원 직송 · 조치원 복숭아
+</footer>
+
+<!-- 하단 고정 주문바 -->
+<div class="orderbar">
+  <div class="total"><small id="totalLabel">수량을 골라주세요</small><b id="totalPrice">0원</b></div>
+  <a class="order-btn" id="goForm" href="https://docs.google.com/forms/d/e/1FAIpQLSe6js7fVaEZGCjnm-mlFn5JmZpMLBTXfFDYSBZ1E-zZ2ReZwA/viewform" target="_blank" rel="noopener">주문서 작성</a>
+</div>
+
+<script>
+(function(){
+  /* ── 카운트다운: 7/20 00:00 KST ── */
+  var target = new Date('2026-07-20T00:00:00+09:00').getTime();
+  var dday = document.getElementById('dday');
+  var hms = document.getElementById('hms');
+  function pad(n){return n<10?'0'+n:''+n;}
+  function tick(){
+    var diff = target - Date.now();
+    if(diff <= 0){
+      dday.textContent = '발송 중';
+      hms.textContent = '주문 순서대로 나가는 중';
+      return;
+    }
+    var d = Math.floor(diff/86400000);
+    var h = Math.floor(diff%86400000/3600000);
+    var m = Math.floor(diff%3600000/60000);
+    var s = Math.floor(diff%60000/1000);
+    dday.textContent = 'D-' + d;
+    hms.textContent = pad(h)+':'+pad(m)+':'+pad(s);
+    setTimeout(tick, 1000);
+  }
+  tick();
+
+  /* ── 수량/합계 ── */
+  var qty = {'3kg':0,'4kg':0};
+  var price = {'3kg':30000,'4kg':40000};
+  var q3 = document.getElementById('qty3');
+  var q4 = document.getElementById('qty4');
+  var totalPrice = document.getElementById('totalPrice');
+  var totalLabel = document.getElementById('totalLabel');
+  var goForm = document.getElementById('goForm');
+
+  /* ── 폼 연동 설정: entry 번호를 받으면 여기만 채우면 완전 연동됨 ── */
+  var FORM_BASE = 'https://docs.google.com/forms/d/e/1FAIpQLSe6js7fVaEZGCjnm-mlFn5JmZpMLBTXfFDYSBZ1E-zZ2ReZwA/viewform';
+  var FORM_ENTRIES = { qty3:'', qty4:'' }; // 예: qty3:'entry.123456789'
+
+  function sum(){ return qty['3kg']*price['3kg'] + qty['4kg']*price['4kg']; }
+  function boxes(){ return qty['3kg'] + qty['4kg']; }
+  function formUrl(){
+    if(!FORM_ENTRIES.qty3 && !FORM_ENTRIES.qty4) return FORM_BASE;
+    var p = [];
+    if(FORM_ENTRIES.qty3) p.push(FORM_ENTRIES.qty3+'='+encodeURIComponent(qty['3kg']+'박스'));
+    if(FORM_ENTRIES.qty4) p.push(FORM_ENTRIES.qty4+'='+encodeURIComponent(qty['4kg']+'박스'));
+    return FORM_BASE + '?usp=pp_url&' + p.join('&');
+  }
+  function render(){
+    q3.textContent = qty['3kg'];
+    q4.textContent = qty['4kg'];
+    totalPrice.textContent = sum().toLocaleString('ko-KR') + '원';
+    totalLabel.textContent = boxes()>0 ? '총 '+boxes()+'박스 · 무료배송' : '수량을 골라주세요';
+    goForm.classList.toggle('hot', boxes()>0);
+    goForm.textContent = boxes()>0 ? '이대로 주문하기' : '주문서 작성';
+    goForm.href = formUrl();
+    document.getElementById('item3').classList.toggle('active', qty['3kg']>0);
+    document.getElementById('item4').classList.toggle('active', qty['4kg']>0);
+  }
+  function orderText(){
+    var lines = [];
+    if(qty['3kg']>0) lines.push('· 말랑이 백도 3kg(13과 내외) x ' + qty['3kg'] + '박스');
+    if(qty['4kg']>0) lines.push('· 말랑이 백도 4kg(15과 내외) x ' + qty['4kg'] + '박스');
+    if(!lines.length) return '';
+    return '🍑 갑부농원 복숭아 주문\n' + lines.join('\n') +
+           '\n합계: ' + sum().toLocaleString('ko-KR') + '원 (무료배송)';
+  }
+
+  var btns = document.querySelectorAll('.qty button');
+  for(var i=0;i<btns.length;i++){
+    btns[i].addEventListener('click',function(){
+      var item = this.getAttribute('data-item');
+      var d = parseInt(this.getAttribute('data-d'),10);
+      qty[item] = Math.max(0, Math.min(3, qty[item]+d));
+      render();
+    });
+  }
+
+  /* 주문 버튼: 누르는 순간 주문 내용 자동 복사 + 폼 열기 */
+  goForm.addEventListener('click',function(){
+    var txt = orderText();
+    if(txt && navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt);
+      totalLabel.textContent = '✅ 주문 내용 복사됨 — 폼에 붙여넣으세요';
+    }
+  });
+
+  /* 단톡방 공유용 복사 */
+  document.getElementById('copyOrder').addEventListener('click',function(){
+    var txt = orderText();
+    var btn = this;
+    if(!txt){
+      btn.textContent = '수량을 먼저 골라주세요';
+      setTimeout(function(){ btn.textContent='주문 내용만 복사하기 (단톡방 공유용)'; },1600);
+      return;
+    }
+    function done(ok){
+      btn.textContent = ok ? '복사 완료 ✅' : '복사가 안 돼요 — 길게 눌러 복사해주세요';
+      setTimeout(function(){ btn.textContent='주문 내용만 복사하기 (단톡방 공유용)'; },2000);
+    }
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(function(){done(true);},function(){done(false);});
+    } else { done(false); }
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

@@ -149,6 +149,27 @@
   .count .timer small{
     display:block;font-size:11px;color:#FFDDD0;font-weight:600;letter-spacing:.04em;
   }
+  /* ── 실시간 주문 카운터 ── */
+  .live-orders{
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    margin:12px 0 0;padding:11px 16px;
+    background:rgba(255,255,255,.72);
+    border:1px solid rgba(255,255,255,.95);border-radius:12px;
+    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+    box-shadow:0 6px 22px rgba(70,80,95,.06);
+    font-size:13.5px;font-weight:600;color:#4A4A46;
+  }
+  .live-orders b{font-weight:800;color:var(--accent);font-variant-numeric:tabular-nums;}
+  .live-orders .dot{
+    width:8px;height:8px;border-radius:50%;background:#FF3B30;flex:none;
+    box-shadow:0 0 0 0 rgba(255,59,48,.5);
+    animation:livePulse 1.8s ease-out infinite;
+  }
+  @keyframes livePulse{
+    0%{box-shadow:0 0 0 0 rgba(255,59,48,.5);}
+    70%{box-shadow:0 0 0 7px rgba(255,59,48,0);}
+    100%{box-shadow:0 0 0 0 rgba(255,59,48,0);}
+  }
 
   /* ── 섹션 공통 ── */
   section{padding:44px 24px 0;}
@@ -503,6 +524,10 @@
     <div class="label">발송 시작까지<b>7월 20일 (월)</b></div>
     <div class="timer"><span id="dday">D-00</span><small id="hms">00:00:00</small></div>
   </div>
+  <div class="live-orders" id="liveOrders" hidden>
+    <span class="dot" aria-hidden="true"></span>
+    <span>지금까지 <b id="orderCount">0</b>건 주문 접수됐어요</span>
+  </div>
 </div>
 
 <!-- 신뢰 지표 -->
@@ -745,6 +770,28 @@
     setTimeout(tick, 1000);
   }
   tick();
+
+  /* ── 실시간 주문 개수 (구글 Apps Script JSONP) ──
+     배포한 Apps Script /exec 주소를 ORDER_COUNT_URL 에 넣으면 켜져요.
+     주소가 비어있으면 카운터는 자동으로 숨겨집니다. */
+  var ORDER_COUNT_URL = '';
+  var liveOrders = document.getElementById('liveOrders');
+  var orderCount = document.getElementById('orderCount');
+  window.__peachOrders = function(data){
+    if(!data || typeof data.orders !== 'number') return;
+    orderCount.textContent = data.orders.toLocaleString('ko-KR');
+    liveOrders.hidden = false;
+  };
+  function fetchOrders(){
+    if(!ORDER_COUNT_URL) return;
+    var s = document.createElement('script');
+    s.src = ORDER_COUNT_URL + (ORDER_COUNT_URL.indexOf('?')>-1?'&':'?') + 'callback=__peachOrders&_=' + Date.now();
+    s.onload = function(){ s.remove(); };
+    s.onerror = function(){ s.remove(); };
+    document.body.appendChild(s);
+  }
+  fetchOrders();
+  setInterval(fetchOrders, 60000); /* 1분마다 갱신 */
 
   /* ── 수량/합계 ── */
   var qty = {'3kg':0,'4kg':0};

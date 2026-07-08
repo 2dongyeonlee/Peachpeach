@@ -8,6 +8,7 @@
 <title>갑부농원 복숭아 — 7.20 발송 시작</title>
 <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css">
+<script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js" defer></script>
 <style>
   :root{
     --bg:#FBFAF7;
@@ -292,6 +293,63 @@
   }
   .rm .d{font-size:13px;color:var(--sub);margin-top:2px;}
 
+  /* ── 주문 입력 시트 ── */
+  .sheet{position:fixed;inset:0;z-index:100;}
+  .sheet[hidden]{display:none;}
+  .sheet-bg{position:absolute;inset:0;background:rgba(20,20,20,.45);}
+  .panel{
+    position:absolute;left:50%;bottom:0;transform:translateX(-50%);
+    width:100%;max-width:480px;max-height:88vh;overflow-y:auto;
+    background:#FFFDFB;border-radius:22px 22px 0 0;
+    padding:20px 20px calc(24px + env(safe-area-inset-bottom));
+    box-shadow:0 -12px 40px rgba(0,0,0,.18);
+  }
+  .p-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;}
+  .p-head b{font-size:18px;font-weight:800;}
+  .p-head button{
+    border:none;background:#F1EFEA;width:32px;height:32px;border-radius:50%;
+    font-size:14px;cursor:pointer;color:#555;
+  }
+  .panel label{display:block;font-size:13px;font-weight:700;color:#4A4A46;margin-bottom:12px;}
+  .panel input{
+    display:block;width:100%;margin-top:6px;
+    border:1.5px solid var(--line);border-radius:12px;
+    padding:13px 14px;font-size:15px;font-family:inherit;
+    background:#fff;color:var(--ink);
+  }
+  .panel input:focus{outline:none;border-color:var(--accent);}
+  .addr-row{display:flex;gap:8px;margin-top:6px;}
+  .addr-row input{margin-top:0;flex:1;}
+  .addr-row button{
+    flex:none;border:none;border-radius:12px;padding:0 16px;
+    background:var(--ink);color:#fff;font-weight:700;font-size:13.5px;
+    cursor:pointer;font-family:inherit;
+  }
+  #postcodeBox{height:340px;margin:8px 0;border:1.5px solid var(--line);border-radius:12px;overflow:hidden;}
+  .pay-line{
+    display:flex;justify-content:space-between;align-items:center;
+    background:var(--accent-soft);border-radius:12px;
+    padding:14px 16px;margin:4px 0 14px;font-size:14px;font-weight:700;
+  }
+  .pay-line b{font-size:19px;color:var(--accent);font-variant-numeric:tabular-nums;}
+  .panel .submit{
+    display:block;width:100%;border:none;cursor:pointer;
+    background:linear-gradient(135deg,#FF8A5C,#FF5A36);color:#fff;
+    font-size:16.5px;font-weight:800;font-family:inherit;
+    padding:16px;border-radius:14px;
+    box-shadow:0 6px 18px rgba(255,90,54,.3);
+  }
+  .panel .submit:active{transform:scale(.98);}
+  .p-hint{font-size:12px;color:var(--sub);text-align:center;margin-top:10px;line-height:1.7;}
+  .p-done{text-align:center;font-size:17px;font-weight:800;padding:10px 0;}
+  .p-done .pay-line{margin-top:16px;text-align:left;}
+  .p-done button{
+    border:2px solid var(--accent);background:#fff;color:var(--accent);
+    font-weight:800;font-size:14px;font-family:inherit;
+    padding:12px 20px;border-radius:12px;cursor:pointer;margin-top:4px;
+  }
+  .p-done p{font-size:13px;font-weight:500;color:var(--sub);margin-top:12px;line-height:1.7;}
+
   /* ── 하단 고정 주문바 ── */
   .orderbar{
     position:fixed;bottom:0;left:50%;transform:translateX(-50%);
@@ -554,6 +612,37 @@
   갑부농원 직송 · 조치원 복숭아
 </footer>
 
+<!-- 주문 입력 시트 -->
+<div class="sheet" id="sheet" hidden>
+  <div class="sheet-bg" id="sheetBg"></div>
+  <div class="panel">
+    <div class="p-head"><b>🍑 주문 정보 입력</b><button type="button" id="sheetClose" aria-label="닫기">✕</button></div>
+    <div id="pForm">
+      <label>주문자 성함<input id="fBuyer" placeholder="본인 이름"></label>
+      <label>수령인 성함<input id="fRecv" placeholder="받으실 분 이름"></label>
+      <label>수령인 주소
+        <div class="addr-row">
+          <input id="fAddr" placeholder="주소 검색을 눌러주세요" readonly>
+          <button type="button" id="addrBtn">주소 검색</button>
+        </div>
+        <div id="postcodeBox" hidden></div>
+        <input id="fAddr2" placeholder="상세주소 (동·호수 등)">
+      </label>
+      <label>수령인 연락처<input id="fPhone" inputmode="tel" placeholder="010-0000-0000"></label>
+      <label>송금인 성함<input id="fPayer" placeholder="카카오페이 보내는 분 이름"></label>
+      <div class="pay-line"><span>송금할 금액</span><b id="pAmount">0원</b></div>
+      <button class="submit" type="button" id="doOrder">주문 완료</button>
+      <p class="p-hint" id="pHint">주문 완료 후, 작년에 보냈던 카카오페이로 송금해주세요.<br>송금 확인 후 주문이 확정됩니다.</p>
+    </div>
+    <div class="p-done" id="pDone" hidden>
+      ✅ 주문이 접수됐어요!
+      <div class="pay-line"><span>카카오페이 송금 금액</span><b id="dAmount">0원</b></div>
+      <button type="button" id="copyAmt">💰 금액 복사하기</button>
+      <p>작년에 보냈던 카카오페이로 송금해주시면<br>확인 후 주문이 확정됩니다 🍑</p>
+    </div>
+  </div>
+</div>
+
 <!-- 하단 고정 주문바 -->
 <div class="orderbar">
   <div class="total"><small id="totalLabel">수량을 골라주세요</small><b id="totalPrice">0원</b></div>
@@ -636,12 +725,101 @@
     });
   }
 
-  /* 주문 버튼: 누르는 순간 주문 내용 자동 복사 + 폼 열기 */
-  goForm.addEventListener('click',function(){
-    var txt = orderText();
-    if(txt && navigator.clipboard && navigator.clipboard.writeText){
-      navigator.clipboard.writeText(txt);
-      totalLabel.textContent = '✅ 주문 내용 복사됨 — 폼에 붙여넣으세요';
+  /* ── 주문 시트 로직 ── */
+  /* entry 번호를 받으면 아래만 채우면 완전 자동 제출로 전환됨 */
+  var ENTRY = { buyer:'', recv:'', addr:'', qty3:'', qty4:'', payer:'' }; /* 예: buyer:'entry.123456' */
+  var FORM_ACTION = FORM_BASE.replace('/viewform','/formResponse');
+  var sheet = document.getElementById('sheet');
+  var pForm = document.getElementById('pForm');
+  var pDone = document.getElementById('pDone');
+
+  function val(id){ return document.getElementById(id).value.trim(); }
+  function money(){ return sum().toLocaleString('ko-KR') + '원'; }
+
+  goForm.addEventListener('click',function(e){
+    if(boxes()===0) return; /* 수량 없으면 그냥 빈 폼 열기 */
+    e.preventDefault();
+    document.getElementById('pAmount').textContent = money();
+    pForm.hidden = false; pDone.hidden = true;
+    sheet.hidden = false;
+  });
+  document.getElementById('sheetClose').addEventListener('click',function(){ sheet.hidden = true; });
+  document.getElementById('sheetBg').addEventListener('click',function(){ sheet.hidden = true; });
+
+  /* 도로명 주소 검색 (카카오 우편번호 위젯) */
+  document.getElementById('addrBtn').addEventListener('click',function(){
+    if(typeof daum === 'undefined' || !daum.Postcode){
+      alert('주소 검색을 불러오지 못했어요. 주소를 직접 입력해주세요.');
+      document.getElementById('fAddr').readOnly = false;
+      return;
+    }
+    var box = document.getElementById('postcodeBox');
+    box.hidden = false; box.innerHTML = '';
+    new daum.Postcode({
+      oncomplete:function(d){
+        document.getElementById('fAddr').value = d.roadAddress || d.address;
+        box.hidden = true; box.innerHTML = '';
+        document.getElementById('fAddr2').focus();
+      },
+      width:'100%', height:'100%'
+    }).embed(box);
+  });
+
+  function fullOrderText(){
+    return '🍑 갑부농원 복숭아 주문\n'
+      + '주문자: ' + val('fBuyer') + '\n'
+      + '수령인: ' + val('fRecv') + '\n'
+      + '주소: ' + val('fAddr') + ' ' + val('fAddr2') + '\n'
+      + '연락처: ' + val('fPhone') + '\n'
+      + (qty['3kg']>0 ? '· 말랑이 백도 3kg x ' + qty['3kg'] + '박스\n' : '')
+      + (qty['4kg']>0 ? '· 말랑이 백도 4kg x ' + qty['4kg'] + '박스\n' : '')
+      + '송금인: ' + val('fPayer') + ' / ' + money();
+  }
+
+  function showDone(){
+    document.getElementById('dAmount').textContent = money();
+    pForm.hidden = true; pDone.hidden = false;
+  }
+
+  document.getElementById('doOrder').addEventListener('click',function(){
+    var need = [['fBuyer','주문자 성함'],['fRecv','수령인 성함'],['fAddr','수령인 주소'],['fPhone','수령인 연락처'],['fPayer','송금인 성함']];
+    for(var i=0;i<need.length;i++){
+      if(!val(need[i][0])){ alert(need[i][1] + '을(를) 입력해주세요!'); document.getElementById(need[i][0]).focus(); return; }
+    }
+    if(ENTRY.buyer){
+      /* 완전 자동: 구글폼 응답 시트로 직접 제출 */
+      var p = new URLSearchParams();
+      p.append(ENTRY.buyer, val('fBuyer'));
+      p.append(ENTRY.recv, val('fRecv'));
+      p.append(ENTRY.addr, val('fAddr') + ' ' + val('fAddr2') + ' (연락처: ' + val('fPhone') + ')');
+      if(qty['3kg']>0) p.append(ENTRY.qty3, qty['3kg'] + '박스');
+      if(qty['4kg']>0) p.append(ENTRY.qty4, qty['4kg'] + '박스');
+      p.append(ENTRY.payer, val('fPayer') + ' / ' + money());
+      fetch(FORM_ACTION, {method:'POST', mode:'no-cors', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:p.toString()})
+        .then(showDone)
+        .catch(function(){ fallbackSubmit(); });
+    } else {
+      fallbackSubmit();
+    }
+  });
+
+  /* entry 번호 없을 때: 전체 내용 자동 복사 + 폼 열기 */
+  function fallbackSubmit(){
+    var txt = fullOrderText();
+    if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(txt); }
+    window.open(FORM_BASE, '_blank');
+    showDone();
+    document.querySelector('#pDone p').innerHTML =
+      '주문 내용이 <b>자동 복사</b>됐어요 — 열린 주문서에 붙여넣어 제출해주세요.<br>그 후 카카오페이로 송금하시면 확정됩니다 🍑';
+  }
+
+  document.getElementById('copyAmt').addEventListener('click',function(){
+    var btn = this;
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(String(sum())).then(function(){
+        btn.textContent = '✅ 복사됨! 카카오페이에 붙여넣으세요';
+        setTimeout(function(){ btn.textContent = '💰 금액 복사하기'; }, 2200);
+      });
     }
   });
 

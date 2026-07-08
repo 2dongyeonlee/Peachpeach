@@ -731,7 +731,7 @@
 
   /* ── 주문 시트 로직 ── */
   /* entry 번호를 받으면 아래만 채우면 완전 자동 제출로 전환됨 */
-  var ENTRY = { buyer:'', recv:'', addr:'', qty3:'entry.1475999037', qty4:'entry.1402244674', payer:'' }; /* buyer·recv·addr·payer 번호를 받으면 완전 자동 전환 */
+  var ENTRY = { buyer:'entry.367769986', recv:'entry.6087249', addr:'entry.285218618', qty3:'entry.1475999037', qty4:'entry.1402244674', payer:'entry.879250962' }; /* 전 항목 연동 완료 → 완전 자동 제출 */
   var FORM_ACTION = FORM_BASE.replace('/viewform','/formResponse');
   var sheet = document.getElementById('sheet');
   var pForm = document.getElementById('pForm');
@@ -796,8 +796,8 @@
       p.append(ENTRY.buyer, val('fBuyer'));
       p.append(ENTRY.recv, val('fRecv'));
       p.append(ENTRY.addr, val('fAddr') + ' ' + val('fAddr2') + ' (연락처: ' + val('fPhone') + ')');
-      if(qty['3kg']>0) p.append(ENTRY.qty3, qty['3kg'] + '박스');
-      if(qty['4kg']>0) p.append(ENTRY.qty4, qty['4kg'] + '박스');
+      p.append(ENTRY.qty3, qty['3kg'] + '박스');
+      p.append(ENTRY.qty4, qty['4kg'] + '박스');
       p.append(ENTRY.payer, val('fPayer') + ' / ' + money());
       fetch(FORM_ACTION, {method:'POST', mode:'no-cors', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:p.toString()})
         .then(showDone)

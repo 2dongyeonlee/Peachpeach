@@ -353,6 +353,18 @@
     padding:12px 20px;border-radius:12px;cursor:pointer;margin-top:4px;
   }
   .p-done p{font-size:13px;font-weight:500;color:var(--sub);margin-top:12px;line-height:1.7;}
+  /* ── 카카오페이 송금 버튼 ── */
+  .kakao-btns{display:flex;flex-direction:column;gap:8px;margin:14px 0 6px;}
+  .kakao-send{
+    display:block;text-align:center;text-decoration:none;
+    background:#FEE500;color:#181600;
+    font-size:16px;font-weight:800;font-family:inherit;
+    padding:15px 12px;border-radius:14px;
+    box-shadow:0 6px 18px rgba(254,229,0,.4);
+    transition:transform .08s ease;
+  }
+  .kakao-send:active{transform:scale(.98);}
+  .kakao-send:focus-visible{outline:2.5px solid var(--ink);outline-offset:2px;}
 
   /* ── 하단 고정 주문바 ── */
   .orderbar{
@@ -646,8 +658,9 @@
     <div class="p-done" id="pDone" hidden>
       ✅ 주문이 접수됐어요!
       <div class="pay-line"><span>카카오페이 송금 금액</span><b id="dAmount">0원</b></div>
-      <button type="button" id="copyAmt">💰 금액 복사하기</button>
-      <p>작년에 보냈던 카카오페이로 송금해주시면<br>확인 후 주문이 확정됩니다 🍑</p>
+      <div class="kakao-btns" id="kakaoBtns"></div>
+      <button type="button" id="copyAmt">💰 금액만 복사하기</button>
+      <p>송금 버튼을 누르면 <b>금액이 자동 복사</b>돼요.<br>카카오페이에서 붙여넣어 송금하시면<br>확인 후 주문이 확정됩니다 🍑</p>
     </div>
   </div>
 </div>
@@ -829,10 +842,30 @@
     if(navigator.clipboard && navigator.clipboard.writeText){
       navigator.clipboard.writeText(String(sum())).then(function(){
         btn.textContent = '✅ 복사됨! 카카오페이에 붙여넣으세요';
-        setTimeout(function(){ btn.textContent = '💰 금액 복사하기'; }, 2200);
+        setTimeout(function(){ btn.textContent = '💰 금액만 복사하기'; }, 2200);
       });
     }
   });
+
+  /* ── 카카오페이 송금 버튼 (여기 배열에 추가하면 버튼이 늘어남) ── */
+  var KAKAO_PAY = [
+    { label:'LDY', url:'https://qr.kakaopay.com/Ej8om8541' }
+  ];
+  (function buildKakao(){
+    var wrap = document.getElementById('kakaoBtns');
+    if(!wrap) return;
+    KAKAO_PAY.forEach(function(k){
+      var a = document.createElement('a');
+      a.className = 'kakao-send';
+      a.href = k.url; a.target = '_blank'; a.rel = 'noopener';
+      a.textContent = '💛 ' + k.label + '에게 카카오페이 송금';
+      a.addEventListener('click', function(){
+        /* 카카오페이엔 금액이 자동 입력되지 않으므로 먼저 복사해 둠 */
+        if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(String(sum())); }
+      });
+      wrap.appendChild(a);
+    });
+  })();
 
   /* 단톡방 공유용 복사 */
   document.getElementById('copyOrder').addEventListener('click',function(){

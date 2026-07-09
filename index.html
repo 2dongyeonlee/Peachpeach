@@ -640,19 +640,6 @@
     </div>
   </div>
 
-  <div class="item" id="itemL">
-    <div class="row1"><span class="name">3.5kg <span style="color:var(--sub);font-weight:700">(특특)</span></span><span class="price">35,000원</span></div>
-    <div class="meta">굵은 특특 · 8~11과 · 최대 3박스</div>
-    <div class="row2">
-      <span class="free">무료배송</span>
-      <div class="qty">
-        <button type="button" data-item="3kgL" data-d="-1" aria-label="3.5kg 특특 수량 줄이기">−</button>
-        <span class="num" id="qtyL">0</span>
-        <button type="button" data-item="3kgL" data-d="1" aria-label="3.5kg 특특 수량 늘리기">+</button>
-      </div>
-    </div>
-  </div>
-
   <div class="item" id="item4">
     <div class="row1"><span class="name">4kg <span style="color:var(--sub);font-weight:700">(특)</span></span><span class="price">40,000원</span></div>
     <div class="meta">말랑이 백도 · 14~17과 · 최대 3박스</div>
@@ -662,6 +649,19 @@
         <button type="button" data-item="4kg" data-d="-1" aria-label="4kg 수량 줄이기">−</button>
         <span class="num" id="qty4">0</span>
         <button type="button" data-item="4kg" data-d="1" aria-label="4kg 수량 늘리기">+</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="item" id="itemL">
+    <div class="row1"><span class="name">3.5kg <span style="color:var(--sub);font-weight:700">(특특)</span></span><span class="price">35,000원</span></div>
+    <div class="meta">특보다 큰 알 · 8~11과 · 최대 3박스</div>
+    <div class="row2">
+      <span class="free">무료배송</span>
+      <div class="qty">
+        <button type="button" data-item="3kgL" data-d="-1" aria-label="3.5kg 특특 수량 줄이기">−</button>
+        <span class="num" id="qtyL">0</span>
+        <button type="button" data-item="3kgL" data-d="1" aria-label="3.5kg 특특 수량 늘리기">+</button>
       </div>
     </div>
   </div>
@@ -686,7 +686,7 @@
       <div class="dot">🍑</div>
       <div>
         <div class="t">백도 말랑이 <span class="tag">7/20 순차발송</span></div>
-        <div class="d">3kg (특) 12~15과 · 30,000원<br>3.5kg (특특) 8~11과 · 35,000원<br>4kg (특) 14~17과 · 40,000원</div>
+        <div class="d">3kg (특) 12~15과 · 30,000원<br>4kg (특) 14~17과 · 40,000원<br>3.5kg (특특) 8~11과 · 35,000원</div>
       </div>
     </div>
     <div class="rm later">
@@ -857,13 +857,13 @@
     var pop = document.getElementById('hwPop');
     if(!pop) return;
     var seen = false;
-    try { seen = localStorage.getItem('hwPopSeen') === '1'; } catch(e){}
+    try { seen = sessionStorage.getItem('hwPopSeen') === '1'; } catch(e){} /* 세션(탭)마다 다시 노출 */
     if(Date.now() < HWANGDO_UNTIL && !seen){
       var leftEl = document.getElementById('hwLeft');
       if(leftEl) leftEl.textContent = '10박스 한정 · 지금 ' + HWANGDO_LEFT + '박스 남음';
       pop.hidden = false;
     }
-    function close(){ pop.hidden = true; try { localStorage.setItem('hwPopSeen','1'); } catch(e){} }
+    function close(){ pop.hidden = true; try { sessionStorage.setItem('hwPopSeen','1'); } catch(e){} }
     document.getElementById('hwClose').addEventListener('click', close);
     document.getElementById('hwBg').addEventListener('click', close);
     document.getElementById('hwSkip').addEventListener('click', close);
@@ -938,8 +938,8 @@
   function itemLine(){
     var a = [];
     if(qty['3kg']>0) a.push('3kg특×' + qty['3kg']);
-    if(qty['3kgL']>0) a.push('3.5kg특특×' + qty['3kgL']);
     if(qty['4kg']>0) a.push('4kg특×' + qty['4kg']);
+    if(qty['3kgL']>0) a.push('3.5kg특특×' + qty['3kgL']);
     return a.join(' · ');
   }
   function orderDetail(){ return variety() + ' · ' + itemLine(); }
@@ -970,8 +970,8 @@
     var v = variety();
     var lines = [];
     if(qty['3kg']>0) lines.push('· ' + v + ' 3kg(특) x ' + qty['3kg'] + '박스');
-    if(qty['3kgL']>0) lines.push('· ' + v + ' 3.5kg(특특) x ' + qty['3kgL'] + '박스');
     if(qty['4kg']>0) lines.push('· ' + v + ' 4kg(특) x ' + qty['4kg'] + '박스');
+    if(qty['3kgL']>0) lines.push('· ' + v + ' 3.5kg(특특) x ' + qty['3kgL'] + '박스');
     if(!lines.length) return '';
     return '🍑 갑부농원 복숭아 주문\n' + lines.join('\n') +
            '\n합계: ' + sum().toLocaleString('ko-KR') + '원 (무료배송)';
@@ -1035,8 +1035,8 @@
       + '연락처: ' + val('fPhone') + '\n'
       + '품종: ' + variety() + '\n'
       + (qty['3kg']>0 ? '· 3kg(특) x ' + qty['3kg'] + '박스\n' : '')
-      + (qty['3kgL']>0 ? '· 3.5kg(특특) x ' + qty['3kgL'] + '박스\n' : '')
       + (qty['4kg']>0 ? '· 4kg(특) x ' + qty['4kg'] + '박스\n' : '')
+      + (qty['3kgL']>0 ? '· 3.5kg(특특) x ' + qty['3kgL'] + '박스\n' : '')
       + '송금인: ' + val('fPayer') + ' / ' + money();
   }
 

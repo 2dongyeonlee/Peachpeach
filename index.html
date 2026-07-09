@@ -110,7 +110,9 @@
     font-family:'Paperlogy','Pretendard Variable',Pretendard,sans-serif;
     font-size:25px;font-weight:800;letter-spacing:-0.02em;margin-top:16px;
   }
-  .pop-price{font-size:14.5px;color:#4A4A46;margin-top:9px;font-weight:600;}
+  .pop-sub{font-size:13.5px;color:var(--sub);margin-top:10px;line-height:1.6;text-wrap:pretty;}
+  .pop-sub b{color:var(--accent);font-weight:800;}
+  .pop-price{font-size:14.5px;color:#4A4A46;margin-top:12px;font-weight:600;}
   .pop-price b{color:var(--ink);font-weight:800;}
   .pop-left{
     display:inline-block;margin-top:16px;
@@ -381,7 +383,12 @@
     background:var(--accent-soft);border-radius:999px;padding:2px 8px;
     vertical-align:2px;
   }
-  .rm .d{font-size:13px;color:var(--sub);margin-top:2px;}
+  .rm .d{font-size:13px;color:var(--sub);margin-top:2px;line-height:1.6;}
+  .rm-note{
+    margin-top:16px;padding:12px 14px;
+    background:rgba(255,241,236,.7);border-radius:12px;
+    font-size:12.5px;color:#8A6D63;line-height:1.6;text-wrap:pretty;
+  }
 
   /* ── 주문 입력 시트 ── */
   .sheet{position:fixed;inset:0;z-index:100;}
@@ -613,8 +620,8 @@
   </div>
 
   <div class="item" id="item3">
-    <div class="row1"><span class="name">3kg 박스</span><span class="price">30,000원</span></div>
-    <div class="meta">말랑이 백도 · 13과 내외 · 최대 3박스</div>
+    <div class="row1"><span class="name">3kg <span style="color:var(--sub);font-weight:700">(특)</span></span><span class="price">30,000원</span></div>
+    <div class="meta">말랑이 백도 · 12~15과 · 최대 3박스</div>
     <div class="row2">
       <span class="free">무료배송</span>
       <div class="qty">
@@ -626,21 +633,21 @@
   </div>
 
   <div class="item" id="itemL">
-    <div class="row1"><span class="name">3kg 큰 알</span><span class="price">35,000원</span></div>
-    <div class="meta">특특 큰 알 · 11과 내외 · 최대 3박스</div>
+    <div class="row1"><span class="name">3.5kg <span style="color:var(--sub);font-weight:700">(특특)</span></span><span class="price">35,000원</span></div>
+    <div class="meta">굵은 특특 · 8~11과 · 최대 3박스</div>
     <div class="row2">
       <span class="free">무료배송</span>
       <div class="qty">
-        <button type="button" data-item="3kgL" data-d="-1" aria-label="3kg 큰 알 수량 줄이기">−</button>
+        <button type="button" data-item="3kgL" data-d="-1" aria-label="3.5kg 특특 수량 줄이기">−</button>
         <span class="num" id="qtyL">0</span>
-        <button type="button" data-item="3kgL" data-d="1" aria-label="3kg 큰 알 수량 늘리기">+</button>
+        <button type="button" data-item="3kgL" data-d="1" aria-label="3.5kg 특특 수량 늘리기">+</button>
       </div>
     </div>
   </div>
 
   <div class="item" id="item4">
-    <div class="row1"><span class="name">4kg 박스</span><span class="price">40,000원</span></div>
-    <div class="meta">말랑이 백도 · 15과 내외 · 최대 3박스</div>
+    <div class="row1"><span class="name">4kg <span style="color:var(--sub);font-weight:700">(특)</span></span><span class="price">40,000원</span></div>
+    <div class="meta">말랑이 백도 · 14~17과 · 최대 3박스</div>
     <div class="row2">
       <span class="free">무료배송</span>
       <div class="qty">
@@ -657,31 +664,32 @@
   <div class="sec-head">
     <div class="kicker">Season</div>
     <h2>올여름 복숭아 순서 🍑</h2>
-    <p>차수마다 품종이 달라요. 놓치면 다음 여름까지 기다려야 해요.</p>
+    <p>품종·시기는 <b>날씨(장마·작황)에 따라 계속 바뀔 수 있어요.</b><br>아래는 예정 순서예요.</p>
   </div>
   <div class="roadmap">
-    <div class="rm">
-      <div class="dot">🍑</div>
-      <div>
-        <div class="t">백도 말랑이 <span class="tag">7/20 순차발송</span></div>
-        <div class="d">3kg 12–15과 30,000원 · 3.5kg 특특 8–11과 35,000원 · 4kg 14–17과 40,000원</div>
-      </div>
-    </div>
     <div class="rm soon">
       <div class="dot">🍑</div>
       <div>
         <div class="t">황도 말랑이 <span class="tag">오늘 선착순</span></div>
-        <div class="d">비 그친 후 순차 발송 · 10박스 한정 · 3kg 13과 내외 30,000원</div>
+        <div class="d">비 그친 후 순차 발송 · 10박스 한정<br>3kg (특) 13과 내외 · 30,000원</div>
+      </div>
+    </div>
+    <div class="rm">
+      <div class="dot">🍑</div>
+      <div>
+        <div class="t">백도 말랑이 <span class="tag">7/20 순차발송</span></div>
+        <div class="d">3kg (특) 12~15과 · 30,000원<br>3.5kg (특특) 8~11과 · 35,000원<br>4kg (특) 14~17과 · 40,000원</div>
       </div>
     </div>
     <div class="rm later">
       <div class="dot">🍑</div>
       <div>
         <div class="t">백도 딱딱이</div>
-        <div class="d">이후 순차 예정 · 3kg 11과 내외 35,000원 · 4kg 15과 내외 40,000원</div>
+        <div class="d">이후 순차 예정<br>3kg (특특) 11과 내외 · 35,000원<br>4kg (특) 15과 내외 · 40,000원</div>
       </div>
     </div>
   </div>
+  <p class="rm-note">🌦 비가 오거나 작황에 따라 순서·발송일은 바뀔 수 있어요. 단톡방에서 그때그때 안내드릴게요.</p>
 </section>
 
 <!-- 후기 -->
@@ -755,10 +763,11 @@
   <div class="pop-bg" id="hwBg"></div>
   <div class="pop-card">
     <button class="pop-close" id="hwClose" type="button" aria-label="닫기">✕</button>
-    <span class="pop-eyebrow">🍑 내일까지 · 선착순 마감</span>
-    <div class="pop-title">황도 말랑이 3kg</div>
-    <div class="pop-price"><b>30,000원</b> · 무료배송 · 10박스 한정</div>
-    <div class="pop-left" id="hwLeft">지금 10박스 남았어요</div>
+    <span class="pop-eyebrow">🍑 올여름 복숭아, 첫 시작</span>
+    <div class="pop-title">선착순 황도 말랑이</div>
+    <div class="pop-sub">올해도 돌아온 복숭아,<br>그 문을 <b>황도 말랑이</b>로 엽니다.</div>
+    <div class="pop-price"><b>3kg · 30,000원</b> · 무료배송</div>
+    <div class="pop-left" id="hwLeft">10박스 한정 · 지금 10박스 남음</div>
     <button class="pop-cta" id="hwCta" type="button">황도 주문하기</button>
     <button class="pop-skip" id="hwSkip" type="button">백도도 보러가기</button>
   </div>
@@ -835,6 +844,7 @@
      · HWANGDO_LEFT: 남은 박스 수(수동) — 바뀌면 이 숫자만 고치면 돼요. */
   var HWANGDO_UNTIL = new Date('2026-07-11T00:00:00+09:00').getTime();
   var HWANGDO_LEFT = 10;
+  var buyingHwangdo = false; /* 팝업 '황도 주문하기'로 들어오면 true → 주문이 황도로 표시됨 */
   (function initPop(){
     var pop = document.getElementById('hwPop');
     if(!pop) return;
@@ -842,7 +852,7 @@
     try { seen = localStorage.getItem('hwPopSeen') === '1'; } catch(e){}
     if(Date.now() < HWANGDO_UNTIL && !seen){
       var leftEl = document.getElementById('hwLeft');
-      if(leftEl) leftEl.textContent = '지금 ' + HWANGDO_LEFT + '박스 남았어요';
+      if(leftEl) leftEl.textContent = '10박스 한정 · 지금 ' + HWANGDO_LEFT + '박스 남음';
       pop.hidden = false;
     }
     function close(){ pop.hidden = true; try { localStorage.setItem('hwPopSeen','1'); } catch(e){} }
@@ -850,6 +860,7 @@
     document.getElementById('hwBg').addEventListener('click', close);
     document.getElementById('hwSkip').addEventListener('click', close);
     document.getElementById('hwCta').addEventListener('click', function(){
+      buyingHwangdo = true; /* 이 주문은 황도로 집계 */
       close();
       var target = document.getElementById('item3');
       if(target) target.scrollIntoView({ behavior:'smooth', block:'center' });
@@ -915,13 +926,15 @@
 
   function sum(){ return qty['3kg']*price['3kg'] + qty['3kgL']*price['3kgL'] + qty['4kg']*price['4kg']; }
   function boxes(){ return qty['3kg'] + qty['3kgL'] + qty['4kg']; }
+  function variety(){ return buyingHwangdo ? '황도' : '백도'; }
   function itemLine(){
     var a = [];
-    if(qty['3kg']>0) a.push('3kg×' + qty['3kg']);
-    if(qty['3kgL']>0) a.push('3kg큰알×' + qty['3kgL']);
-    if(qty['4kg']>0) a.push('4kg×' + qty['4kg']);
+    if(qty['3kg']>0) a.push('3kg특×' + qty['3kg']);
+    if(qty['3kgL']>0) a.push('3.5kg특특×' + qty['3kgL']);
+    if(qty['4kg']>0) a.push('4kg특×' + qty['4kg']);
     return a.join(' · ');
   }
+  function orderDetail(){ return variety() + ' · ' + itemLine(); }
   function formUrl(){
     if(!FORM_ENTRIES.qty3 && !FORM_ENTRIES.qty35 && !FORM_ENTRIES.qty4) return FORM_BASE;
     var p = [];
@@ -946,10 +959,11 @@
     document.getElementById('item4').classList.toggle('active', qty['4kg']>0);
   }
   function orderText(){
+    var v = variety();
     var lines = [];
-    if(qty['3kg']>0) lines.push('· 백도 3kg(13과 내외) x ' + qty['3kg'] + '박스');
-    if(qty['3kgL']>0) lines.push('· 3kg 큰 알(11과 내외) x ' + qty['3kgL'] + '박스');
-    if(qty['4kg']>0) lines.push('· 백도 4kg(15과 내외) x ' + qty['4kg'] + '박스');
+    if(qty['3kg']>0) lines.push('· ' + v + ' 3kg(특) x ' + qty['3kg'] + '박스');
+    if(qty['3kgL']>0) lines.push('· ' + v + ' 3.5kg(특특) x ' + qty['3kgL'] + '박스');
+    if(qty['4kg']>0) lines.push('· ' + v + ' 4kg(특) x ' + qty['4kg'] + '박스');
     if(!lines.length) return '';
     return '🍑 갑부농원 복숭아 주문\n' + lines.join('\n') +
            '\n합계: ' + sum().toLocaleString('ko-KR') + '원 (무료배송)';
@@ -967,7 +981,7 @@
 
   /* ── 주문 시트 로직 ── */
   /* entry 번호를 받으면 아래만 채우면 완전 자동 제출로 전환됨 */
-  var ENTRY = { buyer:'entry.367769986', recv:'entry.6087249', addr:'entry.285218618', qty3:'entry.1475999037', qty35:'', qty4:'entry.1402244674', payer:'entry.879250962' }; /* qty35(3kg 큰 알): 폼 질문 추가 후 entry 번호 넣기. 그전까지는 송금인 칸에 주문내역으로 함께 기록됨 */
+  var ENTRY = { buyer:'entry.367769986', recv:'entry.6087249', addr:'entry.285218618', qty3:'entry.1475999037', qty35:'', qty4:'entry.1402244674', payer:'entry.879250962', detail:'', variety:'' }; /* qty35(3.5kg 특특)·detail(주문내역)·variety(품종): 폼 질문 추가 후 entry 번호를 넣으면 전용 칸으로 집계됨. 그전까지는 송금인 칸에 함께 기록 */
   var FORM_ACTION = FORM_BASE.replace('/viewform','/formResponse');
   var sheet = document.getElementById('sheet');
   var pForm = document.getElementById('pForm');
@@ -1011,9 +1025,10 @@
       + '수령인: ' + val('fRecv') + '\n'
       + '주소: ' + val('fAddr') + ' ' + val('fAddr2') + '\n'
       + '연락처: ' + val('fPhone') + '\n'
-      + (qty['3kg']>0 ? '· 백도 3kg x ' + qty['3kg'] + '박스\n' : '')
-      + (qty['3kgL']>0 ? '· 3kg 큰 알 x ' + qty['3kgL'] + '박스\n' : '')
-      + (qty['4kg']>0 ? '· 백도 4kg x ' + qty['4kg'] + '박스\n' : '')
+      + '품종: ' + variety() + '\n'
+      + (qty['3kg']>0 ? '· 3kg(특) x ' + qty['3kg'] + '박스\n' : '')
+      + (qty['3kgL']>0 ? '· 3.5kg(특특) x ' + qty['3kgL'] + '박스\n' : '')
+      + (qty['4kg']>0 ? '· 4kg(특) x ' + qty['4kg'] + '박스\n' : '')
       + '송금인: ' + val('fPayer') + ' / ' + money();
   }
 
@@ -1037,7 +1052,10 @@
       p.append(ENTRY.qty3, qty['3kg'] + '박스');
       if(ENTRY.qty35) p.append(ENTRY.qty35, qty['3kgL'] + '박스');
       p.append(ENTRY.qty4, qty['4kg'] + '박스');
-      p.append(ENTRY.payer, val('fPayer') + ' / ' + money() + ' / ' + itemLine());
+      if(ENTRY.variety) p.append(ENTRY.variety, variety());        /* 품종 전용 칸(있으면) */
+      if(ENTRY.detail)  p.append(ENTRY.detail, orderDetail());      /* 주문내역 전용 칸(있으면) */
+      /* 전용 칸이 없어도 잃지 않도록 송금인 칸에 품종·주문내역을 함께 기록 */
+      p.append(ENTRY.payer, val('fPayer') + ' / ' + money() + ' / ' + orderDetail());
       fetch(FORM_ACTION, {method:'POST', mode:'no-cors', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:p.toString()})
         .then(showDone)
         .catch(function(){ fallbackSubmit(); });

@@ -290,6 +290,14 @@
     border-radius:999px;padding:2px 8px;
   }
   .item#itemH{border-color:rgba(255,90,54,.35);background:rgba(255,241,236,.5);}
+  /* 조기 마감(회색 처리) */
+  .item.soldout,.item#itemH.soldout{background:#F4F3F0;border-color:var(--line);}
+  .item.soldout .name,.item.soldout .price{color:var(--sub);}
+  .item.soldout .otag{background:#9A9A94;color:#fff;}
+  .item.soldout .meta{opacity:.6;}
+  .item.soldout .item-note{display:none;}
+  .item.soldout .free{color:var(--sub);}
+  .item.soldout .qty button:disabled{opacity:.4;cursor:not-allowed;border-color:var(--line);}
   .item .price{font-size:17px;font-weight:800;font-variant-numeric:tabular-nums;}
   .item .meta{font-size:13px;color:var(--sub);margin-top:3px;}
   .item .item-note{
@@ -976,8 +984,15 @@
   var q3 = document.getElementById('qty3');
   var qL = document.getElementById('qtyL');
   var q4 = document.getElementById('qty4');
-  /* 황도 마감(수동) 또는 마감 시각 지나면 황도 상품 숨김 */
-  if(HWANGDO_CLOSED || Date.now() >= HWANGDO_UNTIL){ var _ih=document.getElementById('itemH'); if(_ih) _ih.style.display='none'; }
+  /* 황도 마감(수동) 또는 마감 시각 지나면 황도 상품을 '조기 마감' 회색 처리 */
+  if(HWANGDO_CLOSED || Date.now() >= HWANGDO_UNTIL){
+    var _ih=document.getElementById('itemH');
+    if(_ih){
+      _ih.classList.add('soldout');
+      var _tag=_ih.querySelector('.otag'); if(_tag) _tag.textContent='조기 마감';
+      var _qb=_ih.querySelectorAll('.qty button'); for(var _k=0;_k<_qb.length;_k++){ _qb[_k].disabled=true; }
+    }
+  }
   var totalPrice = document.getElementById('totalPrice');
   var totalLabel = document.getElementById('totalLabel');
   var goForm = document.getElementById('goForm');

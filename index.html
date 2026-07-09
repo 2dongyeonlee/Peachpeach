@@ -607,7 +607,7 @@
 <body>
 <div class="bg" aria-hidden="true"></div>
 
-<div class="topbar">7월 20일 발송 시작 · <b>물량 소진 시 조기 마감</b></div>
+<div class="topbar" id="topbar">7월 20일 발송 시작 · <b>물량 소진 시 조기 마감</b></div>
 
 <!-- 히어로 -->
 <header class="hero">
@@ -623,7 +623,7 @@
 <!-- 카운트다운 -->
 <div class="count-wrap">
   <div class="count">
-    <div class="label">발송 시작까지<b>7월 20일 (월)</b></div>
+    <div class="label" id="cdLabel">발송 시작까지<b id="cdDate">7월 20일 (월)</b></div>
     <div class="timer"><span id="dday">D-00</span><small id="hms">00:00:00</small></div>
   </div>
   <div class="live-orders" id="liveOrders" hidden>
@@ -732,21 +732,21 @@
     <div class="rm soon">
       <div class="dot">🍑</div>
       <div>
-        <div class="t">황도 말랑이 <span class="tag">오늘 선착순</span></div>
+        <div class="t">황도 말랑이 <span class="tag" id="rmHwang">오늘 선착순</span></div>
         <div class="d">비 그친 후 순차 발송 · 마감돼도 주문 OK<br>3kg (특) 13과 내외 · 30,000원</div>
       </div>
     </div>
     <div class="rm">
       <div class="dot">🍑</div>
       <div>
-        <div class="t">백도 말랑이 <span class="tag">7/20 순차발송</span></div>
+        <div class="t">백도 말랑이 <span class="tag" id="rmBaek">7/20 순차발송</span></div>
         <div class="d">3kg (특) 12~15과 · 30,000원<br>4kg (특) 14~17과 · 40,000원<br>3.5kg (특특) 8~11과 · 35,000원</div>
       </div>
     </div>
     <div class="rm later">
       <div class="dot">🍑</div>
       <div>
-        <div class="t">백도 딱딱이</div>
+        <div class="t">백도 딱딱이 <span class="tag" id="rmDdak">오픈 예정</span></div>
         <div class="d">이후 순차 예정<br>3kg (특특) 11과 내외 · 35,000원<br>4kg (특) 15과 내외 · 40,000원</div>
       </div>
     </div>
@@ -873,8 +873,27 @@
 
 <script>
 (function(){
-  /* ── 카운트다운: 7/20 00:00 KST ── */
-  var target = new Date('2026-07-20T00:00:00+09:00').getTime();
+  /* ════════════════════════════════════════════════════════════
+     ▼▼▼ 시즌 일정 — 여기 3~4줄만 관리하면 사이트가 자동 반영돼요 ▼▼▼
+     · hwangdo   : 'open'(선착순 진행) | 'closed'(마감). 물량 소진 시 'closed'.
+     · hwangdoCloseDate : 이 날짜 지나면 안 고쳐도 자동 마감.
+     · baekdoShipDate   : 백도 말랑이 발송 시작일(이 날부터 '발송 중').
+     · ddakddak  : 'coming'(오픈 예정) | 'open'(주문 받는 중).
+     ════════════════════════════════════════════════════════════ */
+  var SEASON = {
+    hwangdo:          'closed',
+    hwangdoCloseDate: '2026-07-09',
+    baekdoShipDate:   '2026-07-20',
+    ddakddak:         'coming'
+  };
+  /* 오늘 날짜(한국시간 기준, YYYY-MM-DD) */
+  var TODAY = new Date(Date.now() + 9*3600000).toISOString().slice(0,10);
+  var shipDMS = SEASON.baekdoShipDate + 'T00:00:00+09:00';
+  var baekdoShipping = TODAY >= SEASON.baekdoShipDate;                 /* 백도 발송 시작됨? */
+  var hwangClosed = (SEASON.hwangdo === 'closed') || (TODAY > SEASON.hwangdoCloseDate); /* 황도 마감? */
+
+  /* ── 카운트다운: 백도 발송 시작일 00:00 KST ── */
+  var target = new Date(shipDMS).getTime();
   var dday = document.getElementById('dday');
   var hms = document.getElementById('hms');
   function pad(n){return n<10?'0'+n:''+n;}
@@ -895,20 +914,36 @@
   }
   tick();
 
-  /* ── 황도 팝업 ──
-     · HWANGDO_CLOSED = true → "황도 조기 마감" 안내 + 황도 상품 숨김.
-       다시 열 때: HWANGDO_CLOSED = false 로 바꾸고 HWANGDO_UNTIL(마감시각) 조정.
-     · HWANGDO_LEFT: 남은 박스 수(수동, 오픈 상태에서만 표시). */
-  var HWANGDO_CLOSED = true;
-  var HWANGDO_UNTIL = new Date('2026-07-10T00:00:00+09:00').getTime();
-  var HWANGDO_LEFT = 10;
+  /* ── 시즌 상태를 로드맵 딱지에 자동 반영 ── */
+  var HWANGDO_LEFT = 10; /* 황도 남은 박스 수(오픈 상태에서만 표시) */
+  (function applySeason(){
+    var setTag = function(id, txt){ var el=document.getElementById(id); if(el) el.textContent = txt; };
+    setTag('rmHwang', hwangClosed ? '마감' : '선착순 진행중');
+    setTag('rmBaek', baekdoShipping ? '발송 중' : '주문 받는 중');
+    setTag('rmDdak', SEASON.ddakddak === 'open' ? '주문 받는 중' : '오픈 예정');
+    /* 발송일 표시(예: 7월 20일 (월)) 자동 계산 */
+    var ks = new Date(new Date(shipDMS).getTime() + 9*3600000);
+    var wd = ['일','월','화','수','목','금','토'][ks.getUTCDay()];
+    var shipLabel = (ks.getUTCMonth()+1) + '월 ' + ks.getUTCDate() + '일 (' + wd + ')';
+    var cd = document.getElementById('cdDate'); if(cd) cd.textContent = shipLabel;
+    /* 상단 공지바 자동 전환 */
+    var tb = document.getElementById('topbar');
+    if(tb){
+      tb.innerHTML = baekdoShipping
+        ? '지금 <b>발송 중</b> · 주문 순서대로 나가는 중'
+        : shipLabel.replace(/\s*\([^)]*\)/,'') + ' 발송 시작 · <b>물량 소진 시 조기 마감</b>';
+    }
+    var cdl = document.getElementById('cdLabel');
+    if(cdl && baekdoShipping) cdl.innerHTML = '지금<b>발송 중</b>';
+  })();
+
+  /* ── 황도 팝업 (hwangClosed 에 따라 자동 전환) ── */
   (function initPop(){
     var pop = document.getElementById('hwPop');
     if(!pop) return;
     var seen = false;
     try { seen = sessionStorage.getItem('hwPopSeen') === '1'; } catch(e){} /* 세션(탭)마다 다시 노출 */
-    var active = HWANGDO_CLOSED || Date.now() < HWANGDO_UNTIL;
-    if(HWANGDO_CLOSED){
+    if(hwangClosed){
       document.getElementById('hwEyebrow').textContent = '🍑 잠깐 알려드려요';
       document.getElementById('hwTitle').innerHTML = '황도 말랑이<br>조기 마감됐어요 🙏';
       document.getElementById('hwSub').innerHTML = '선착순 황도가 예상보다 빨리 나갔어요.<br>백도는 지금 <b>바로 주문 가능</b>해요!';
@@ -921,15 +956,15 @@
       var leftEl = document.getElementById('hwLeft');
       if(leftEl) leftEl.textContent = '선착순 ' + HWANGDO_LEFT + '박스 · 1인 1박스';
     }
-    if(active && !seen){ pop.hidden = false; }
+    if(!seen){ pop.hidden = false; }
     function close(){ pop.hidden = true; try { sessionStorage.setItem('hwPopSeen','1'); } catch(e){} }
     document.getElementById('hwClose').addEventListener('click', close);
     document.getElementById('hwBg').addEventListener('click', close);
     document.getElementById('hwSkip').addEventListener('click', close);
     document.getElementById('hwCta').addEventListener('click', function(){
       close();
-      if(!HWANGDO_CLOSED && qty['hwang'] < 1){ qty['hwang'] = 1; render(); } /* 오픈 상태면 황도 1박스 담기 */
-      var target = document.getElementById(HWANGDO_CLOSED ? 'item3' : 'itemH');
+      if(!hwangClosed && qty['hwang'] < 1){ qty['hwang'] = 1; render(); } /* 오픈 상태면 황도 1박스 담기 */
+      var target = document.getElementById(hwangClosed ? 'item3' : 'itemH');
       if(target) target.scrollIntoView({ behavior:'smooth', block:'center' });
     });
   })();
@@ -984,8 +1019,8 @@
   var q3 = document.getElementById('qty3');
   var qL = document.getElementById('qtyL');
   var q4 = document.getElementById('qty4');
-  /* 황도 마감(수동) 또는 마감 시각 지나면 황도 상품을 '조기 마감' 회색 처리 */
-  if(HWANGDO_CLOSED || Date.now() >= HWANGDO_UNTIL){
+  /* 황도 마감이면 상품을 '조기 마감' 회색 처리 (hwangClosed = 날짜/상태 자동 판단) */
+  if(hwangClosed){
     var _ih=document.getElementById('itemH');
     if(_ih){
       _ih.classList.add('soldout');

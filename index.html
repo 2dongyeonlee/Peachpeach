@@ -759,7 +759,7 @@
   /* ── 실시간 주문 개수 ──
      기본: 무설정 자동 카운터(Abacus)로 '페이지에서 완료된 주문 수'를 셉니다.
      정확한 시트 개수를 쓰려면, 배포한 Apps Script /exec 주소를 ORDER_COUNT_URL 에 넣으세요. */
-  var ORDER_COUNT_URL = '';              /* 있으면 우선 사용(정확한 시트 개수) */
+  var ORDER_COUNT_URL = 'https://script.google.com/macros/s/AKfycbwmn1WF1PmscxPg61eNtJR7jrXOInuB3yPjj2cdMjxpfLm_tF87A08qxy6RU_fiFWp3wg/exec'; /* 구글 시트 실제 주문 건수 */
   var COUNTER_BASE = 0;                   /* 기존 주문 보정값 (원하면 숫자 조정) */
   var COUNTER_NS = 'gabbu-peach';
   var COUNTER_KEY = 'orders-2026';

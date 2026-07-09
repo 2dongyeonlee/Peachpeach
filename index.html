@@ -83,31 +83,52 @@
   }
   .topbar b{color:#FFE9DF;font-weight:800;}
 
-  /* ── 오늘 마감 긴급 배너 (황도) ── */
-  .flash{
-    margin:12px 16px 0;
-    padding:15px 16px;
-    border-radius:16px;
-    background:linear-gradient(135deg,#FF4E63 0%,#FF5A36 60%,#FF8A5C 100%);
-    color:#fff;
-    box-shadow:0 10px 26px rgba(255,78,99,.28);
+  /* ── 황도 첫방문 팝업 ── */
+  .pop{position:fixed;inset:0;z-index:120;display:flex;align-items:center;justify-content:center;padding:22px;}
+  .pop[hidden]{display:none;}
+  .pop-bg{position:absolute;inset:0;background:rgba(24,20,18,.5);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);}
+  .pop-card{
+    position:relative;width:100%;max-width:336px;
+    background:#FFFDFB;border-radius:24px;
+    padding:30px 26px 22px;text-align:center;
+    border:1px solid rgba(0,0,0,.04);
+    box-shadow:0 24px 64px rgba(0,0,0,.3);
+    animation:popIn .28s cubic-bezier(.2,.9,.3,1.2);
   }
-  .flash .fl-top{
-    display:flex;align-items:center;gap:7px;
-    font-size:12px;font-weight:800;letter-spacing:.02em;
-    color:#FFE1D6;text-transform:uppercase;
+  @keyframes popIn{from{opacity:0;transform:translateY(14px) scale(.96);}to{opacity:1;transform:none;}}
+  .pop-close{
+    position:absolute;top:14px;right:14px;border:none;background:#F2F0EB;
+    width:30px;height:30px;border-radius:50%;font-size:13px;color:#8A8A84;cursor:pointer;
   }
-  .flash .fl-top .live{
-    width:7px;height:7px;border-radius:50%;background:#fff;
-    box-shadow:0 0 0 0 rgba(255,255,255,.6);
-    animation:livePulse 1.8s ease-out infinite;
+  .pop-eyebrow{
+    display:inline-flex;align-items:center;gap:6px;
+    font-size:11.5px;font-weight:700;letter-spacing:.03em;
+    color:var(--accent);background:var(--accent-soft);
+    padding:6px 12px;border-radius:999px;
   }
-  .flash .fl-title{
+  .pop-title{
     font-family:'Paperlogy','Pretendard Variable',Pretendard,sans-serif;
-    font-size:19px;font-weight:800;letter-spacing:-0.02em;margin-top:7px;line-height:1.3;
+    font-size:25px;font-weight:800;letter-spacing:-0.02em;margin-top:16px;
   }
-  .flash .fl-sub{font-size:13px;color:#FFEFE9;margin-top:6px;line-height:1.55;}
-  .flash .fl-sub b{color:#fff;font-weight:800;}
+  .pop-price{font-size:14.5px;color:#4A4A46;margin-top:9px;font-weight:600;}
+  .pop-price b{color:var(--ink);font-weight:800;}
+  .pop-left{
+    display:inline-block;margin-top:16px;
+    font-size:13px;font-weight:700;color:var(--accent);
+    background:var(--accent-soft);border-radius:10px;padding:8px 14px;
+  }
+  .pop-cta{
+    display:block;width:100%;margin-top:20px;border:none;cursor:pointer;
+    background:linear-gradient(135deg,#FF8A5C,#FF5A36);color:#fff;
+    font-size:16px;font-weight:800;font-family:inherit;
+    padding:15px;border-radius:14px;box-shadow:0 8px 20px rgba(255,90,54,.28);
+  }
+  .pop-cta:active{transform:scale(.98);}
+  .pop-skip{
+    margin-top:12px;background:none;border:none;cursor:pointer;font-family:inherit;
+    font-size:13px;font-weight:600;color:var(--sub);
+    text-decoration:underline;text-underline-offset:3px;
+  }
 
   /* ── 히어로 ── */
   .hero{padding:52px 24px 40px;}
@@ -533,13 +554,6 @@
 
 <div class="topbar">7월 20일 발송 시작 · <b>물량 소진 시 조기 마감</b></div>
 
-<!-- 오늘 마감 긴급 배너 (황도) -->
-<div class="flash">
-  <div class="fl-top"><span class="live" aria-hidden="true"></span>오늘 저녁까지 · 선착순 마감</div>
-  <div class="fl-title">🍑 황도 말랑이 3kg · 30,000원<br>선착순 <b>10박스 한정</b></div>
-  <div class="fl-sub"><b>입금순</b>으로 마감돼요 (물량 안 되면 따는 대로 순차 발송).<br>주문서 제출 후 단톡방에 <b>“황도”</b>라고 남겨주세요.</div>
-</div>
-
 <!-- 히어로 -->
 <header class="hero">
   <span class="eyebrow">🍑 여름마다 돌아오는 그 맛</span>
@@ -736,6 +750,20 @@
   갑부농원 직송 · 조치원 복숭아
 </footer>
 
+<!-- 황도 첫방문 팝업 -->
+<div class="pop" id="hwPop" hidden>
+  <div class="pop-bg" id="hwBg"></div>
+  <div class="pop-card">
+    <button class="pop-close" id="hwClose" type="button" aria-label="닫기">✕</button>
+    <span class="pop-eyebrow">🍑 내일까지 · 선착순 마감</span>
+    <div class="pop-title">황도 말랑이 3kg</div>
+    <div class="pop-price"><b>30,000원</b> · 무료배송 · 10박스 한정</div>
+    <div class="pop-left" id="hwLeft">지금 10박스 남았어요</div>
+    <button class="pop-cta" id="hwCta" type="button">황도 주문하기</button>
+    <button class="pop-skip" id="hwSkip" type="button">백도도 보러가기</button>
+  </div>
+</div>
+
 <!-- 주문 입력 시트 -->
 <div class="sheet" id="sheet" hidden>
   <div class="sheet-bg" id="sheetBg"></div>
@@ -801,6 +829,32 @@
     setTimeout(tick, 1000);
   }
   tick();
+
+  /* ── 황도 첫방문 팝업 ──
+     · HWANGDO_UNTIL 시각 전까지만 노출(내일까지). 지나면 자동으로 안 뜸.
+     · HWANGDO_LEFT: 남은 박스 수(수동) — 바뀌면 이 숫자만 고치면 돼요. */
+  var HWANGDO_UNTIL = new Date('2026-07-11T00:00:00+09:00').getTime();
+  var HWANGDO_LEFT = 10;
+  (function initPop(){
+    var pop = document.getElementById('hwPop');
+    if(!pop) return;
+    var seen = false;
+    try { seen = localStorage.getItem('hwPopSeen') === '1'; } catch(e){}
+    if(Date.now() < HWANGDO_UNTIL && !seen){
+      var leftEl = document.getElementById('hwLeft');
+      if(leftEl) leftEl.textContent = '지금 ' + HWANGDO_LEFT + '박스 남았어요';
+      pop.hidden = false;
+    }
+    function close(){ pop.hidden = true; try { localStorage.setItem('hwPopSeen','1'); } catch(e){} }
+    document.getElementById('hwClose').addEventListener('click', close);
+    document.getElementById('hwBg').addEventListener('click', close);
+    document.getElementById('hwSkip').addEventListener('click', close);
+    document.getElementById('hwCta').addEventListener('click', function(){
+      close();
+      var target = document.getElementById('item3');
+      if(target) target.scrollIntoView({ behavior:'smooth', block:'center' });
+    });
+  })();
 
   /* ── 실시간 주문 개수 ──
      기본: 무설정 자동 카운터(Abacus)로 '페이지에서 완료된 주문 수'를 셉니다.

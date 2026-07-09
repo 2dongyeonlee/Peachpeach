@@ -953,7 +953,7 @@
 
   /* ── 폼 연동 설정: entry 번호를 받으면 여기만 채우면 완전 연동됨 ── */
   var FORM_BASE = 'https://docs.google.com/forms/d/e/1FAIpQLSe6js7fVaEZGCjnm-mlFn5JmZpMLBTXfFDYSBZ1E-zZ2ReZwA/viewform';
-  var FORM_ENTRIES = { qty3:'entry.1475999037', qty35:'', qty4:'entry.1402244674' }; // qty35(3kg 큰 알 35,000): 폼 질문 추가 후 entry 번호 넣기
+  var FORM_ENTRIES = { hwang:'entry.1750455373', qty3:'entry.1475999037', qty4:'entry.1402244674', qty35:'entry.216000600' };
 
   function sum(){ return qty['hwang']*price['hwang'] + qty['3kg']*price['3kg'] + qty['3kgL']*price['3kgL'] + qty['4kg']*price['4kg']; }
   function boxes(){ return qty['hwang'] + qty['3kg'] + qty['3kgL'] + qty['4kg']; }
@@ -967,11 +967,12 @@
   }
   function orderDetail(){ return itemLine(); }
   function formUrl(){
-    if(!FORM_ENTRIES.qty3 && !FORM_ENTRIES.qty35 && !FORM_ENTRIES.qty4) return FORM_BASE;
     var p = [];
+    if(FORM_ENTRIES.hwang) p.push(FORM_ENTRIES.hwang+'='+encodeURIComponent(qty['hwang']+'박스'));
     if(FORM_ENTRIES.qty3) p.push(FORM_ENTRIES.qty3+'='+encodeURIComponent(qty['3kg']+'박스'));
-    if(FORM_ENTRIES.qty35) p.push(FORM_ENTRIES.qty35+'='+encodeURIComponent(qty['3kgL']+'박스'));
     if(FORM_ENTRIES.qty4) p.push(FORM_ENTRIES.qty4+'='+encodeURIComponent(qty['4kg']+'박스'));
+    if(FORM_ENTRIES.qty35) p.push(FORM_ENTRIES.qty35+'='+encodeURIComponent(qty['3kgL']+'박스'));
+    if(!p.length) return FORM_BASE;
     return FORM_BASE + '?usp=pp_url&' + p.join('&');
   }
   function render(){
@@ -1015,7 +1016,12 @@
 
   /* ── 주문 시트 로직 ── */
   /* entry 번호를 받으면 아래만 채우면 완전 자동 제출로 전환됨 */
-  var ENTRY = { buyer:'entry.367769986', recv:'entry.6087249', addr:'entry.285218618', qty3:'entry.1475999037', qty35:'', qty4:'entry.1402244674', payer:'entry.879250962', detail:'', variety:'' }; /* qty35(3.5kg 특특)·detail(주문내역)·variety(품종): 폼 질문 추가 후 entry 번호를 넣으면 전용 칸으로 집계됨. 그전까지는 송금인 칸에 함께 기록 */
+  var ENTRY = {
+    buyer:'entry.367769986', recv:'entry.6087249', addr:'entry.285218618',
+    phone:'entry.2075265700', hwang:'entry.1750455373',
+    qty3:'entry.1475999037', qty4:'entry.1402244674', qty35:'entry.216000600',
+    payer:'entry.879250962', amount:'entry.1154068632'
+  };
   var FORM_ACTION = FORM_BASE.replace('/viewform','/formResponse');
   var sheet = document.getElementById('sheet');
   var pForm = document.getElementById('pForm');
@@ -1082,13 +1088,14 @@
       var p = new URLSearchParams();
       p.append(ENTRY.buyer, val('fBuyer'));
       p.append(ENTRY.recv, val('fRecv'));
-      p.append(ENTRY.addr, val('fAddr') + ' ' + val('fAddr2') + ' (연락처: ' + val('fPhone') + ')');
-      p.append(ENTRY.qty3, qty['3kg'] + '박스');
-      if(ENTRY.qty35) p.append(ENTRY.qty35, qty['3kgL'] + '박스');
-      p.append(ENTRY.qty4, qty['4kg'] + '박스');
-      if(ENTRY.detail)  p.append(ENTRY.detail, orderDetail());      /* 주문내역 전용 칸(있으면) */
-      /* 전용 칸이 없어도 잃지 않도록 송금인 칸에 품종·주문내역을 함께 기록 */
-      p.append(ENTRY.payer, val('fPayer') + ' / ' + money() + ' / ' + orderDetail());
+      p.append(ENTRY.addr, val('fAddr') + ' ' + val('fAddr2'));
+      p.append(ENTRY.phone, val('fPhone'));                 /* 연락처 전용 칸 */
+      p.append(ENTRY.hwang, qty['hwang'] + '박스');          /* 황도 수량 */
+      p.append(ENTRY.qty3, qty['3kg'] + '박스');             /* 3kg(특) */
+      p.append(ENTRY.qty4, qty['4kg'] + '박스');             /* 4kg(특) */
+      p.append(ENTRY.qty35, qty['3kgL'] + '박스');           /* 3.5kg(특특) */
+      p.append(ENTRY.payer, val('fPayer'));                  /* 송금인 성함 */
+      p.append(ENTRY.amount, String(sum()));                /* 송금 금액(숫자) */
       fetch(FORM_ACTION, {method:'POST', mode:'no-cors', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:p.toString()})
         .then(showDone)
         .catch(function(){ fallbackSubmit(); });

@@ -133,8 +133,14 @@
     font-size:13px;font-weight:700;color:var(--accent);
     background:var(--accent-soft);border-radius:10px;padding:8px 14px;
   }
+  .pop-note{
+    margin-top:14px;padding:11px 14px;
+    background:rgba(255,241,236,.7);border-radius:12px;
+    font-size:12.5px;font-weight:600;color:#8A5A4A;line-height:1.55;text-wrap:pretty;
+  }
+  .pop-note b{color:var(--accent);font-weight:800;}
   .pop-cta{
-    display:block;width:100%;margin-top:20px;border:none;cursor:pointer;
+    display:block;width:100%;margin-top:16px;border:none;cursor:pointer;
     background:linear-gradient(135deg,#FF8A5C,#FF5A36);color:#fff;
     font-size:16px;font-weight:800;font-family:inherit;
     padding:15px;border-radius:14px;box-shadow:0 8px 20px rgba(255,90,54,.28);
@@ -286,6 +292,11 @@
   .item#itemH{border-color:rgba(255,90,54,.35);background:rgba(255,241,236,.5);}
   .item .price{font-size:17px;font-weight:800;font-variant-numeric:tabular-nums;}
   .item .meta{font-size:13px;color:var(--sub);margin-top:3px;}
+  .item .item-note{
+    margin-top:8px;padding:8px 11px;border-radius:10px;
+    background:var(--accent-soft);
+    font-size:12px;font-weight:700;color:var(--accent);line-height:1.5;
+  }
   .item .row2{
     display:flex;justify-content:space-between;align-items:center;
     margin-top:16px;padding-top:14px;border-top:1px solid var(--line);
@@ -643,6 +654,7 @@
   <div class="item" id="itemH">
     <div class="row1"><span class="name">황도 말랑이 3kg <span class="otag">🔥 선착순</span></span><span class="price">30,000원</span></div>
     <div class="meta">여름 첫 복숭아 · 13과 내외 · 선착순 · 1인 1박스</div>
+    <div class="item-note">🚚 10박스 넘어도 주문 OK · 수확되는 대로 바로 발송</div>
     <div class="row2">
       <span class="free">무료배송</span>
       <div class="qty">
@@ -705,7 +717,7 @@
       <div class="dot">🍑</div>
       <div>
         <div class="t">황도 말랑이 <span class="tag">오늘 선착순</span></div>
-        <div class="d">비 그친 후 순차 발송 · 10박스 한정<br>3kg (특) 13과 내외 · 30,000원</div>
+        <div class="d">비 그친 후 순차 발송 · 마감돼도 주문 OK<br>3kg (특) 13과 내외 · 30,000원</div>
       </div>
     </div>
     <div class="rm">
@@ -789,6 +801,7 @@
     <div class="pop-sub">올해는 <b>선착순 황도 말랑이</b>로<br>시작합니다!</div>
     <div class="pop-price"><b>3kg · 30,000원</b> · 무료배송</div>
     <div class="pop-left" id="hwLeft">선착순 10박스 · 1인 1박스</div>
+    <div class="pop-note">🚚 10박스 넘어도 <b>주문 받아둬요!</b><br>수확되는 대로 <b>바로바로 보내드려요.</b></div>
     <button class="pop-cta" id="hwCta" type="button">황도 주문하기</button>
     <button class="pop-skip" id="hwSkip" type="button">백도도 보러가기</button>
   </div>

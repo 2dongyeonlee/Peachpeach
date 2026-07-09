@@ -271,6 +271,13 @@
   .item.active{border-color:var(--ink);}
   .item .row1{display:flex;justify-content:space-between;align-items:baseline;}
   .item .name{font-size:17px;font-weight:800;}
+  .item .otag{
+    display:inline-block;margin-left:6px;vertical-align:2px;
+    font-size:10.5px;font-weight:800;color:#fff;
+    background:linear-gradient(135deg,#FF5A36,#FF4E63);
+    border-radius:999px;padding:2px 8px;
+  }
+  .item#itemH{border-color:rgba(255,90,54,.35);background:rgba(255,241,236,.5);}
   .item .price{font-size:17px;font-weight:800;font-variant-numeric:tabular-nums;}
   .item .meta{font-size:13px;color:var(--sub);margin-top:3px;}
   .item .row2{
@@ -627,6 +634,19 @@
     <p>고르면 아래 주문 버튼에 합계가 바로 반영돼요.</p>
   </div>
 
+  <div class="item" id="itemH">
+    <div class="row1"><span class="name">황도 말랑이 3kg <span class="otag">🔥 선착순</span></span><span class="price">30,000원</span></div>
+    <div class="meta">여름 첫 복숭아 · 13과 내외 · 10박스 한정</div>
+    <div class="row2">
+      <span class="free">무료배송</span>
+      <div class="qty">
+        <button type="button" data-item="hwang" data-d="-1" aria-label="황도 3kg 수량 줄이기">−</button>
+        <span class="num" id="qtyH">0</span>
+        <button type="button" data-item="hwang" data-d="1" aria-label="황도 3kg 수량 늘리기">+</button>
+      </div>
+    </div>
+  </div>
+
   <div class="item" id="item3">
     <div class="row1"><span class="name">3kg <span style="color:var(--sub);font-weight:700">(특)</span></span><span class="price">30,000원</span></div>
     <div class="meta">말랑이 백도 · 12~15과 · 최대 3박스</div>
@@ -852,7 +872,6 @@
      · HWANGDO_LEFT: 남은 박스 수(수동) — 바뀌면 이 숫자만 고치면 돼요. */
   var HWANGDO_UNTIL = new Date('2026-07-11T00:00:00+09:00').getTime();
   var HWANGDO_LEFT = 10;
-  var buyingHwangdo = false; /* 팝업 '황도 주문하기'로 들어오면 true → 주문이 황도로 표시됨 */
   (function initPop(){
     var pop = document.getElementById('hwPop');
     if(!pop) return;
@@ -868,9 +887,10 @@
     document.getElementById('hwBg').addEventListener('click', close);
     document.getElementById('hwSkip').addEventListener('click', close);
     document.getElementById('hwCta').addEventListener('click', function(){
-      buyingHwangdo = true; /* 이 주문은 황도로 집계 */
       close();
-      var target = document.getElementById('item3');
+      if(qty['hwang'] < 3) qty['hwang'] += 1; /* 황도 1박스 담기 */
+      render();
+      var target = document.getElementById('itemH');
       if(target) target.scrollIntoView({ behavior:'smooth', block:'center' });
     });
   })();
@@ -919,11 +939,14 @@
   })();
 
   /* ── 수량/합계 ── */
-  var qty = {'3kg':0,'3kgL':0,'4kg':0};
-  var price = {'3kg':30000,'3kgL':35000,'4kg':40000};
+  var qty = {'hwang':0,'3kg':0,'3kgL':0,'4kg':0};
+  var price = {'hwang':30000,'3kg':30000,'3kgL':35000,'4kg':40000};
+  var qH = document.getElementById('qtyH');
   var q3 = document.getElementById('qty3');
   var qL = document.getElementById('qtyL');
   var q4 = document.getElementById('qty4');
+  /* 황도 마감 시각이 지나면 황도 상품은 자동으로 숨김 */
+  if(Date.now() >= HWANGDO_UNTIL){ var _ih=document.getElementById('itemH'); if(_ih) _ih.style.display='none'; }
   var totalPrice = document.getElementById('totalPrice');
   var totalLabel = document.getElementById('totalLabel');
   var goForm = document.getElementById('goForm');
@@ -932,17 +955,17 @@
   var FORM_BASE = 'https://docs.google.com/forms/d/e/1FAIpQLSe6js7fVaEZGCjnm-mlFn5JmZpMLBTXfFDYSBZ1E-zZ2ReZwA/viewform';
   var FORM_ENTRIES = { qty3:'entry.1475999037', qty35:'', qty4:'entry.1402244674' }; // qty35(3kg 큰 알 35,000): 폼 질문 추가 후 entry 번호 넣기
 
-  function sum(){ return qty['3kg']*price['3kg'] + qty['3kgL']*price['3kgL'] + qty['4kg']*price['4kg']; }
-  function boxes(){ return qty['3kg'] + qty['3kgL'] + qty['4kg']; }
-  function variety(){ return buyingHwangdo ? '황도' : '백도'; }
+  function sum(){ return qty['hwang']*price['hwang'] + qty['3kg']*price['3kg'] + qty['3kgL']*price['3kgL'] + qty['4kg']*price['4kg']; }
+  function boxes(){ return qty['hwang'] + qty['3kg'] + qty['3kgL'] + qty['4kg']; }
   function itemLine(){
     var a = [];
-    if(qty['3kg']>0) a.push('3kg특×' + qty['3kg']);
-    if(qty['4kg']>0) a.push('4kg특×' + qty['4kg']);
-    if(qty['3kgL']>0) a.push('3.5kg특특×' + qty['3kgL']);
+    if(qty['hwang']>0) a.push('황도3kg×' + qty['hwang']);
+    if(qty['3kg']>0) a.push('백도3kg특×' + qty['3kg']);
+    if(qty['4kg']>0) a.push('백도4kg특×' + qty['4kg']);
+    if(qty['3kgL']>0) a.push('백도3.5kg특특×' + qty['3kgL']);
     return a.join(' · ');
   }
-  function orderDetail(){ return variety() + ' · ' + itemLine(); }
+  function orderDetail(){ return itemLine(); }
   function formUrl(){
     if(!FORM_ENTRIES.qty3 && !FORM_ENTRIES.qty35 && !FORM_ENTRIES.qty4) return FORM_BASE;
     var p = [];
@@ -952,6 +975,7 @@
     return FORM_BASE + '?usp=pp_url&' + p.join('&');
   }
   function render(){
+    if(qH) qH.textContent = qty['hwang'];
     q3.textContent = qty['3kg'];
     qL.textContent = qty['3kgL'];
     q4.textContent = qty['4kg'];
@@ -962,16 +986,17 @@
     goForm.setAttribute('aria-disabled', boxes()===0 ? 'true' : 'false');
     goForm.textContent = boxes()>0 ? '이대로 주문하기' : '주문서 작성';
     goForm.href = boxes()>0 ? formUrl() : '#';
+    var ih=document.getElementById('itemH'); if(ih) ih.classList.toggle('active', qty['hwang']>0);
     document.getElementById('item3').classList.toggle('active', qty['3kg']>0);
     document.getElementById('itemL').classList.toggle('active', qty['3kgL']>0);
     document.getElementById('item4').classList.toggle('active', qty['4kg']>0);
   }
   function orderText(){
-    var v = variety();
     var lines = [];
-    if(qty['3kg']>0) lines.push('· ' + v + ' 3kg(특) x ' + qty['3kg'] + '박스');
-    if(qty['4kg']>0) lines.push('· ' + v + ' 4kg(특) x ' + qty['4kg'] + '박스');
-    if(qty['3kgL']>0) lines.push('· ' + v + ' 3.5kg(특특) x ' + qty['3kgL'] + '박스');
+    if(qty['hwang']>0) lines.push('· 황도 말랑이 3kg x ' + qty['hwang'] + '박스');
+    if(qty['3kg']>0) lines.push('· 백도 3kg(특) x ' + qty['3kg'] + '박스');
+    if(qty['4kg']>0) lines.push('· 백도 4kg(특) x ' + qty['4kg'] + '박스');
+    if(qty['3kgL']>0) lines.push('· 백도 3.5kg(특특) x ' + qty['3kgL'] + '박스');
     if(!lines.length) return '';
     return '🍑 갑부농원 복숭아 주문\n' + lines.join('\n') +
            '\n합계: ' + sum().toLocaleString('ko-KR') + '원 (무료배송)';
@@ -1033,10 +1058,10 @@
       + '수령인: ' + val('fRecv') + '\n'
       + '주소: ' + val('fAddr') + ' ' + val('fAddr2') + '\n'
       + '연락처: ' + val('fPhone') + '\n'
-      + '품종: ' + variety() + '\n'
-      + (qty['3kg']>0 ? '· 3kg(특) x ' + qty['3kg'] + '박스\n' : '')
-      + (qty['4kg']>0 ? '· 4kg(특) x ' + qty['4kg'] + '박스\n' : '')
-      + (qty['3kgL']>0 ? '· 3.5kg(특특) x ' + qty['3kgL'] + '박스\n' : '')
+      + (qty['hwang']>0 ? '· 황도 3kg x ' + qty['hwang'] + '박스\n' : '')
+      + (qty['3kg']>0 ? '· 백도 3kg(특) x ' + qty['3kg'] + '박스\n' : '')
+      + (qty['4kg']>0 ? '· 백도 4kg(특) x ' + qty['4kg'] + '박스\n' : '')
+      + (qty['3kgL']>0 ? '· 백도 3.5kg(특특) x ' + qty['3kgL'] + '박스\n' : '')
       + '송금인: ' + val('fPayer') + ' / ' + money();
   }
 
@@ -1060,7 +1085,6 @@
       p.append(ENTRY.qty3, qty['3kg'] + '박스');
       if(ENTRY.qty35) p.append(ENTRY.qty35, qty['3kgL'] + '박스');
       p.append(ENTRY.qty4, qty['4kg'] + '박스');
-      if(ENTRY.variety) p.append(ENTRY.variety, variety());        /* 품종 전용 칸(있으면) */
       if(ENTRY.detail)  p.append(ENTRY.detail, orderDetail());      /* 주문내역 전용 칸(있으면) */
       /* 전용 칸이 없어도 잃지 않도록 송금인 칸에 품종·주문내역을 함께 기록 */
       p.append(ENTRY.payer, val('fPayer') + ' / ' + money() + ' / ' + orderDetail());

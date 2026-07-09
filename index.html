@@ -768,7 +768,7 @@
   </div>
   <details>
     <summary>복숭아 언제 도착해요?</summary>
-    <div class="a">7월 20일부터 <b>주문 순서대로</b> 발송돼요.<br>발송 후 보통 1~2일이면 도착해요.</div>
+    <div class="a">7월 20일부터 <b>주문 순서대로</b> 발송돼요. 발송 후 보통 1~2일이면 도착해요.<br>발송되면 <b>문자로 택배 알림</b> 보내드려요.</div>
   </details>
   <details>
     <summary>받았는데 좀 딱딱해요</summary>
@@ -804,12 +804,12 @@
   <div class="pop-bg" id="hwBg"></div>
   <div class="pop-card">
     <button class="pop-close" id="hwClose" type="button" aria-label="닫기">✕</button>
-    <span class="pop-eyebrow">🍑 여름 첫 복숭아</span>
-    <div class="pop-title">올해도 돌아온<br>달달한 복숭아</div>
-    <div class="pop-sub">올해는 <b>선착순 황도 말랑이</b>로<br>시작합니다!</div>
-    <div class="pop-price"><b>3kg · 30,000원</b> · 무료배송</div>
+    <span class="pop-eyebrow" id="hwEyebrow">🍑 여름 첫 복숭아</span>
+    <div class="pop-title" id="hwTitle">올해도 돌아온<br>달달한 복숭아</div>
+    <div class="pop-sub" id="hwSub">올해는 <b>선착순 황도 말랑이</b>로<br>시작합니다!</div>
+    <div class="pop-price" id="hwPrice"><b>3kg · 30,000원</b> · 무료배송</div>
     <div class="pop-left" id="hwLeft">선착순 10박스 · 1인 1박스</div>
-    <div class="pop-note">🚚 10박스 넘어도 <b>주문 받아둬요!</b><br>수확되는 대로 <b>바로바로 보내드려요.</b></div>
+    <div class="pop-note" id="hwNote">🚚 10박스 넘어도 <b>주문 받아둬요!</b><br>수확되는 대로 <b>바로바로 보내드려요.</b></div>
     <button class="pop-cta" id="hwCta" type="button">황도 주문하기</button>
     <button class="pop-skip" id="hwSkip" type="button">백도도 보러가기</button>
   </div>
@@ -833,7 +833,7 @@
       </label>
       <label>수령인 연락처<input id="fPhone" inputmode="tel" placeholder="010-0000-0000"></label>
       <label>송금인 성함<input id="fPayer" placeholder="카카오페이 보내는 분 이름"></label>
-      <label>입금 받는 분 (카카오페이)
+      <label>입금 받는 분 <span style="color:var(--sub);font-weight:600">(카카오페이 이용 시 · 선택)</span>
         <div class="pay-to" id="payTo">
           <button type="button" class="pt-btn" data-pay="이동연">이동연</button>
           <button type="button" class="pt-btn" data-pay="류태희">류태희</button>
@@ -887,30 +887,41 @@
   }
   tick();
 
-  /* ── 황도 첫방문 팝업 ──
-     · HWANGDO_UNTIL 시각 전까지만 노출(내일까지). 지나면 자동으로 안 뜸.
-     · HWANGDO_LEFT: 남은 박스 수(수동) — 바뀌면 이 숫자만 고치면 돼요. */
-  var HWANGDO_UNTIL = new Date('2026-07-10T00:00:00+09:00').getTime(); /* 오늘 밤 지나면 황도 팝업·상품 자동 종료 */
+  /* ── 황도 팝업 ──
+     · HWANGDO_CLOSED = true → "황도 조기 마감" 안내 + 황도 상품 숨김.
+       다시 열 때: HWANGDO_CLOSED = false 로 바꾸고 HWANGDO_UNTIL(마감시각) 조정.
+     · HWANGDO_LEFT: 남은 박스 수(수동, 오픈 상태에서만 표시). */
+  var HWANGDO_CLOSED = true;
+  var HWANGDO_UNTIL = new Date('2026-07-10T00:00:00+09:00').getTime();
   var HWANGDO_LEFT = 10;
   (function initPop(){
     var pop = document.getElementById('hwPop');
     if(!pop) return;
     var seen = false;
     try { seen = sessionStorage.getItem('hwPopSeen') === '1'; } catch(e){} /* 세션(탭)마다 다시 노출 */
-    if(Date.now() < HWANGDO_UNTIL && !seen){
+    var active = HWANGDO_CLOSED || Date.now() < HWANGDO_UNTIL;
+    if(HWANGDO_CLOSED){
+      document.getElementById('hwEyebrow').textContent = '🍑 잠깐 알려드려요';
+      document.getElementById('hwTitle').innerHTML = '황도 말랑이<br>조기 마감됐어요 🙏';
+      document.getElementById('hwSub').innerHTML = '선착순 황도가 예상보다 빨리 나갔어요.<br>백도는 지금 <b>바로 주문 가능</b>해요!';
+      document.getElementById('hwPrice').style.display = 'none';
+      document.getElementById('hwLeft').style.display = 'none';
+      document.getElementById('hwNote').innerHTML = '🔔 황도·딱딱이 복숭아 다시 열리면 알려드려요.<br>🚚 배송 시작되면 <b>문자로 택배 알림</b> 보내드려요.';
+      document.getElementById('hwCta').textContent = '백도 주문하러 가기';
+      document.getElementById('hwSkip').textContent = '그냥 둘러보기';
+    } else {
       var leftEl = document.getElementById('hwLeft');
       if(leftEl) leftEl.textContent = '선착순 ' + HWANGDO_LEFT + '박스 · 1인 1박스';
-      pop.hidden = false;
     }
+    if(active && !seen){ pop.hidden = false; }
     function close(){ pop.hidden = true; try { sessionStorage.setItem('hwPopSeen','1'); } catch(e){} }
     document.getElementById('hwClose').addEventListener('click', close);
     document.getElementById('hwBg').addEventListener('click', close);
     document.getElementById('hwSkip').addEventListener('click', close);
     document.getElementById('hwCta').addEventListener('click', function(){
       close();
-      if(qty['hwang'] < 1) qty['hwang'] = 1; /* 황도 1박스 담기 (1인 1박스) */
-      render();
-      var target = document.getElementById('itemH');
+      if(!HWANGDO_CLOSED && qty['hwang'] < 1){ qty['hwang'] = 1; render(); } /* 오픈 상태면 황도 1박스 담기 */
+      var target = document.getElementById(HWANGDO_CLOSED ? 'item3' : 'itemH');
       if(target) target.scrollIntoView({ behavior:'smooth', block:'center' });
     });
   })();
@@ -965,8 +976,8 @@
   var q3 = document.getElementById('qty3');
   var qL = document.getElementById('qtyL');
   var q4 = document.getElementById('qty4');
-  /* 황도 마감 시각이 지나면 황도 상품은 자동으로 숨김 */
-  if(Date.now() >= HWANGDO_UNTIL){ var _ih=document.getElementById('itemH'); if(_ih) _ih.style.display='none'; }
+  /* 황도 마감(수동) 또는 마감 시각 지나면 황도 상품 숨김 */
+  if(HWANGDO_CLOSED || Date.now() >= HWANGDO_UNTIL){ var _ih=document.getElementById('itemH'); if(_ih) _ih.style.display='none'; }
   var totalPrice = document.getElementById('totalPrice');
   var totalLabel = document.getElementById('totalLabel');
   var goForm = document.getElementById('goForm');
@@ -1104,7 +1115,6 @@
     for(var i=0;i<need.length;i++){
       if(!val(need[i][0])){ alert(need[i][1] + '을(를) 입력해주세요!'); document.getElementById(need[i][0]).focus(); return; }
     }
-    if(!selectedPay){ alert('입금 받는 분(이동연/류태희)을 선택해주세요!'); return; }
     if(ENTRY.buyer){
       /* 완전 자동: 구글폼 응답 시트로 직접 제출 */
       var p = new URLSearchParams();
@@ -1116,8 +1126,8 @@
       p.append(ENTRY.qty3, qty['3kg'] + '박스');             /* 3kg(특) */
       p.append(ENTRY.qty4, qty['4kg'] + '박스');             /* 4kg(특) */
       p.append(ENTRY.qty35, qty['3kgL'] + '박스');           /* 3.5kg(특특) */
-      p.append(ENTRY.payer, ENTRY.payto ? val('fPayer') : (val('fPayer') + ' / 입금:' + selectedPay)); /* 전용 칸 없으면 송금인 칸에 함께 */
-      if(ENTRY.payto) p.append(ENTRY.payto, selectedPay);   /* 입금 받는 분 전용 칸(있으면) */
+      p.append(ENTRY.payer, (ENTRY.payto || !selectedPay) ? val('fPayer') : (val('fPayer') + ' / 입금:' + selectedPay)); /* 선택 시 송금인 칸에 함께 기록 */
+      if(ENTRY.payto && selectedPay) p.append(ENTRY.payto, selectedPay); /* 입금 받는 분 전용 칸(있으면) */
       p.append(ENTRY.amount, String(sum()));                /* 송금 금액(숫자) */
       fetch(FORM_ACTION, {method:'POST', mode:'no-cors', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:p.toString()})
         .then(showDone)
@@ -1164,17 +1174,20 @@
     var wrap = document.getElementById('kakaoBtns');
     if(!wrap) return;
     wrap.innerHTML = '';
-    var url = PAY_ACCOUNTS[selectedPay];
-    if(!url) return;
-    var a = document.createElement('a');
-    a.className = 'kakao-send';
-    a.href = url; a.target = '_blank'; a.rel = 'noopener';
-    a.textContent = '💛 ' + selectedPay + '님에게 카카오페이 송금';
-    a.addEventListener('click', function(){
-      /* 카카오페이엔 금액이 자동 입력되지 않으므로 먼저 복사해 둠 */
-      if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(String(sum())); }
+    /* 선택하면 그 한 명, 안 하면 두 명 모두 표시 (카카오페이 안 쓰면 그냥 무시) */
+    var names = selectedPay ? [selectedPay] : Object.keys(PAY_ACCOUNTS);
+    names.forEach(function(name){
+      var url = PAY_ACCOUNTS[name];
+      var a = document.createElement('a');
+      a.className = 'kakao-send';
+      a.href = url; a.target = '_blank'; a.rel = 'noopener';
+      a.textContent = '💛 ' + name + '님에게 카카오페이 송금';
+      a.addEventListener('click', function(){
+        /* 카카오페이엔 금액이 자동 입력되지 않으므로 먼저 복사해 둠 */
+        if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(String(sum())); }
+      });
+      wrap.appendChild(a);
     });
-    wrap.appendChild(a);
   }
 
   /* 단톡방 공유용 복사 */

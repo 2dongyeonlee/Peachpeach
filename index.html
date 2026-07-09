@@ -83,6 +83,32 @@
   }
   .topbar b{color:#FFE9DF;font-weight:800;}
 
+  /* ── 오늘 마감 긴급 배너 (황도) ── */
+  .flash{
+    margin:12px 16px 0;
+    padding:15px 16px;
+    border-radius:16px;
+    background:linear-gradient(135deg,#FF4E63 0%,#FF5A36 60%,#FF8A5C 100%);
+    color:#fff;
+    box-shadow:0 10px 26px rgba(255,78,99,.28);
+  }
+  .flash .fl-top{
+    display:flex;align-items:center;gap:7px;
+    font-size:12px;font-weight:800;letter-spacing:.02em;
+    color:#FFE1D6;text-transform:uppercase;
+  }
+  .flash .fl-top .live{
+    width:7px;height:7px;border-radius:50%;background:#fff;
+    box-shadow:0 0 0 0 rgba(255,255,255,.6);
+    animation:livePulse 1.8s ease-out infinite;
+  }
+  .flash .fl-title{
+    font-family:'Paperlogy','Pretendard Variable',Pretendard,sans-serif;
+    font-size:19px;font-weight:800;letter-spacing:-0.02em;margin-top:7px;line-height:1.3;
+  }
+  .flash .fl-sub{font-size:13px;color:#FFEFE9;margin-top:6px;line-height:1.55;}
+  .flash .fl-sub b{color:#fff;font-weight:800;}
+
   /* ── 히어로 ── */
   .hero{padding:52px 24px 40px;}
   .hero .eyebrow{
@@ -507,6 +533,13 @@
 
 <div class="topbar">7월 20일 발송 시작 · <b>물량 소진 시 조기 마감</b></div>
 
+<!-- 오늘 마감 긴급 배너 (황도) -->
+<div class="flash">
+  <div class="fl-top"><span class="live" aria-hidden="true"></span>오늘 저녁까지 · 선착순 마감</div>
+  <div class="fl-title">🍑 황도 말랑이 3kg · 30,000원<br>선착순 <b>10박스 한정</b></div>
+  <div class="fl-sub"><b>입금순</b>으로 마감돼요 (물량 안 되면 따는 대로 순차 발송).<br>주문서 제출 후 단톡방에 <b>“황도”</b>라고 남겨주세요.</div>
+</div>
+
 <!-- 히어로 -->
 <header class="hero">
   <span class="eyebrow">🍑 여름마다 돌아오는 그 맛</span>
@@ -567,7 +600,7 @@
 
   <div class="item" id="item3">
     <div class="row1"><span class="name">3kg 박스</span><span class="price">30,000원</span></div>
-    <div class="meta">말랑이 백도 특사이즈 · 13과 내외 · 최대 3박스</div>
+    <div class="meta">말랑이 백도 · 13과 내외 · 최대 3박스</div>
     <div class="row2">
       <span class="free">무료배송</span>
       <div class="qty">
@@ -578,9 +611,22 @@
     </div>
   </div>
 
+  <div class="item" id="itemL">
+    <div class="row1"><span class="name">3kg 큰 알</span><span class="price">35,000원</span></div>
+    <div class="meta">특특 큰 알 · 11과 내외 · 최대 3박스</div>
+    <div class="row2">
+      <span class="free">무료배송</span>
+      <div class="qty">
+        <button type="button" data-item="3kgL" data-d="-1" aria-label="3kg 큰 알 수량 줄이기">−</button>
+        <span class="num" id="qtyL">0</span>
+        <button type="button" data-item="3kgL" data-d="1" aria-label="3kg 큰 알 수량 늘리기">+</button>
+      </div>
+    </div>
+  </div>
+
   <div class="item" id="item4">
     <div class="row1"><span class="name">4kg 박스</span><span class="price">40,000원</span></div>
-    <div class="meta">말랑이 백도 특사이즈 · 15과 내외 · 최대 3박스</div>
+    <div class="meta">말랑이 백도 · 15과 내외 · 최대 3박스</div>
     <div class="row2">
       <span class="free">무료배송</span>
       <div class="qty">
@@ -601,24 +647,24 @@
   </div>
   <div class="roadmap">
     <div class="rm">
-      <div class="dot">1차</div>
+      <div class="dot">🍑</div>
       <div>
-        <div class="t">말랑이 백도 <span class="tag">지금 주문중</span></div>
-        <div class="d">3kg 13과 내외 30,000원 · 4kg 15과 내외 40,000원</div>
+        <div class="t">백도 말랑이 <span class="tag">7/20 순차발송</span></div>
+        <div class="d">3kg 12–15과 30,000원 · 3.5kg 특특 8–11과 35,000원 · 4kg 14–17과 40,000원</div>
       </div>
     </div>
     <div class="rm soon">
-      <div class="dot">2차</div>
+      <div class="dot">🍑</div>
       <div>
-        <div class="t">딱딱이 백도</div>
-        <div class="d">알이 굵어져요 · 3kg 11과 내외 35,000원 · 4kg 40,000원</div>
+        <div class="t">황도 말랑이 <span class="tag">오늘 선착순</span></div>
+        <div class="d">비 그친 후 순차 발송 · 10박스 한정 · 3kg 13과 내외 30,000원</div>
       </div>
     </div>
     <div class="rm later">
-      <div class="dot">3차</div>
+      <div class="dot">🍑</div>
       <div>
-        <div class="t">황도 외</div>
-        <div class="d">이후 순차 예정 · 상세는 추후 안내</div>
+        <div class="t">백도 딱딱이</div>
+        <div class="d">이후 순차 예정 · 3kg 11과 내외 35,000원 · 4kg 15과 내외 40,000원</div>
       </div>
     </div>
   </div>
@@ -800,9 +846,10 @@
   })();
 
   /* ── 수량/합계 ── */
-  var qty = {'3kg':0,'4kg':0};
-  var price = {'3kg':30000,'4kg':40000};
+  var qty = {'3kg':0,'3kgL':0,'4kg':0};
+  var price = {'3kg':30000,'3kgL':35000,'4kg':40000};
   var q3 = document.getElementById('qty3');
+  var qL = document.getElementById('qtyL');
   var q4 = document.getElementById('qty4');
   var totalPrice = document.getElementById('totalPrice');
   var totalLabel = document.getElementById('totalLabel');
@@ -810,19 +857,28 @@
 
   /* ── 폼 연동 설정: entry 번호를 받으면 여기만 채우면 완전 연동됨 ── */
   var FORM_BASE = 'https://docs.google.com/forms/d/e/1FAIpQLSe6js7fVaEZGCjnm-mlFn5JmZpMLBTXfFDYSBZ1E-zZ2ReZwA/viewform';
-  var FORM_ENTRIES = { qty3:'entry.1475999037', qty4:'entry.1402244674' }; // 수량 자동선택 연동 완료
+  var FORM_ENTRIES = { qty3:'entry.1475999037', qty35:'', qty4:'entry.1402244674' }; // qty35(3kg 큰 알 35,000): 폼 질문 추가 후 entry 번호 넣기
 
-  function sum(){ return qty['3kg']*price['3kg'] + qty['4kg']*price['4kg']; }
-  function boxes(){ return qty['3kg'] + qty['4kg']; }
+  function sum(){ return qty['3kg']*price['3kg'] + qty['3kgL']*price['3kgL'] + qty['4kg']*price['4kg']; }
+  function boxes(){ return qty['3kg'] + qty['3kgL'] + qty['4kg']; }
+  function itemLine(){
+    var a = [];
+    if(qty['3kg']>0) a.push('3kg×' + qty['3kg']);
+    if(qty['3kgL']>0) a.push('3kg큰알×' + qty['3kgL']);
+    if(qty['4kg']>0) a.push('4kg×' + qty['4kg']);
+    return a.join(' · ');
+  }
   function formUrl(){
-    if(!FORM_ENTRIES.qty3 && !FORM_ENTRIES.qty4) return FORM_BASE;
+    if(!FORM_ENTRIES.qty3 && !FORM_ENTRIES.qty35 && !FORM_ENTRIES.qty4) return FORM_BASE;
     var p = [];
     if(FORM_ENTRIES.qty3) p.push(FORM_ENTRIES.qty3+'='+encodeURIComponent(qty['3kg']+'박스'));
+    if(FORM_ENTRIES.qty35) p.push(FORM_ENTRIES.qty35+'='+encodeURIComponent(qty['3kgL']+'박스'));
     if(FORM_ENTRIES.qty4) p.push(FORM_ENTRIES.qty4+'='+encodeURIComponent(qty['4kg']+'박스'));
     return FORM_BASE + '?usp=pp_url&' + p.join('&');
   }
   function render(){
     q3.textContent = qty['3kg'];
+    qL.textContent = qty['3kgL'];
     q4.textContent = qty['4kg'];
     totalPrice.textContent = sum().toLocaleString('ko-KR') + '원';
     totalLabel.textContent = boxes()>0 ? '총 '+boxes()+'박스 · 무료배송' : '수량을 골라주세요';
@@ -832,12 +888,14 @@
     goForm.textContent = boxes()>0 ? '이대로 주문하기' : '주문서 작성';
     goForm.href = boxes()>0 ? formUrl() : '#';
     document.getElementById('item3').classList.toggle('active', qty['3kg']>0);
+    document.getElementById('itemL').classList.toggle('active', qty['3kgL']>0);
     document.getElementById('item4').classList.toggle('active', qty['4kg']>0);
   }
   function orderText(){
     var lines = [];
-    if(qty['3kg']>0) lines.push('· 말랑이 백도 3kg(13과 내외) x ' + qty['3kg'] + '박스');
-    if(qty['4kg']>0) lines.push('· 말랑이 백도 4kg(15과 내외) x ' + qty['4kg'] + '박스');
+    if(qty['3kg']>0) lines.push('· 백도 3kg(13과 내외) x ' + qty['3kg'] + '박스');
+    if(qty['3kgL']>0) lines.push('· 3kg 큰 알(11과 내외) x ' + qty['3kgL'] + '박스');
+    if(qty['4kg']>0) lines.push('· 백도 4kg(15과 내외) x ' + qty['4kg'] + '박스');
     if(!lines.length) return '';
     return '🍑 갑부농원 복숭아 주문\n' + lines.join('\n') +
            '\n합계: ' + sum().toLocaleString('ko-KR') + '원 (무료배송)';
@@ -855,7 +913,7 @@
 
   /* ── 주문 시트 로직 ── */
   /* entry 번호를 받으면 아래만 채우면 완전 자동 제출로 전환됨 */
-  var ENTRY = { buyer:'entry.367769986', recv:'entry.6087249', addr:'entry.285218618', qty3:'entry.1475999037', qty4:'entry.1402244674', payer:'entry.879250962' }; /* 전 항목 연동 완료 → 완전 자동 제출 */
+  var ENTRY = { buyer:'entry.367769986', recv:'entry.6087249', addr:'entry.285218618', qty3:'entry.1475999037', qty35:'', qty4:'entry.1402244674', payer:'entry.879250962' }; /* qty35(3kg 큰 알): 폼 질문 추가 후 entry 번호 넣기. 그전까지는 송금인 칸에 주문내역으로 함께 기록됨 */
   var FORM_ACTION = FORM_BASE.replace('/viewform','/formResponse');
   var sheet = document.getElementById('sheet');
   var pForm = document.getElementById('pForm');
@@ -899,8 +957,9 @@
       + '수령인: ' + val('fRecv') + '\n'
       + '주소: ' + val('fAddr') + ' ' + val('fAddr2') + '\n'
       + '연락처: ' + val('fPhone') + '\n'
-      + (qty['3kg']>0 ? '· 말랑이 백도 3kg x ' + qty['3kg'] + '박스\n' : '')
-      + (qty['4kg']>0 ? '· 말랑이 백도 4kg x ' + qty['4kg'] + '박스\n' : '')
+      + (qty['3kg']>0 ? '· 백도 3kg x ' + qty['3kg'] + '박스\n' : '')
+      + (qty['3kgL']>0 ? '· 3kg 큰 알 x ' + qty['3kgL'] + '박스\n' : '')
+      + (qty['4kg']>0 ? '· 백도 4kg x ' + qty['4kg'] + '박스\n' : '')
       + '송금인: ' + val('fPayer') + ' / ' + money();
   }
 
@@ -922,8 +981,9 @@
       p.append(ENTRY.recv, val('fRecv'));
       p.append(ENTRY.addr, val('fAddr') + ' ' + val('fAddr2') + ' (연락처: ' + val('fPhone') + ')');
       p.append(ENTRY.qty3, qty['3kg'] + '박스');
+      if(ENTRY.qty35) p.append(ENTRY.qty35, qty['3kgL'] + '박스');
       p.append(ENTRY.qty4, qty['4kg'] + '박스');
-      p.append(ENTRY.payer, val('fPayer') + ' / ' + money());
+      p.append(ENTRY.payer, val('fPayer') + ' / ' + money() + ' / ' + itemLine());
       fetch(FORM_ACTION, {method:'POST', mode:'no-cors', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:p.toString()})
         .then(showDone)
         .catch(function(){ fallbackSubmit(); });

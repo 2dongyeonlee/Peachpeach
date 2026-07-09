@@ -461,6 +461,14 @@
     padding:14px 16px;margin:4px 0 14px;font-size:14px;font-weight:700;
   }
   .pay-line b{font-size:19px;color:var(--accent);font-variant-numeric:tabular-nums;}
+  .pay-to{display:flex;gap:8px;margin-top:6px;}
+  .pay-to .pt-btn{
+    flex:1;border:1.5px solid var(--line);background:#fff;
+    border-radius:12px;padding:13px;font-size:15px;font-weight:800;font-family:inherit;
+    color:var(--ink);cursor:pointer;transition:border-color .12s ease,background .12s ease;
+  }
+  .pay-to .pt-btn.sel{border-color:var(--accent);background:var(--accent-soft);color:var(--accent);}
+  .pay-to .pt-btn:focus-visible{outline:2.5px solid var(--accent);outline-offset:2px;}
   .panel .submit{
     display:block;width:100%;border:none;cursor:pointer;
     background:linear-gradient(135deg,#FF8A5C,#FF5A36);color:#fff;
@@ -825,9 +833,15 @@
       </label>
       <label>수령인 연락처<input id="fPhone" inputmode="tel" placeholder="010-0000-0000"></label>
       <label>송금인 성함<input id="fPayer" placeholder="카카오페이 보내는 분 이름"></label>
+      <label>입금 받는 분 (카카오페이)
+        <div class="pay-to" id="payTo">
+          <button type="button" class="pt-btn" data-pay="이동연">이동연</button>
+          <button type="button" class="pt-btn" data-pay="류태희">류태희</button>
+        </div>
+      </label>
       <div class="pay-line"><span>송금할 금액</span><b id="pAmount">0원</b></div>
       <button class="submit" type="button" id="doOrder">주문 완료</button>
-      <p class="p-hint" id="pHint">주문 완료 후, 작년에 보냈던 카카오페이로 송금해주세요.<br>송금 확인 후 주문이 확정됩니다.</p>
+      <p class="p-hint" id="pHint">주문 완료 후, 위에서 고른 분의 카카오페이로 송금해주세요.<br>송금 확인 후 주문이 확정됩니다.</p>
     </div>
     <div class="p-done" id="pDone" hidden>
       <div class="check">✓</div>
@@ -1026,8 +1040,8 @@
     buyer:'entry.367769986', recv:'entry.6087249', addr:'entry.285218618',
     phone:'entry.2075265700', hwang:'entry.1750455373',
     qty3:'entry.1475999037', qty4:'entry.1402244674', qty35:'entry.216000600',
-    payer:'entry.879250962', amount:'entry.1154068632'
-  };
+    payer:'entry.879250962', amount:'entry.1154068632', payto:''
+  }; /* payto(입금 받는 분): 폼에 질문 추가 후 entry 번호를 넣으면 전용 칸으로. 그전까지는 송금인 칸에 함께 기록 */
   var FORM_ACTION = FORM_BASE.replace('/viewform','/formResponse');
   var sheet = document.getElementById('sheet');
   var pForm = document.getElementById('pForm');
@@ -1080,6 +1094,7 @@
 
   function showDone(){
     document.getElementById('dAmount').textContent = money();
+    renderKakaoBtn(); /* 선택한 입금 대상의 카카오페이 버튼만 표시 */
     pForm.hidden = true; pDone.hidden = false;
     bumpOrders(); /* 실시간 주문 카운터 +1 */
   }
@@ -1089,6 +1104,7 @@
     for(var i=0;i<need.length;i++){
       if(!val(need[i][0])){ alert(need[i][1] + '을(를) 입력해주세요!'); document.getElementById(need[i][0]).focus(); return; }
     }
+    if(!selectedPay){ alert('입금 받는 분(이동연/류태희)을 선택해주세요!'); return; }
     if(ENTRY.buyer){
       /* 완전 자동: 구글폼 응답 시트로 직접 제출 */
       var p = new URLSearchParams();
@@ -1100,7 +1116,8 @@
       p.append(ENTRY.qty3, qty['3kg'] + '박스');             /* 3kg(특) */
       p.append(ENTRY.qty4, qty['4kg'] + '박스');             /* 4kg(특) */
       p.append(ENTRY.qty35, qty['3kgL'] + '박스');           /* 3.5kg(특특) */
-      p.append(ENTRY.payer, val('fPayer'));                  /* 송금인 성함 */
+      p.append(ENTRY.payer, ENTRY.payto ? val('fPayer') : (val('fPayer') + ' / 입금:' + selectedPay)); /* 전용 칸 없으면 송금인 칸에 함께 */
+      if(ENTRY.payto) p.append(ENTRY.payto, selectedPay);   /* 입금 받는 분 전용 칸(있으면) */
       p.append(ENTRY.amount, String(sum()));                /* 송금 금액(숫자) */
       fetch(FORM_ACTION, {method:'POST', mode:'no-cors', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:p.toString()})
         .then(showDone)
@@ -1130,26 +1147,35 @@
     }
   });
 
-  /* ── 카카오페이 송금 버튼 (여기 배열에 추가하면 버튼이 늘어남) ── */
-  var KAKAO_PAY = [
-    { label:'LDY', url:'https://qr.kakaopay.com/Ej8om8541' },
-    { label:'RTH', url:'https://qr.kakaopay.com/Fes2Wef26' }
-  ];
-  (function buildKakao(){
+  /* ── 입금 받는 분(카카오페이 계정) ── */
+  var PAY_ACCOUNTS = {
+    '이동연':'https://qr.kakaopay.com/Ej8om8541',
+    '류태희':'https://qr.kakaopay.com/Fes2Wef26'
+  };
+  var selectedPay = '';
+  var payToBtns = document.querySelectorAll('#payTo .pt-btn');
+  for(var pi=0; pi<payToBtns.length; pi++){
+    payToBtns[pi].addEventListener('click', function(){
+      selectedPay = this.getAttribute('data-pay');
+      for(var j=0;j<payToBtns.length;j++){ payToBtns[j].classList.toggle('sel', payToBtns[j]===this); }
+    });
+  }
+  function renderKakaoBtn(){
     var wrap = document.getElementById('kakaoBtns');
     if(!wrap) return;
-    KAKAO_PAY.forEach(function(k){
-      var a = document.createElement('a');
-      a.className = 'kakao-send';
-      a.href = k.url; a.target = '_blank'; a.rel = 'noopener';
-      a.textContent = '💛 ' + k.label + '에게 카카오페이 송금';
-      a.addEventListener('click', function(){
-        /* 카카오페이엔 금액이 자동 입력되지 않으므로 먼저 복사해 둠 */
-        if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(String(sum())); }
-      });
-      wrap.appendChild(a);
+    wrap.innerHTML = '';
+    var url = PAY_ACCOUNTS[selectedPay];
+    if(!url) return;
+    var a = document.createElement('a');
+    a.className = 'kakao-send';
+    a.href = url; a.target = '_blank'; a.rel = 'noopener';
+    a.textContent = '💛 ' + selectedPay + '님에게 카카오페이 송금';
+    a.addEventListener('click', function(){
+      /* 카카오페이엔 금액이 자동 입력되지 않으므로 먼저 복사해 둠 */
+      if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(String(sum())); }
     });
-  })();
+    wrap.appendChild(a);
+  }
 
   /* 단톡방 공유용 복사 */
   document.getElementById('copyOrder').addEventListener('click',function(){

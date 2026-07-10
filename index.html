@@ -944,12 +944,12 @@
     var seen = false;
     try { seen = sessionStorage.getItem('hwPopSeen') === '1'; } catch(e){} /* 세션(탭)마다 다시 노출 */
     if(hwangClosed){
-      document.getElementById('hwEyebrow').textContent = '🍑 잠깐 알려드려요';
-      document.getElementById('hwTitle').innerHTML = '황도 말랑이<br>조기 마감됐어요 🙏';
-      document.getElementById('hwSub').innerHTML = '선착순 황도가 예상보다 빨리 나갔어요.<br>백도는 지금 <b>바로 주문 가능</b>해요!';
+      document.getElementById('hwEyebrow').textContent = '🍑 지금 주문 가능';
+      document.getElementById('hwTitle').innerHTML = '백도 말랑이<br>주문 받는 중!';
+      document.getElementById('hwSub').innerHTML = '선착순 황도는 마감됐지만,<br>백도 말랑이는 <b>지금 바로 주문</b>돼요!';
       document.getElementById('hwPrice').style.display = 'none';
       document.getElementById('hwLeft').style.display = 'none';
-      document.getElementById('hwNote').innerHTML = '🔔 황도·딱딱이 복숭아 다시 열리면 알려드려요.<br>🚚 배송 시작되면 <b>문자로 택배 알림</b> 보내드려요.';
+      document.getElementById('hwNote').innerHTML = '🚚 <b>황도</b>는 추가 주문분까지 <b>전량 출하 예정</b>이에요.<br>다음 주 초 도착 예정 · 안 오면 꼭 확인 요청해주세요!';
       document.getElementById('hwCta').textContent = '백도 주문하러 가기';
       document.getElementById('hwSkip').textContent = '그냥 둘러보기';
     } else {

@@ -1049,7 +1049,7 @@
     if(od){
       od.innerHTML = !baekdoClosed
         ? ('📅 1차 주문 <b>'+round1Full+'까지</b> · '+shipShort+'부터 순차 발송')
-        : (ddakOpen ? ('🗓 백도 딱딱이 주문 <b>'+ddakPeriodShort+'</b> · 물량 50박스 내외')
+        : (ddakOpen ? ''   /* 딱딱이 구분선(ddakDiv)이 이미 안내 → 중복 배너 숨김 */
           : (baekdoShipping ? ('📦 발송 중 · <b>'+arriveFull+' 도착 예정</b>') : '✅ 1차 주문 마감 · <b>다음 차수 곧 공지</b>'));
     }
     /* 상단 공지바 자동 전환 */

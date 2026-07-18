@@ -774,7 +774,7 @@
 
   <div class="item ddak" id="itemD3">
     <div class="row1"><span class="name">딱딱이 3kg <span style="color:var(--sub);font-weight:700">(특)</span></span><span class="price">30,000원</span></div>
-    <div class="meta">단단한 딱복 · 12~13과 · 수확 후 발송</div>
+    <div class="meta">단단한 딱복 · 12~13과 · 수확 후 이번 주 도착</div>
     <div class="row2">
       <span class="free">무료배송</span>
       <div class="qty">
@@ -787,7 +787,7 @@
 
   <div class="item ddak" id="itemDL">
     <div class="row1"><span class="name">딱딱이 3.5kg <span style="color:var(--sub);font-weight:700">(특특)</span></span><span class="price">35,000원</span></div>
-    <div class="meta">단단한 딱복 · 11과 이내 · 수확 후 발송</div>
+    <div class="meta">단단한 딱복 · 11과 이내 · 수확 후 이번 주 도착</div>
     <div class="row2">
       <span class="free">무료배송</span>
       <div class="qty">
@@ -800,7 +800,7 @@
 
   <div class="item ddak" id="itemD4">
     <div class="row1"><span class="name">딱딱이 4kg <span style="color:var(--sub);font-weight:700">(특)</span></span><span class="price">40,000원</span></div>
-    <div class="meta">단단한 딱복 · 14과 내외 · 수확 후 발송</div>
+    <div class="meta">단단한 딱복 · 14과 내외 · 수확 후 이번 주 도착</div>
     <div class="row2">
       <span class="free">무료배송</span>
       <div class="qty">
@@ -867,7 +867,7 @@
   </div>
   <details>
     <summary>복숭아 언제 도착해요?</summary>
-    <div class="a"><b>7월 20일(월)</b> 물량이 모두 발송되면, <b>화요일(7/21)</b>이면 받아보실 수 있어요.<br>주문 순서대로 나가고, 발송되면 <b>문자로 택배 알림</b> 보내드려요.</div>
+    <div class="a" id="faqArrive"><b>백도 말랑이</b>는 7월 20일(월) 전량 발송돼요 — 주문하신 분은 <b>화요일(7/21)까지</b> 모두 받아보실 수 있어요.<br><b>백도 딱딱이</b>는 7월 22일(수) 주문 마감 후 수확·발송돼서 <b>이번 주 중</b> 받아보실 수 있어요.<br>발송되면 <b>문자로 택배 알림</b> 보내드려요.</div>
   </details>
   <details>
     <summary>받았는데 좀 딱딱해요</summary>
@@ -1037,6 +1037,13 @@
     setTag('rmHwang', hwangClosed ? '그 다음' : '선착순 진행중');
     /* 발송일 표시(예: 7월 20일 (월)) 자동 */
     var cd = document.getElementById('cdDate'); if(cd) cd.textContent = shipFull;
+    /* FAQ 도착 안내 자동(발송일·도착일·딱딱이 마감일 반영) */
+    var fa = document.getElementById('faqArrive');
+    if(fa){
+      fa.innerHTML = '<b>백도 말랑이</b>는 '+shipFull+' 전량 발송돼요 — 주문하신 분은 <b>'+arriveFull+'까지</b> 모두 받아보실 수 있어요.<br>'
+        + '<b>백도 딱딱이</b>는 '+ddakCloseFull+' 주문 마감 후 수확·발송돼서 <b>이번 주 중</b> 받아보실 수 있어요.<br>'
+        + '발송되면 <b>문자로 택배 알림</b> 보내드려요.';
+    }
     /* 1차 주문 마감 안내 */
     var od = document.getElementById('orderDeadline');
     if(od){

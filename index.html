@@ -867,7 +867,7 @@
   </div>
   <details>
     <summary>복숭아 언제 도착해요?</summary>
-    <div class="a">7월 20일부터 <b>주문 순서대로</b> 발송돼요. 발송 후 보통 1~2일이면 도착해요.<br>발송되면 <b>문자로 택배 알림</b> 보내드려요.</div>
+    <div class="a"><b>7월 20일(월)</b> 물량이 모두 발송되면, <b>화요일(7/21)</b>이면 받아보실 수 있어요.<br>주문 순서대로 나가고, 발송되면 <b>문자로 택배 알림</b> 보내드려요.</div>
   </details>
   <details>
     <summary>받았는데 좀 딱딱해요</summary>
@@ -932,7 +932,7 @@
       </label>
       <label>수령인 연락처<input id="fPhone" inputmode="tel" placeholder="010-0000-0000"></label>
       <label>송금인 성함<input id="fPayer" placeholder="카카오페이 보내는 분 이름"></label>
-      <label>입금 받는 분 <span style="color:var(--sub);font-weight:600">(카카오페이 이용 시 · 선택)</span>
+      <label>입금 받는 분 <span style="color:var(--accent);font-weight:700">(누구에게 보낼지 골라주세요)</span>
         <div class="pay-to" id="payTo">
           <button type="button" class="pt-btn" data-pay="이동연">이동연</button>
           <button type="button" class="pt-btn" data-pay="류태희">류태희</button>
@@ -999,6 +999,9 @@
   }
   var shipFull=fmtKST(SEASON.baekdoShipDate,true), shipShort=fmtKST(SEASON.baekdoShipDate,false);
   var round1Full=fmtKST(SEASON.round1Deadline,true), round1Short=fmtKST(SEASON.round1Deadline,false);
+  /* 도착 예정일 = 발송일 + 1일 (예: 월 발송 → 화 도착) */
+  var arriveISO = new Date(new Date(SEASON.baekdoShipDate+'T00:00:00+09:00').getTime() + 24*3600000 + 9*3600000).toISOString().slice(0,10);
+  var arriveFull=fmtKST(arriveISO,true), arriveShort=fmtKST(arriveISO,false);
   var ddakOpenFull=fmtKST(SEASON.ddakOpenDate,true), ddakOpenShort=fmtKST(SEASON.ddakOpenDate,false);
   var ddakCloseFull=fmtKST(SEASON.ddakCloseDate,true), ddakCloseShort=fmtKST(SEASON.ddakCloseDate,false);
   var ddakPeriodShort = ddakOpenShort+'~'+ddakCloseShort;             /* 예: 7/20~7/22 */
@@ -1012,7 +1015,7 @@
     var diff = target - Date.now();
     if(diff <= 0){
       dday.textContent = '발송 중';
-      hms.textContent = '주문 순서대로 나가는 중';
+      hms.textContent = arriveFull + ' 도착 예정';
       return;
     }
     var d = Math.floor(diff/86400000);
@@ -1040,13 +1043,13 @@
       od.innerHTML = !baekdoClosed
         ? ('📅 1차 주문 <b>'+round1Full+'까지</b> · '+shipShort+'부터 순차 발송')
         : (ddakOpen ? ('🗓 백도 딱딱이 예약 <b>'+ddakPeriodShort+'</b> · 물량 50박스 내외')
-          : (baekdoShipping ? '📦 1차 주문 마감 · 지금 발송 중' : '✅ 1차 주문 마감 · <b>다음 차수 곧 공지</b>'));
+          : (baekdoShipping ? ('📦 발송 중 · <b>'+arriveFull+' 도착 예정</b>') : '✅ 1차 주문 마감 · <b>다음 차수 곧 공지</b>'));
     }
     /* 상단 공지바 자동 전환 */
     var tb = document.getElementById('topbar');
     if(tb){
       tb.innerHTML = baekdoShipping
-        ? '지금 <b>발송 중</b> · 주문 순서대로 나가는 중'
+        ? ('지금 <b>발송 중</b> · '+arriveFull+' 도착 예정')
         : (!baekdoClosed ? ('1차 주문 <b>'+round1Short+'까지</b> · '+shipShort+' 발송 시작')
           : (ddakOpen ? ('🗓 백도 딱딱이 <b>예약 '+ddakPeriodShort+'</b> · 물량 50박스 내외')
                       : '✅ 1차 주문 마감 · <b>다음 차수 곧 공지</b>'));
@@ -1369,6 +1372,7 @@
     for(var i=0;i<need.length;i++){
       if(!val(need[i][0])){ alert(need[i][1] + '을(를) 입력해주세요!'); document.getElementById(need[i][0]).focus(); return; }
     }
+    if(!selectedPay){ alert('입금 받는 분(이동연/류태희)을 골라주세요!'); var pt=document.getElementById('payTo'); if(pt) pt.scrollIntoView({behavior:'smooth',block:'center'}); return; }
     if(ENTRY.buyer){
       /* 완전 자동: 구글폼 응답 시트로 직접 제출 */
       var p = new URLSearchParams();

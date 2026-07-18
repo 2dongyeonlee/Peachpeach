@@ -770,10 +770,10 @@
     </div>
   </div>
 
-  <div class="select-div" id="ddakDiv">🗓 백도 딱딱이 <b>예약 주문</b> — <span id="ddakDivPeriod">7/20~7/22</span> · 물량 50박스 내외</div>
+  <div class="select-div" id="ddakDiv">🗓 백도 딱딱이 <b>주문</b> — <span id="ddakDivPeriod">7/20~7/22</span> · 물량 50박스 내외</div>
 
   <div class="item ddak" id="itemD3">
-    <div class="row1"><span class="name">딱딱이 3kg <span style="color:var(--sub);font-weight:700">(특)</span> <span class="otag preo">예약</span></span><span class="price">30,000원</span></div>
+    <div class="row1"><span class="name">딱딱이 3kg <span style="color:var(--sub);font-weight:700">(특)</span></span><span class="price">30,000원</span></div>
     <div class="meta">단단한 딱복 · 12~13과 · 수확 후 발송</div>
     <div class="row2">
       <span class="free">무료배송</span>
@@ -786,7 +786,7 @@
   </div>
 
   <div class="item ddak" id="itemDL">
-    <div class="row1"><span class="name">딱딱이 3.5kg <span style="color:var(--sub);font-weight:700">(특특)</span> <span class="otag preo">예약</span></span><span class="price">35,000원</span></div>
+    <div class="row1"><span class="name">딱딱이 3.5kg <span style="color:var(--sub);font-weight:700">(특특)</span></span><span class="price">35,000원</span></div>
     <div class="meta">단단한 딱복 · 11과 이내 · 수확 후 발송</div>
     <div class="row2">
       <span class="free">무료배송</span>
@@ -799,7 +799,7 @@
   </div>
 
   <div class="item ddak" id="itemD4">
-    <div class="row1"><span class="name">딱딱이 4kg <span style="color:var(--sub);font-weight:700">(특)</span> <span class="otag preo">예약</span></span><span class="price">40,000원</span></div>
+    <div class="row1"><span class="name">딱딱이 4kg <span style="color:var(--sub);font-weight:700">(특)</span></span><span class="price">40,000원</span></div>
     <div class="meta">단단한 딱복 · 14과 내외 · 수확 후 발송</div>
     <div class="row2">
       <span class="free">무료배송</span>
@@ -1033,7 +1033,7 @@
   (function applySeason(){
     var setTag = function(id, txt){ var el=document.getElementById(id); if(el) el.textContent = txt; };
     setTag('rmBaek', baekdoClosed ? '배송 중' : '주문 받는 중');
-    setTag('rmDdak', ddakOpen ? (ddakPeriodShort+' 예약중') : (ddakClosedByDate ? '마감' : '다음 차수'));
+    setTag('rmDdak', ddakOpen ? (ddakPeriodShort+' 주문중') : (ddakClosedByDate ? '마감' : '다음 차수'));
     setTag('rmHwang', hwangClosed ? '그 다음' : '선착순 진행중');
     /* 발송일 표시(예: 7월 20일 (월)) 자동 */
     var cd = document.getElementById('cdDate'); if(cd) cd.textContent = shipFull;
@@ -1042,7 +1042,7 @@
     if(od){
       od.innerHTML = !baekdoClosed
         ? ('📅 1차 주문 <b>'+round1Full+'까지</b> · '+shipShort+'부터 순차 발송')
-        : (ddakOpen ? ('🗓 백도 딱딱이 예약 <b>'+ddakPeriodShort+'</b> · 물량 50박스 내외')
+        : (ddakOpen ? ('🗓 백도 딱딱이 주문 <b>'+ddakPeriodShort+'</b> · 물량 50박스 내외')
           : (baekdoShipping ? ('📦 발송 중 · <b>'+arriveFull+' 도착 예정</b>') : '✅ 1차 주문 마감 · <b>다음 차수 곧 공지</b>'));
     }
     /* 상단 공지바 자동 전환 */
@@ -1051,7 +1051,7 @@
       tb.innerHTML = baekdoShipping
         ? ('지금 <b>발송 중</b> · '+arriveFull+' 도착 예정')
         : (!baekdoClosed ? ('1차 주문 <b>'+round1Short+'까지</b> · '+shipShort+' 발송 시작')
-          : (ddakOpen ? ('🗓 백도 딱딱이 <b>예약 '+ddakPeriodShort+'</b> · 물량 50박스 내외')
+          : (ddakOpen ? ('🗓 백도 딱딱이 <b>주문 '+ddakPeriodShort+'</b> · 물량 50박스 내외')
                       : '✅ 1차 주문 마감 · <b>다음 차수 곧 공지</b>'));
     }
     var cdl = document.getElementById('cdLabel');
@@ -1066,14 +1066,14 @@
     try { seen = sessionStorage.getItem('hwPopSeen') === '1'; } catch(e){} /* 세션(탭)마다 다시 노출 */
     if(ddakOpen && baekdoClosed){
       /* 백도 말랑이 1차 마감 + 딱딱이 예약 주문 오픈 */
-      document.getElementById('hwEyebrow').textContent = '🗓 예약 주문 오픈';
-      document.getElementById('hwTitle').innerHTML = '백도 딱딱이<br>예약 주문 받아요!';
-      document.getElementById('hwSub').innerHTML = '백도 말랑이는 <b>배송 중</b>이에요.<br>딱딱이는 지금 <b>예약</b> 받는 중이에요!';
+      document.getElementById('hwEyebrow').textContent = '🗓 딱딱이 주문 오픈';
+      document.getElementById('hwTitle').innerHTML = '백도 딱딱이<br>주문 받아요!';
+      document.getElementById('hwSub').innerHTML = '백도 말랑이는 <b>배송 중</b>이에요.<br>딱딱이는 지금 <b>주문</b> 받는 중이에요!';
       document.getElementById('hwPrice').style.display = 'none';
       document.getElementById('hwLeft').style.display = 'inline-block';
-      document.getElementById('hwLeft').innerHTML = '🗓 예약 주문 ' + ddakOpenFull + ' ~ ' + ddakCloseFull;
+      document.getElementById('hwLeft').innerHTML = '🗓 주문 ' + ddakOpenFull + ' ~ ' + ddakCloseFull;
       document.getElementById('hwNote').innerHTML = '🍑 알이 단단한 <b>딱복</b> · 물량 50박스 내외<br>수확 후 순차 발송 · 다음은 <b>황도 말랑이</b>!';
-      document.getElementById('hwCta').textContent = '딱딱이 예약하러 가기';
+      document.getElementById('hwCta').textContent = '딱딱이 주문하러 가기';
       document.getElementById('hwSkip').textContent = '그냥 둘러보기';
     } else if(baekdoClosed){
       /* 백도 1차까지 마감 → 다음 차수 예고 */
@@ -1279,9 +1279,9 @@
     if(qty['3kg']>0) lines.push('· 백도 3kg(특) x ' + qty['3kg'] + '박스');
     if(qty['4kg']>0) lines.push('· 백도 4kg(특) x ' + qty['4kg'] + '박스');
     if(qty['3kgL']>0) lines.push('· 백도 3.5kg(특특) x ' + qty['3kgL'] + '박스');
-    if(qty['ddak3']>0) lines.push('· 딱딱이 3kg(특) x ' + qty['ddak3'] + '박스 (예약)');
-    if(qty['ddakL']>0) lines.push('· 딱딱이 3.5kg(특특) x ' + qty['ddakL'] + '박스 (예약)');
-    if(qty['ddak4']>0) lines.push('· 딱딱이 4kg(특) x ' + qty['ddak4'] + '박스 (예약)');
+    if(qty['ddak3']>0) lines.push('· 딱딱이 3kg(특) x ' + qty['ddak3'] + '박스');
+    if(qty['ddakL']>0) lines.push('· 딱딱이 3.5kg(특특) x ' + qty['ddakL'] + '박스');
+    if(qty['ddak4']>0) lines.push('· 딱딱이 4kg(특) x ' + qty['ddak4'] + '박스');
     if(!lines.length) return '';
     return '🍑 갑부농원 복숭아 주문\n' + lines.join('\n') +
            '\n합계: ' + sum().toLocaleString('ko-KR') + '원 (무료배송)';
@@ -1354,9 +1354,9 @@
       + (qty['3kg']>0 ? '· 백도 3kg(특) x ' + qty['3kg'] + '박스\n' : '')
       + (qty['4kg']>0 ? '· 백도 4kg(특) x ' + qty['4kg'] + '박스\n' : '')
       + (qty['3kgL']>0 ? '· 백도 3.5kg(특특) x ' + qty['3kgL'] + '박스\n' : '')
-      + (qty['ddak3']>0 ? '· 딱딱이 3kg(특) x ' + qty['ddak3'] + '박스 (예약)\n' : '')
-      + (qty['ddakL']>0 ? '· 딱딱이 3.5kg(특특) x ' + qty['ddakL'] + '박스 (예약)\n' : '')
-      + (qty['ddak4']>0 ? '· 딱딱이 4kg(특) x ' + qty['ddak4'] + '박스 (예약)\n' : '')
+      + (qty['ddak3']>0 ? '· 딱딱이 3kg(특) x ' + qty['ddak3'] + '박스\n' : '')
+      + (qty['ddakL']>0 ? '· 딱딱이 3.5kg(특특) x ' + qty['ddakL'] + '박스\n' : '')
+      + (qty['ddak4']>0 ? '· 딱딱이 4kg(특) x ' + qty['ddak4'] + '박스\n' : '')
       + '송금인: ' + val('fPayer') + ' / ' + money();
   }
 

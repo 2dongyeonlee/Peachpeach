@@ -1218,7 +1218,7 @@
 
   /* ── 폼 연동 설정: entry 번호를 받으면 여기만 채우면 완전 연동됨 ── */
   var FORM_BASE = 'https://docs.google.com/forms/d/e/1FAIpQLSe6js7fVaEZGCjnm-mlFn5JmZpMLBTXfFDYSBZ1E-zZ2ReZwA/viewform';
-  var FORM_ENTRIES = { hwang:'entry.1750455373', qty3:'entry.1475999037', qty4:'entry.1402244674', qty35:'entry.216000600', ddak3:'entry.1967207558', ddakL:'entry.582193471' };
+  var FORM_ENTRIES = { hwang:'entry.1750455373', qty3:'entry.1475999037', qty4:'entry.1402244674', qty35:'entry.216000600', ddak3:'entry.1967207558', ddakL:'entry.582193471', ddak4:'entry.2038527287' };
 
   function sum(){ return qty['hwang']*price['hwang'] + qty['3kg']*price['3kg'] + qty['3kgL']*price['3kgL'] + qty['4kg']*price['4kg'] + qty['ddak3']*price['ddak3'] + qty['ddakL']*price['ddakL'] + qty['ddak4']*price['ddak4']; }
   function boxes(){ return qty['hwang'] + qty['3kg'] + qty['3kgL'] + qty['4kg'] + qty['ddak3'] + qty['ddakL'] + qty['ddak4']; }
@@ -1311,9 +1311,9 @@
     buyer:'entry.367769986', recv:'entry.6087249', addr:'entry.285218618',
     phone:'entry.2075265700', hwang:'entry.1750455373',
     qty3:'entry.1475999037', qty4:'entry.1402244674', qty35:'entry.216000600',
-    ddak3:'entry.1967207558', ddakL:'entry.582193471', ddak4:'',
+    ddak3:'entry.1967207558', ddakL:'entry.582193471', ddak4:'entry.2038527287',
     payer:'entry.879250962', amount:'entry.1154068632', payto:''
-  }; /* ddak3/ddakL: 딱딱이 3kg·3.5kg 전용 칸. ddak4(딱딱이 4kg): 폼에 칸 추가 후 entry 번호 넣으면 전용 칸으로. 그전까지는 송금인 칸에 함께 기록. payto도 동일 */
+  }; /* ddak3/ddakL/ddak4: 딱딱이 3kg·3.5kg·4kg 전용 칸. payto(입금 받는 분): 폼에 질문 추가 후 entry 번호 넣으면 전용 칸으로. 그전까지는 송금인 칸에 함께 기록 */
   var FORM_ACTION = FORM_BASE.replace('/viewform','/formResponse');
   var sheet = document.getElementById('sheet');
   var pForm = document.getElementById('pForm');

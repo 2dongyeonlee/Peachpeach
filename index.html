@@ -786,14 +786,14 @@
   </div>
 
   <div class="item ddak" id="itemDL">
-    <div class="row1"><span class="name">딱딱이 3.5kg <span style="color:var(--sub);font-weight:700">(특특)</span></span><span class="price">35,000원</span></div>
+    <div class="row1"><span class="name">딱딱이 3kg <span style="color:var(--sub);font-weight:700">(특특)</span></span><span class="price">35,000원</span></div>
     <div class="meta">단단한 딱복 · 11과 이내 · 수확 후 이번 주 도착</div>
     <div class="row2">
       <span class="free">무료배송</span>
       <div class="qty">
-        <button type="button" data-item="ddakL" data-d="-1" aria-label="딱딱이 3.5kg 특특 수량 줄이기">−</button>
+        <button type="button" data-item="ddakL" data-d="-1" aria-label="딱딱이 3kg 특특 수량 줄이기">−</button>
         <span class="num" id="qtyDL">0</span>
-        <button type="button" data-item="ddakL" data-d="1" aria-label="딱딱이 3.5kg 특특 수량 늘리기">+</button>
+        <button type="button" data-item="ddakL" data-d="1" aria-label="딱딱이 3kg 특특 수량 늘리기">+</button>
       </div>
     </div>
   </div>
@@ -831,7 +831,7 @@
       <div class="dot">🍑</div>
       <div>
         <div class="t">백도 딱딱이 <span class="tag" id="rmDdak">다음 차수</span></div>
-        <div class="d">알이 단단한 딱복<br>3kg (특) 12~13과 · 30,000원<br>3.5kg (특특) 11과 이내 · 35,000원<br>4kg (특) 14과 내외 · 40,000원</div>
+        <div class="d">알이 단단한 딱복<br>3kg (특) 12~13과 · 30,000원<br>3kg (특특) 11과 이내 · 35,000원<br>4kg (특) 14과 내외 · 40,000원</div>
       </div>
     </div>
     <div class="rm later">
@@ -1231,7 +1231,7 @@
     if(qty['4kg']>0) a.push('백도4kg특×' + qty['4kg']);
     if(qty['3kgL']>0) a.push('백도3.5kg특특×' + qty['3kgL']);
     if(qty['ddak3']>0) a.push('딱딱이3kg특×' + qty['ddak3']);
-    if(qty['ddakL']>0) a.push('딱딱이3.5kg특특×' + qty['ddakL']);
+    if(qty['ddakL']>0) a.push('딱딱이3kg특특×' + qty['ddakL']);
     if(qty['ddak4']>0) a.push('딱딱이4kg특×' + qty['ddak4']);
     return a.join(' · ');
   }
@@ -1287,7 +1287,7 @@
     if(qty['4kg']>0) lines.push('· 백도 4kg(특) x ' + qty['4kg'] + '박스');
     if(qty['3kgL']>0) lines.push('· 백도 3.5kg(특특) x ' + qty['3kgL'] + '박스');
     if(qty['ddak3']>0) lines.push('· 딱딱이 3kg(특) x ' + qty['ddak3'] + '박스');
-    if(qty['ddakL']>0) lines.push('· 딱딱이 3.5kg(특특) x ' + qty['ddakL'] + '박스');
+    if(qty['ddakL']>0) lines.push('· 딱딱이 3kg(특특) x ' + qty['ddakL'] + '박스');
     if(qty['ddak4']>0) lines.push('· 딱딱이 4kg(특) x ' + qty['ddak4'] + '박스');
     if(!lines.length) return '';
     return '🍑 갑부농원 복숭아 주문\n' + lines.join('\n') +
@@ -1313,7 +1313,7 @@
     qty3:'entry.1475999037', qty4:'entry.1402244674', qty35:'entry.216000600',
     ddak3:'entry.1967207558', ddakL:'entry.582193471', ddak4:'entry.2038527287',
     payer:'entry.879250962', amount:'entry.1154068632', payto:''
-  }; /* ddak3/ddakL/ddak4: 딱딱이 3kg·3.5kg·4kg 전용 칸. payto(입금 받는 분): 폼에 질문 추가 후 entry 번호 넣으면 전용 칸으로. 그전까지는 송금인 칸에 함께 기록 */
+  }; /* ddak3/ddakL/ddak4: 딱딱이 3kg특·3kg특특·4kg특 전용 칸. payto(입금 받는 분): 폼에 질문 추가 후 entry 번호 넣으면 전용 칸으로. 그전까지는 송금인 칸에 함께 기록 */
   var FORM_ACTION = FORM_BASE.replace('/viewform','/formResponse');
   var sheet = document.getElementById('sheet');
   var pForm = document.getElementById('pForm');
@@ -1362,7 +1362,7 @@
       + (qty['4kg']>0 ? '· 백도 4kg(특) x ' + qty['4kg'] + '박스\n' : '')
       + (qty['3kgL']>0 ? '· 백도 3.5kg(특특) x ' + qty['3kgL'] + '박스\n' : '')
       + (qty['ddak3']>0 ? '· 딱딱이 3kg(특) x ' + qty['ddak3'] + '박스\n' : '')
-      + (qty['ddakL']>0 ? '· 딱딱이 3.5kg(특특) x ' + qty['ddakL'] + '박스\n' : '')
+      + (qty['ddakL']>0 ? '· 딱딱이 3kg(특특) x ' + qty['ddakL'] + '박스\n' : '')
       + (qty['ddak4']>0 ? '· 딱딱이 4kg(특) x ' + qty['ddak4'] + '박스\n' : '')
       + '송금인: ' + val('fPayer') + ' / ' + money();
   }
@@ -1392,7 +1392,7 @@
       p.append(ENTRY.qty4, qty['4kg'] + '박스');             /* 4kg(특) */
       p.append(ENTRY.qty35, qty['3kgL'] + '박스');           /* 3.5kg(특특) */
       if(ENTRY.ddak3) p.append(ENTRY.ddak3, qty['ddak3'] + '박스'); /* 딱딱이 3kg(특) 전용 칸 */
-      if(ENTRY.ddakL) p.append(ENTRY.ddakL, qty['ddakL'] + '박스'); /* 딱딱이 3.5kg(특특) 전용 칸 */
+      if(ENTRY.ddakL) p.append(ENTRY.ddakL, qty['ddakL'] + '박스'); /* 딱딱이 3kg(특특) 전용 칸 */
       if(ENTRY.ddak4) p.append(ENTRY.ddak4, qty['ddak4'] + '박스'); /* 딱딱이 4kg(특) 전용 칸(있으면) */
       var payerVal = val('fPayer');
       if(!ENTRY.payto && selectedPay) payerVal += ' / 입금:' + selectedPay; /* 입금 받는 분: 선택 시 송금인 칸에 함께 기록 */

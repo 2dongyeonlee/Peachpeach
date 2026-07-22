@@ -741,6 +741,7 @@
   <div class="item" id="item3">
     <div class="row1"><span class="name">3kg <span style="color:var(--sub);font-weight:700">(특)</span></span><span class="price">30,000원</span></div>
     <div class="meta">말랑이 백도 · 12~13과 · 최대 3박스</div>
+    <div class="item-note" id="baek2Note" hidden>🍑 이번 <b>단골 추가분</b>은 제일 인기 많은 3kg만 받아요 · 이번 주말 수확</div>
     <div class="row2">
       <span class="free">무료배송</span>
       <div class="qty">
@@ -1021,16 +1022,32 @@
   var ddakPeriodShort = ddakOpenShort+'~'+ddakCloseShort;             /* 예: 7/20~7/22 */
   var ddakShipFull=fmtKST(SEASON.ddakShipDate,true), ddakShipShort=fmtKST(SEASON.ddakShipDate,false); /* 딱딱이 수확·발송 예정일 */
 
-  /* ── 카운트다운: 백도 발송 시작일 00:00 KST ── */
-  var target = new Date(shipDMS).getTime();
+  /* ── 카운트다운: 지금 진행 중인 차수 기준 ──
+     · 추가 주문 중  → 추가 주문 마감(baekdo2Deadline)까지
+     · 그 외          → 백도 발송 시작일까지 (지나면 '발송 중') */
+  var cdLabelTxt, cdDateTxt, cdTarget, cdDoneMain, cdDoneSub;
+  if(baekdo2Open){
+    cdLabelTxt = '추가 주문 마감까지';
+    cdDateTxt  = baekdo2Full;
+    cdTarget   = new Date(SEASON.baekdo2Deadline + 'T23:59:59+09:00').getTime();
+    cdDoneMain = '주문 마감';
+    cdDoneSub  = '다음 소식 기다려주세요';
+  } else {
+    cdLabelTxt = '발송 시작까지';
+    cdDateTxt  = shipFull;
+    cdTarget   = new Date(shipDMS).getTime();
+    cdDoneMain = '발송 중';
+    cdDoneSub  = arriveFull + ' 도착 예정';
+  }
+  var target = cdTarget;
   var dday = document.getElementById('dday');
   var hms = document.getElementById('hms');
   function pad(n){return n<10?'0'+n:''+n;}
   function tick(){
     var diff = target - Date.now();
     if(diff <= 0){
-      dday.textContent = '발송 중';
-      hms.textContent = arriveFull + ' 도착 예정';
+      dday.textContent = cdDoneMain;
+      hms.textContent = cdDoneSub;
       return;
     }
     var d = Math.floor(diff/86400000);
@@ -1054,8 +1071,8 @@
     var setWhen = function(id, html){ var el=document.getElementById(id); if(el) el.innerHTML = html; };
     setWhen('rmBaekWhen', baekdo2Open ? '🗓 이번 주말 수확 예정' : '');
     setWhen('rmDdakWhen', ddakEnded ? ('🚚 '+ddakShipFull+' 수확·발송 예정') : '');
-    /* 발송일 표시(예: 7월 20일 (월)) 자동 */
-    var cd = document.getElementById('cdDate'); if(cd) cd.textContent = shipFull;
+    /* 카운트다운 라벨·날짜(진행 중인 차수 기준) 자동 */
+    var cdl = document.getElementById('cdLabel'); if(cdl) cdl.innerHTML = cdLabelTxt + '<b id="cdDate">' + cdDateTxt + '</b>';
     /* FAQ 도착 안내 자동(발송일·도착일·딱딱이 마감일 반영) */
     var fa = document.getElementById('faqArrive');
     if(fa){
@@ -1085,8 +1102,6 @@
             : (ddakOpen ? ('🗓 백도 딱딱이 <b>주문 '+ddakPeriodShort+'</b> · 물량 50박스 내외')
                         : '✅ 1차 주문 마감 · <b>다음 차수 곧 공지</b>')));
     }
-    var cdl = document.getElementById('cdLabel');
-    if(cdl && baekdoShipping) cdl.innerHTML = '지금<b>발송 중</b>';
   })();
 
   /* ── 황도 팝업 (hwangClosed 에 따라 자동 전환) ── */
@@ -1234,8 +1249,10 @@
   (function initBaek2(){
     var bd = document.getElementById('baekDiv');
     if(!bd) return;
-    if(baekdo2Open){ var bp=document.getElementById('baekDivPeriod'); if(bp) bp.textContent = baekdo2Short+'까지'; }
-    else { bd.style.display = 'none'; }
+    if(baekdo2Open){
+      var bp=document.getElementById('baekDivPeriod'); if(bp) bp.textContent = baekdo2Short+'까지';
+      var bn=document.getElementById('baek2Note'); if(bn) bn.hidden = false; /* 단골 추가분 안내 노트 노출 */
+    } else { bd.style.display = 'none'; }
   })();
   /* 마감된 상품은 접이식 '히스토리'로 모아둠 (펼치면 보임) */
   (function buildHistory(){

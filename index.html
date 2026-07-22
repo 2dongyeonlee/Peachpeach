@@ -308,6 +308,9 @@
     font-size:13px;font-weight:700;color:#6A5ACD;text-align:center;line-height:1.5;
   }
   .select-div b{font-weight:800;color:#5A4AC0;}
+  /* 백도 말랑이 추가 주문 구분선(복숭아색) */
+  .select-div.baek{background:var(--accent-soft);border-color:rgba(255,90,54,.22);color:var(--accent);}
+  .select-div.baek b{color:#D8391B;}
   .item.ddak{border-color:rgba(138,124,255,.28);background:rgba(238,235,252,.5);}
   .item.ddak.active{border-color:#8A7CFF;}
   /* 마감 상품 히스토리(접이식) */
@@ -731,9 +734,11 @@
     </div>
   </div>
 
+  <div class="select-div baek" id="baekDiv">🍑 백도 말랑이 <b>추가 주문</b> — <span id="baekDivPeriod">7/24까지</span> · 12~13과 3kg · 물량 50박스 내외</div>
+
   <div class="item" id="item3">
     <div class="row1"><span class="name">3kg <span style="color:var(--sub);font-weight:700">(특)</span></span><span class="price">30,000원</span></div>
-    <div class="meta">말랑이 백도 · 12~15과 · 최대 3박스</div>
+    <div class="meta">말랑이 백도 · 12~13과 · 최대 3박스</div>
     <div class="row2">
       <span class="free">무료배송</span>
       <div class="qty">
@@ -979,7 +984,9 @@
     baekdoShipDate:   '2026-07-20',
     ddakddak:         'open',         /* 백도 딱딱이: 'coming'(예정) | 'open'(예약 주문) */
     ddakOpenDate:     '2026-07-20',   /* 딱딱이 주문 시작일(안내용) */
-    ddakCloseDate:    '2026-07-22'    /* 딱딱이 주문 마감일 — 이 날 지나면 자동 마감 */
+    ddakCloseDate:    '2026-07-22',   /* 딱딱이 주문 마감일 — 이 날 지나면 자동 마감 */
+    baekdo2:          'open',         /* 백도 말랑이 추가 주문(3kg 특만): 'open' | 'closed' */
+    baekdo2Deadline:  '2026-07-24'    /* 추가 주문 마감일(금) — 이 날 지나면 자동 마감 */
   };
   /* 오늘 날짜(한국시간 기준, YYYY-MM-DD) */
   var TODAY = new Date(Date.now() + 9*3600000).toISOString().slice(0,10);
@@ -990,7 +997,8 @@
   var baekdoClosed = (SEASON.baekdo === 'closed') || !round1Open;      /* 백도 말랑이 1차 마감? */
   var ddakOpen = (SEASON.ddakddak === 'open') && (TODAY <= SEASON.ddakCloseDate); /* 딱딱이 예약 주문 중?(마감일 이내) */
   var ddakClosedByDate = (SEASON.ddakddak === 'open') && (TODAY > SEASON.ddakCloseDate); /* 딱딱이 기간 지나 마감? */
-  var allClosed = hwangClosed && baekdoClosed && !ddakOpen;            /* 지금 주문 가능한 상품 없음? */
+  var baekdo2Open = (SEASON.baekdo2 === 'open') && (TODAY <= SEASON.baekdo2Deadline); /* 백도 말랑이 3kg 추가 주문 중? */
+  var allClosed = hwangClosed && baekdoClosed && !ddakOpen && !baekdo2Open; /* 지금 주문 가능한 상품 없음? */
   /* 날짜 표기 헬퍼: full=true → "7월 15일 (화)", false → "7/15" */
   function fmtKST(iso, full){
     var d = new Date(new Date(iso+'T00:00:00+09:00').getTime() + 9*3600000);
@@ -999,6 +1007,7 @@
   }
   var shipFull=fmtKST(SEASON.baekdoShipDate,true), shipShort=fmtKST(SEASON.baekdoShipDate,false);
   var round1Full=fmtKST(SEASON.round1Deadline,true), round1Short=fmtKST(SEASON.round1Deadline,false);
+  var baekdo2Full=fmtKST(SEASON.baekdo2Deadline,true), baekdo2Short=fmtKST(SEASON.baekdo2Deadline,false);
   /* 도착 예정일 = 발송일 + 1일 (예: 월 발송 → 화 도착) */
   var arriveISO = new Date(new Date(SEASON.baekdoShipDate+'T00:00:00+09:00').getTime() + 24*3600000 + 9*3600000).toISOString().slice(0,10);
   var arriveFull=fmtKST(arriveISO,true), arriveShort=fmtKST(arriveISO,false);
@@ -1032,7 +1041,7 @@
   var HWANGDO_LEFT = 10; /* 황도 남은 박스 수(오픈 상태에서만 표시) */
   (function applySeason(){
     var setTag = function(id, txt){ var el=document.getElementById(id); if(el) el.textContent = txt; };
-    setTag('rmBaek', baekdoClosed ? '배송 중' : '주문 받는 중');
+    setTag('rmBaek', baekdo2Open ? '추가 주문 중' : (baekdoClosed ? '배송 중' : '주문 받는 중'));
     setTag('rmDdak', ddakOpen ? (ddakPeriodShort+' 주문중') : (ddakClosedByDate ? '마감' : '다음 차수'));
     setTag('rmHwang', hwangClosed ? '그 다음' : '선착순 진행중');
     /* 발송일 표시(예: 7월 20일 (월)) 자동 */
@@ -1049,17 +1058,19 @@
     if(od){
       od.innerHTML = !baekdoClosed
         ? ('📅 1차 주문 <b>'+round1Full+'까지</b> · '+shipShort+'부터 순차 발송')
-        : (ddakOpen ? ''   /* 딱딱이 구분선(ddakDiv)이 이미 안내 → 중복 배너 숨김 */
+        : ((baekdo2Open || ddakOpen) ? ''   /* 구분선(baekDiv·ddakDiv)이 이미 안내 → 중복 배너 숨김 */
           : (baekdoShipping ? ('📦 발송 중 · <b>'+arriveFull+' 도착 예정</b>') : '✅ 1차 주문 마감 · <b>다음 차수 곧 공지</b>'));
     }
     /* 상단 공지바 자동 전환 */
     var tb = document.getElementById('topbar');
     if(tb){
-      tb.innerHTML = baekdoShipping
-        ? ('지금 <b>발송 중</b> · '+arriveFull+' 도착 예정')
-        : (!baekdoClosed ? ('1차 주문 <b>'+round1Short+'까지</b> · '+shipShort+' 발송 시작')
-          : (ddakOpen ? ('🗓 백도 딱딱이 <b>주문 '+ddakPeriodShort+'</b> · 물량 50박스 내외')
-                      : '✅ 1차 주문 마감 · <b>다음 차수 곧 공지</b>'));
+      tb.innerHTML = baekdo2Open
+        ? ('🍑 백도 말랑이 <b>추가 주문</b> · '+baekdo2Short+'까지 · 3kg')
+        : (baekdoShipping
+          ? ('지금 <b>발송 중</b> · '+arriveFull+' 도착 예정')
+          : (!baekdoClosed ? ('1차 주문 <b>'+round1Short+'까지</b> · '+shipShort+' 발송 시작')
+            : (ddakOpen ? ('🗓 백도 딱딱이 <b>주문 '+ddakPeriodShort+'</b> · 물량 50박스 내외')
+                        : '✅ 1차 주문 마감 · <b>다음 차수 곧 공지</b>')));
     }
     var cdl = document.getElementById('cdLabel');
     if(cdl && baekdoShipping) cdl.innerHTML = '지금<b>발송 중</b>';
@@ -1071,7 +1082,20 @@
     if(!pop) return;
     var seen = false;
     try { seen = sessionStorage.getItem('hwPopSeen') === '1'; } catch(e){} /* 세션(탭)마다 다시 노출 */
-    if(ddakOpen && baekdoClosed){
+    if(baekdo2Open){
+      /* 백도 말랑이 추가 주문(3kg) — 가장 최신 소식 우선 안내 */
+      document.getElementById('hwEyebrow').textContent = '🍑 백도 추가 주문 오픈';
+      document.getElementById('hwTitle').innerHTML = '백도 말랑이<br>더 받아요!';
+      document.getElementById('hwSub').innerHTML = '제일 인기 많은 <b>백도 말랑이 3kg</b>,<br><b>'+baekdo2Full+'까지</b> 추가로 받아요!';
+      document.getElementById('hwPrice').style.display = 'none';
+      document.getElementById('hwLeft').style.display = 'inline-block';
+      document.getElementById('hwLeft').innerHTML = '🍑 12~13과 3kg · 30,000원 · 물량 50박스 내외';
+      document.getElementById('hwNote').innerHTML = ddakOpen
+        ? '🗓 <b>백도 딱딱이</b>도 오늘까지 주문 받아요!<br>수확 후 이번 주 중 도착 예정이에요.'
+        : '🚚 수확 순서대로 바로 발송해드려요.<br>다음은 <b>황도 말랑이</b>로 이어갈게요!';
+      document.getElementById('hwCta').textContent = '백도 주문하러 가기';
+      document.getElementById('hwSkip').textContent = '그냥 둘러보기';
+    } else if(ddakOpen && baekdoClosed){
       /* 백도 말랑이 1차 마감 + 딱딱이 예약 주문 오픈 */
       document.getElementById('hwEyebrow').textContent = '🗓 딱딱이 주문 오픈';
       document.getElementById('hwTitle').innerHTML = '백도 딱딱이<br>주문 받아요!';
@@ -1113,9 +1137,9 @@
     document.getElementById('hwCta').addEventListener('click', function(){
       close();
       if(!hwangClosed && !baekdoClosed && qty['hwang'] < 1){ qty['hwang'] = 1; render(); } /* 황도 오픈 상태면 담기 */
-      var id = (ddakOpen && baekdoClosed) ? 'itemD3' : (baekdoClosed ? 'seasonSec' : (hwangClosed ? 'item3' : 'itemH'));
+      var id = baekdo2Open ? 'item3' : ((ddakOpen && baekdoClosed) ? 'itemD3' : (baekdoClosed ? 'seasonSec' : (hwangClosed ? 'item3' : 'itemH')));
       var target = document.getElementById(id);
-      if(target) target.scrollIntoView({ behavior:'smooth', block:(baekdoClosed && !ddakOpen)?'start':'center' });
+      if(target) target.scrollIntoView({ behavior:'smooth', block:(baekdoClosed && !ddakOpen && !baekdo2Open)?'start':'center' });
     });
   })();
 
@@ -1191,7 +1215,17 @@
     var qb=el.querySelectorAll('.qty button'); for(var k=0;k<qb.length;k++){ qb[k].disabled=true; }
   }
   if(hwangClosed) markSoldout('itemH', '조기 마감');
-  if(baekdoClosed){ markSoldout('item3','1차 마감'); markSoldout('item4','1차 마감'); markSoldout('itemL','1차 마감'); }
+  if(baekdoClosed){
+    if(!baekdo2Open) markSoldout('item3','1차 마감'); /* 추가 주문 열려있으면 3kg는 살려둠 */
+    markSoldout('item4','1차 마감'); markSoldout('itemL','1차 마감');
+  }
+  /* 백도 말랑이 추가 주문 구분선: 추가 주문 중일 때만 노출 */
+  (function initBaek2(){
+    var bd = document.getElementById('baekDiv');
+    if(!bd) return;
+    if(baekdo2Open){ var bp=document.getElementById('baekDivPeriod'); if(bp) bp.textContent = baekdo2Short+'까지'; }
+    else { bd.style.display = 'none'; }
+  })();
   /* 마감된 상품은 접이식 '히스토리'로 모아둠 (펼치면 보임) */
   (function buildHistory(){
     var soldItems = Array.prototype.slice.call(document.querySelectorAll('.item.soldout'));

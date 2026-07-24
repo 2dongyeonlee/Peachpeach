@@ -483,6 +483,29 @@
     background:rgba(255,241,236,.7);border-radius:12px;
     font-size:12.5px;color:#8A6D63;line-height:1.6;text-wrap:pretty;
   }
+  /* 공통 가격(모든 품종 동일) 배너 */
+  .price-common{
+    margin:0 0 20px;padding:16px;border-radius:16px;
+    background:var(--accent-soft);border:1px solid rgba(255,90,54,.16);
+  }
+  .price-common .pc-top{
+    font-size:13.5px;font-weight:700;color:var(--accent);text-align:center;line-height:1.5;
+  }
+  .price-common .pc-top b{font-weight:800;color:#D8391B;}
+  .price-common .pc-grid{
+    display:flex;flex-wrap:wrap;justify-content:center;gap:6px 14px;
+    margin-top:10px;font-size:13px;color:#5A4A44;
+  }
+  .price-common .pc-grid b{color:var(--ink);font-weight:800;}
+  /* "먹고 싶은 품종 알려주세요" 안내 */
+  .rm-ask{
+    margin-top:16px;padding:14px;border-radius:14px;text-align:center;
+    background:rgba(255,255,255,.72);border:1px solid rgba(255,255,255,.95);
+    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+    box-shadow:0 6px 22px rgba(70,80,95,.07);
+    font-size:14px;font-weight:600;color:#4A4A46;line-height:1.6;
+  }
+  .rm-ask b{font-weight:800;color:var(--accent);}
 
   /* ── 주문 입력 시트 ── */
   .sheet{position:fixed;inset:0;z-index:100;}
@@ -825,7 +848,16 @@
   <div class="sec-head">
     <div class="kicker">Season</div>
     <h2>올여름 복숭아 순서 🍑</h2>
-    <p>품종·시기는 <b>날씨(장마·작황)에 따라 계속 바뀔 수 있어요.</b><br>차수마다 여기서 계속 공지할게요.</p>
+    <p><b>가격도 품질도 모두 똑같아요</b> — 품종만 순서대로 바뀌어요.<br>날씨(장마·작황)에 따라 순서·시기는 바뀔 수 있어요.</p>
+  </div>
+  <!-- 공통 가격(모든 품종 동일) -->
+  <div class="price-common">
+    <div class="pc-top">🍑 모든 복숭아 <b>같은 가격 · 같은 품질</b> · 무료배송</div>
+    <div class="pc-grid">
+      <span><b>3kg</b> 특 · 30,000원</span>
+      <span><b>3.5kg</b> 특특 · 35,000원</span>
+      <span><b>4kg</b> 특 · 40,000원</span>
+    </div>
   </div>
   <div class="roadmap">
     <div class="rm">
@@ -833,7 +865,7 @@
       <div>
         <div class="t">백도 말랑이 <span class="tag" id="rmBaek">1차 마감</span></div>
         <div class="rm-when" id="rmBaekWhen"></div>
-        <div class="d">3kg (특) · 30,000원<br>4kg (특) · 40,000원<br>3.5kg (특특) · 35,000원</div>
+        <div class="d">말랑하게 익는 여름 복숭아</div>
       </div>
     </div>
     <div class="rm soon">
@@ -841,17 +873,18 @@
       <div>
         <div class="t">백도 딱딱이 <span class="tag" id="rmDdak">다음 차수</span></div>
         <div class="rm-when" id="rmDdakWhen"></div>
-        <div class="d">알이 단단한 딱복<br>3kg (특) · 30,000원<br>3kg (특특) · 35,000원<br>4kg (특) · 40,000원</div>
+        <div class="d">알이 단단한 딱복 (딱딱한 식감)</div>
       </div>
     </div>
     <div class="rm later">
       <div class="dot">🍑</div>
       <div>
         <div class="t">황도 말랑이 <span class="tag" id="rmHwang">그 다음</span></div>
-        <div class="d">비 그친 후 순차 발송<br>3kg (특) · 30,000원</div>
+        <div class="d">속살 노란 황도 · 비 그친 후 순차 발송</div>
       </div>
     </div>
   </div>
+  <div class="rm-ask">🍑 중간에 <b>특별히 드시고 싶은 품종</b> 있으면<br><b>개인 메시지로 알려주세요!</b></div>
   <p class="rm-note">🌦 비가 오거나 작황에 따라 순서·발송일은 바뀔 수 있어요. 오픈 소식은 여기서 계속 알려드릴게요.</p>
 </section>
 

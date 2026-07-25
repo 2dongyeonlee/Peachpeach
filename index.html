@@ -764,7 +764,7 @@
   <div class="item" id="item3">
     <div class="row1"><span class="name">3kg <span style="color:var(--sub);font-weight:700">(특)</span></span><span class="price">30,000원</span></div>
     <div class="meta">말랑이 백도 · 최대 3박스</div>
-    <div class="item-note" id="baek2Note" hidden>🍑 이번 <b>단골 추가분</b>은 제일 인기 많은 3kg만 받아요 · 이번 주말 수확</div>
+    <div class="item-note" id="baek2Note" hidden>🍑 이번 <b>단골 추가분</b>은 제일 인기 많은 3kg만 받아요 · 주문 순서대로 배송 예정</div>
     <div class="row2">
       <span class="free">무료배송</span>
       <div class="qty">
@@ -1024,8 +1024,9 @@
     ddakOpenDate:     '2026-07-20',   /* 딱딱이 주문 시작일(안내용) */
     ddakCloseDate:    '2026-07-22',   /* 딱딱이 주문 마감일 — 이 날 지나면 자동 마감 */
     ddakShipDate:     '2026-07-23',   /* 딱딱이 수확·발송 예정일(안내용) */
+    ddakDelivered:    true,           /* 딱딱이 배송 완료? true면 로드맵/FAQ에 '배송 완료' 표시 */
     baekdo2:          'open',         /* 백도 말랑이 추가 주문(3kg 특만): 'open' | 'closed' */
-    baekdo2Deadline:  '2026-07-24'    /* 추가 주문 마감일(금) — 이 날 지나면 자동 마감 */
+    baekdo2Deadline:  '2026-07-31'    /* 추가 주문 마감일 — 이 날 지나면 자동 마감('마감'으로 수동 종료 가능) */
   };
   /* 오늘 날짜(한국시간 기준, YYYY-MM-DD) */
   var TODAY = new Date(Date.now() + 9*3600000).toISOString().slice(0,10);
@@ -1108,16 +1109,17 @@
     setTag('rmHwang', hwangClosed ? '그 다음' : '선착순 진행중');
     /* 로드맵 수확·발송 일정 안내 */
     var setWhen = function(id, html){ var el=document.getElementById(id); if(el) el.innerHTML = html; };
-    setWhen('rmBaekWhen', baekdo2Open ? '🗓 이번 주말 수확 예정' : '');
-    setWhen('rmDdakWhen', ddakEnded ? ('🚚 '+ddakShipFull+' 수확·발송 예정') : '');
+    setWhen('rmBaekWhen', baekdo2Open ? '🚚 주문 순서대로 배송 예정' : '');
+    setWhen('rmDdakWhen', SEASON.ddakDelivered ? '✅ 배송 완료' : (ddakEnded ? ('🚚 '+ddakShipFull+' 수확·발송 예정') : ''));
     /* 카운트다운 라벨·날짜(진행 중인 차수 기준) 자동 */
     var cdl = document.getElementById('cdLabel'); if(cdl) cdl.innerHTML = cdLabelTxt + '<b id="cdDate">' + cdDateTxt + '</b>';
     /* FAQ 도착 안내 자동(발송일·도착일·딱딱이 마감일 반영) */
     var fa = document.getElementById('faqArrive');
     if(fa){
       var lines = ['주문 순서대로 <b>수확 후 바로 발송</b>해드려요.'];
-      if(baekdo2Open) lines.push('· <b>백도 말랑이</b>는 이번 주말 수확 예정이에요.');
-      if(ddakEnded) lines.push('· <b>백도 딱딱이</b>는 <b>'+ddakShipFull+'</b> 수확·발송 예정이에요.');
+      if(baekdo2Open) lines.push('· <b>백도 말랑이</b>는 주문 순서대로 <b>곧 배송 예정</b>이에요.');
+      if(SEASON.ddakDelivered) lines.push('· <b>백도 딱딱이</b>는 <b>배송 완료</b>됐어요.');
+      else if(ddakEnded) lines.push('· <b>백도 딱딱이</b>는 <b>'+ddakShipFull+'</b> 수확·발송 예정이에요.');
       else if(ddakOpen) lines.push('· <b>백도 딱딱이</b>는 '+ddakCloseFull+' 주문 마감 후 수확·발송돼요.');
       lines.push('발송되면 <b>문자로 택배 알림</b> 보내드려요.');
       fa.innerHTML = lines.join('<br>');
@@ -1159,8 +1161,10 @@
       document.getElementById('hwSub').innerHTML = '단골분들께 제일 인기 많은 <b>백도 말랑이 3kg</b>,<br><b>'+baekdo2Full+'까지</b> 특별히 더 받아요!';
       document.getElementById('hwPrice').style.display = 'none';
       document.getElementById('hwLeft').style.display = 'inline-block';
-      document.getElementById('hwLeft').innerHTML = '🍑 3kg · 30,000원 · 이번 주말 수확 예정';
-      document.getElementById('hwNote').innerHTML = '📦 <b>백도 딱딱이</b>는 주문 마감 · <b>'+ddakShipFull+' 수확·발송</b> 예정<br>다음은 <b>황도 말랑이</b>로 이어갈게요!';
+      document.getElementById('hwLeft').innerHTML = '🍑 3kg · 30,000원 · 주문 순서대로 배송 예정';
+      document.getElementById('hwNote').innerHTML = SEASON.ddakDelivered
+        ? '✅ <b>백도 딱딱이</b>는 배송 완료됐어요.<br>다음은 <b>황도 말랑이</b>로 이어갈게요!'
+        : '📦 <b>백도 딱딱이</b>는 주문 마감 · <b>'+ddakShipFull+' 수확·발송</b> 예정<br>다음은 <b>황도 말랑이</b>로 이어갈게요!';
       document.getElementById('hwCta').textContent = '백도 주문하러 가기';
       document.getElementById('hwSkip').textContent = '그냥 둘러보기';
     } else if(ddakOpen && baekdoClosed){

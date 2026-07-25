@@ -910,7 +910,7 @@
   </div>
   <details>
     <summary>복숭아 언제 도착해요?</summary>
-    <div class="a" id="faqArrive"><b>백도 말랑이</b>는 7월 20일(월) 전량 발송돼요 — 주문하신 분은 <b>화요일(7/21)까지</b> 모두 받아보실 수 있어요.<br><b>백도 딱딱이</b>는 7월 22일(수) 주문 마감 후 수확·발송돼서 <b>이번 주 중</b> 받아보실 수 있어요.<br>발송되면 <b>문자로 택배 알림</b> 보내드려요.</div>
+    <div class="a" id="faqArrive">주문 순서대로 <b>수확 후 바로 발송</b>해드려요.<br><b>그날 수확한</b> 복숭아를, 택배 이동 중 눌리지 않게 <b>일부러 약간 단단한 걸로</b> 보내드려요.<br>발송되면 <b>문자로 택배 알림</b> 보내드려요.</div>
   </details>
   <details>
     <summary>받았는데 좀 딱딱해요</summary>
@@ -1113,17 +1113,7 @@
     setWhen('rmDdakWhen', SEASON.ddakDelivered ? '✅ 배송 완료' : (ddakEnded ? ('🚚 '+ddakShipFull+' 수확·발송 예정') : ''));
     /* 카운트다운 라벨·날짜(진행 중인 차수 기준) 자동 */
     var cdl = document.getElementById('cdLabel'); if(cdl) cdl.innerHTML = cdLabelTxt + '<b id="cdDate">' + cdDateTxt + '</b>';
-    /* FAQ 도착 안내 자동(발송일·도착일·딱딱이 마감일 반영) */
-    var fa = document.getElementById('faqArrive');
-    if(fa){
-      var lines = ['주문 순서대로 <b>수확 후 바로 발송</b>해드려요.'];
-      if(baekdo2Open) lines.push('· <b>백도 말랑이</b>는 주문 순서대로 <b>곧 배송 예정</b>이에요.');
-      if(SEASON.ddakDelivered) lines.push('· <b>백도 딱딱이</b>는 <b>배송 완료</b>됐어요.');
-      else if(ddakEnded) lines.push('· <b>백도 딱딱이</b>는 <b>'+ddakShipFull+'</b> 수확·발송 예정이에요.');
-      else if(ddakOpen) lines.push('· <b>백도 딱딱이</b>는 '+ddakCloseFull+' 주문 마감 후 수확·발송돼요.');
-      lines.push('발송되면 <b>문자로 택배 알림</b> 보내드려요.');
-      fa.innerHTML = lines.join('<br>');
-    }
+    /* FAQ '언제 도착해요?'는 날짜 없이 고정 문구(HTML)로 둠 — 발송일이 자주 바뀌어서 */
     /* 1차 주문 마감 안내 */
     var od = document.getElementById('orderDeadline');
     if(od){

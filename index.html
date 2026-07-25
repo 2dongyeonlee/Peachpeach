@@ -8,6 +8,29 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
+<script>
+/* 자동 최신화: 새로 배포되면 방문 시 알아서 최신 버전을 불러와요 (캐시 방지).
+   version.txt(index.html 내용 해시)를 no-store로 읽어, 지난 방문과 값이 다르면 한 번만 새로고침. */
+(function(){
+  try{
+    fetch('version.txt?_=' + Date.now(), { cache: 'no-store' })
+      .then(function(r){ return r.ok ? r.text() : null; })
+      .then(function(t){
+        if(t == null) return;
+        var v = t.trim(); if(!v) return;
+        var seen = null; try{ seen = localStorage.getItem('peachVer'); }catch(e){}
+        try{ localStorage.setItem('peachVer', v); }catch(e){}
+        var already = null; try{ already = sessionStorage.getItem('peachReloadedVer'); }catch(e){}
+        var curParam = (location.search.match(/[?&]v=([^&]*)/) || [])[1];
+        if(seen && seen !== v && curParam !== v && already !== v){
+          try{ sessionStorage.setItem('peachReloadedVer', v); }catch(e){}
+          location.replace(location.pathname + '?v=' + encodeURIComponent(v));
+        }
+      })
+      .catch(function(){});
+  }catch(e){}
+})();
+</script>
 <title>올해도 달달하게 복숭아 드실 분🙌🏻</title>
 <meta name="description" content="여름마다 찾는 조치원 복숭아 🍑 올해는 선착순 황도 말랑이로 시작! 갑부농원 산지 직송.">
 <meta property="og:title" content="올해도 달달하게 복숭아 드실 분🙌🏻">

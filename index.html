@@ -303,22 +303,33 @@
   .order-deadline:empty{display:none;}
   .order-deadline b{font-weight:800;}
 
-  /* ── 신뢰 지표 (수상) ── */
-  .cred{
-    display:grid;grid-template-columns:1fr 1fr;gap:12px;
+  /* ── 신뢰 지표 (수상) · 가로 스크롤 뱃지 ── */
+  .cred-scroll{
+    display:flex;gap:12px;
+    overflow-x:auto;overflow-y:hidden;
+    margin:0 -24px;padding:4px 24px 10px;   /* 화면 끝까지 흐르게 */
+    scroll-snap-type:x proximity;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;-ms-overflow-style:none;
   }
-  .cred-card{
-    background:var(--card);
-    border:1px solid var(--line);
-    border-radius:16px;
-    padding:18px 16px;
+  .cred-scroll::-webkit-scrollbar{display:none;}
+  .cred-badge{
+    flex:0 0 auto;scroll-snap-align:start;
+    width:148px;
+    border:1px solid rgba(255,255,255,.9);
+    border-radius:18px;
+    padding:16px 16px 18px;
+    box-shadow:0 6px 22px rgba(70,80,95,.07);
+    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
   }
-  .cred-card .big{font-size:19px;font-weight:800;letter-spacing:-0.02em;}
-  .cred-card .small{font-size:12.5px;color:var(--sub);margin-top:4px;line-height:1.5;}
-  .cred .cred-card:nth-child(1){background:rgba(255,235,224,.78);}
-  .cred .cred-card:nth-child(2){background:rgba(222,243,232,.78);}
-  .cred .cred-card:nth-child(3){background:rgba(233,229,251,.78);}
-  .cred .cred-card:nth-child(4){background:rgba(223,237,251,.78);}
+  .cred-badge .cb-ico{font-size:26px;line-height:1;}
+  .cred-badge .cb-big{font-size:18px;font-weight:800;letter-spacing:-0.02em;margin-top:10px;}
+  .cred-badge .cb-small{font-size:12px;color:var(--sub);margin-top:4px;line-height:1.5;}
+  .cred-scroll .cred-badge:nth-child(1){background:rgba(255,235,224,.85);}
+  .cred-scroll .cred-badge:nth-child(2){background:rgba(222,243,232,.85);}
+  .cred-scroll .cred-badge:nth-child(3){background:rgba(233,229,251,.85);}
+  .cred-scroll .cred-badge:nth-child(4){background:rgba(223,237,251,.85);}
+  .cred-scroll .cred-badge:nth-child(5){background:rgba(255,241,236,.9);}
 
   /* ── 상품/주문 ── */
   .item{
@@ -868,22 +879,31 @@
     <h2>맛은 이미 검증 끝</h2>
     <p>수상 이력도, <b>당도도 매년 그대로</b>예요.</p>
   </div>
-  <div class="cred">
-    <div class="cred-card">
-      <div class="big">부문 1위</div>
-      <div class="small">대한민국 대표과일<br>선발대회 복숭아 부문</div>
+  <div class="cred-scroll">
+    <div class="cred-badge">
+      <div class="cb-ico" aria-hidden="true">🥇</div>
+      <div class="cb-big">부문 1위</div>
+      <div class="cb-small">대한민국 대표과일<br>선발대회 복숭아 부문</div>
     </div>
-    <div class="cred-card">
-      <div class="big">대상 수상</div>
-      <div class="small">조치원 복숭아축제<br>품평회</div>
+    <div class="cred-badge">
+      <div class="cb-ico" aria-hidden="true">🏆</div>
+      <div class="cb-big">대상 수상</div>
+      <div class="cb-small">조치원 복숭아축제<br>품평회</div>
     </div>
-    <div class="cred-card">
-      <div class="big">3년 연속</div>
-      <div class="small">단골들이 다시 찾는<br>여름 재주문</div>
+    <div class="cred-badge">
+      <div class="cb-ico" aria-hidden="true">🔁</div>
+      <div class="cb-big">3년 연속</div>
+      <div class="cb-small">단골들이 다시 찾는<br>여름 재주문</div>
     </div>
-    <div class="cred-card">
-      <div class="big">산지 직송</div>
-      <div class="small">갑부농원에서<br>수확 후 바로 발송</div>
+    <div class="cred-badge">
+      <div class="cb-ico" aria-hidden="true">🚚</div>
+      <div class="cb-big">산지 직송</div>
+      <div class="cb-small">갑부농원 수확 후<br>바로 발송</div>
+    </div>
+    <div class="cred-badge">
+      <div class="cb-ico" aria-hidden="true">🍯</div>
+      <div class="cb-big">당도 대박</div>
+      <div class="cb-small">매년 같은 품질<br>그대로예요</div>
     </div>
   </div>
 </section>

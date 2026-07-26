@@ -771,7 +771,7 @@
   </div>
   <div class="order-deadline" id="orderDeadline"></div>
 
-  <div class="select-div hwang" id="hwangDiv">🍑 황도 말랑이 <b>주문</b> — <span id="hwangDivPeriod">7/29까지</span> · 물량 40~50박스</div>
+  <div class="select-div hwang" id="hwangDiv">🍑 황도 말랑이 <b>주문</b> — <span id="hwangDivPeriod">7/29까지</span> · 물량 50박스까지</div>
 
   <div class="item" id="itemH">
     <div class="row1"><span class="name">황도 말랑이 3kg <span style="color:var(--sub);font-weight:700">(특특)</span></span><span class="price">35,000원</span></div>
@@ -1140,14 +1140,14 @@
   var HWANGDO_LEFT = 10; /* 황도 남은 박스 수(오픈 상태에서만 표시) */
   (function applySeason(){
     var setTag = function(id, txt){ var el=document.getElementById(id); if(el) el.textContent = txt; };
-    setTag('rmBaek', SEASON.baekDelivered ? '발송 완료' : (baekdo2Open ? '추가 주문 중' : (baekdoClosed ? '배송 중' : '주문 받는 중')));
-    setTag('rmDdak', ddakOpen ? (ddakPeriodShort+' 주문중') : (ddakEnded ? '주문 마감' : '다음 차수'));
+    setTag('rmBaek', SEASON.baekDelivered ? '2차 주문 마감' : (baekdo2Open ? '추가 주문 중' : (baekdoClosed ? '배송 중' : '주문 받는 중')));
+    setTag('rmDdak', ddakOpen ? (ddakPeriodShort+' 주문중') : (ddakEnded ? '1차 주문 마감' : '다음 차수'));
     setTag('rmHwang', hwangClosed ? '그 다음' : (hwangShort+'까지 주문중'));
     /* 로드맵 수확·발송 일정 안내 */
     var setWhen = function(id, html){ var el=document.getElementById(id); if(el) el.innerHTML = html; };
     setWhen('rmBaekWhen', SEASON.baekDelivered ? '🚚 다음 주 초 도착 예정' : (baekdo2Open ? '🚚 주문 순서대로 배송 예정' : ''));
     setWhen('rmDdakWhen', SEASON.ddakDelivered ? '✅ 배송 완료' : (ddakEnded ? ('🚚 '+ddakShipFull+' 수확·발송 예정') : ''));
-    setWhen('rmHwangWhen', !hwangClosed ? ('🛒 '+hwangShort+'(수)까지 주문 · 물량 40~50박스') : '');
+    setWhen('rmHwangWhen', !hwangClosed ? ('🛒 '+hwangShort+'(수)까지 주문 · 물량 50박스까지') : '');
     /* 카운트다운 라벨·날짜(진행 중인 차수 기준) 자동 */
     var cdl = document.getElementById('cdLabel'); if(cdl) cdl.innerHTML = cdLabelTxt + '<b id="cdDate">' + cdDateTxt + '</b>';
     /* FAQ '언제 도착해요?'는 날짜 없이 고정 문구(HTML)로 둠 — 발송일이 자주 바뀌어서 */
@@ -1164,7 +1164,7 @@
     var tb = document.getElementById('topbar');
     if(tb){
       tb.innerHTML = !hwangClosed
-        ? ('🍑 황도 말랑이 <b>주문</b> · '+hwangShort+'까지 · 물량 40~50박스')
+        ? ('🍑 황도 말랑이 <b>주문</b> · '+hwangShort+'까지 · 물량 50박스까지')
         : (baekdo2Open
         ? ('🍑 백도 말랑이 <b>추가 주문</b> · '+baekdo2Short+'까지 · 3kg')
         : (allClosed
@@ -1190,7 +1190,7 @@
       document.getElementById('hwSub').innerHTML = '속살 노란 <b>황도 말랑이</b>,<br><b>'+hwangFull+'까지</b> 주문 받아요!';
       document.getElementById('hwPrice').style.display = 'none';
       document.getElementById('hwLeft').style.display = 'inline-block';
-      document.getElementById('hwLeft').innerHTML = '🍑 3kg 특특 · 35,000원 · 물량 40~50박스';
+      document.getElementById('hwLeft').innerHTML = '🍑 3kg 특특 · 35,000원 · 물량 50박스까지';
       document.getElementById('hwNote').innerHTML = '📦 <b>'+hwangFull+'까지</b> 주문 · 마감 후 순차 발송<br>다음은 다시 <b>백도 말랑이</b>로 이어가요!';
       document.getElementById('hwCta').textContent = '황도 주문하러 가기';
       document.getElementById('hwSkip').textContent = '그냥 둘러보기';
@@ -1313,7 +1313,7 @@
   /* 딱딱이 상태별 처리: 오픈중=그대로 / 기간 지남=히스토리로 / 오픈 예정=숨김 */
   if(!ddakOpen){
     var ddivEl = document.getElementById('ddakDiv'); if(ddivEl) ddivEl.style.display = 'none';
-    if(ddakEnded){ markSoldout('itemD3','주문 마감'); markSoldout('itemDL','주문 마감'); markSoldout('itemD4','주문 마감'); }
+    if(ddakEnded){ markSoldout('itemD3','1차 마감'); markSoldout('itemDL','1차 마감'); markSoldout('itemD4','1차 마감'); }
     else { ['itemD3','itemDL','itemD4'].forEach(function(id){ var el=document.getElementById(id); if(el) el.style.display='none'; }); }
   }
   /* 상품 마감(회색) 처리 헬퍼 */
@@ -1334,8 +1334,8 @@
     else { hd.style.display = 'none'; }
   })();
   if(baekdoClosed){
-    if(!baekdo2Open) markSoldout('item3','1차 마감'); /* 추가 주문 열려있으면 3kg는 살려둠 */
-    markSoldout('item4','1차 마감'); markSoldout('itemL','1차 마감');
+    if(!baekdo2Open) markSoldout('item3','2차 마감'); /* 추가 주문 열려있으면 3kg는 살려둠 */
+    markSoldout('item4','2차 마감'); markSoldout('itemL','2차 마감');
   }
   /* 백도 말랑이 추가 주문 구분선: 추가 주문 중일 때만 노출 */
   (function initBaek2(){

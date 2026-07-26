@@ -224,6 +224,22 @@
     -webkit-background-clip:text;background-clip:text;color:transparent;
     font-weight:800;
   }
+  /* 히어로 CTA: 바로 주문 섹션으로 점프(재주문 손님 스크롤 최소화) */
+  .hero-cta{
+    display:flex;align-items:center;justify-content:center;gap:8px;
+    margin-top:18px;text-decoration:none;
+    background:linear-gradient(135deg,#FF8A5C,#FF5A36);color:#fff;
+    font-size:16px;font-weight:800;font-family:inherit;
+    padding:16px;border-radius:16px;
+    box-shadow:0 10px 26px rgba(255,90,54,.28);
+    transition:transform .08s ease, box-shadow .2s ease;
+  }
+  .hero-cta:active{transform:scale(.98);}
+  .hero-cta:focus-visible{outline:2.5px solid var(--ink);outline-offset:2px;}
+  .hero-cta .arw{font-weight:800;animation:ctaBounce 1.6s ease-in-out infinite;}
+  @keyframes ctaBounce{0%,100%{transform:translateY(0);}50%{transform:translateY(3px);}}
+  /* 주문 섹션으로 점프 시 상단바에 안 가리게 */
+  #order{scroll-margin-top:16px;}
 
   /* ── 카운트다운 ── */
   .count-wrap{padding:0 24px;}
@@ -721,6 +737,7 @@
     <span class="hb-ico" aria-hidden="true">🍯</span>
     <span>매년 <b>같은 품질</b> 그대로,<br><b class="hl">당도는 항상 대박</b>이에요 🍑</span>
   </div>
+  <a href="#order" class="hero-cta" id="heroCta">🛒 바로 주문하러 가기 <span class="arw" aria-hidden="true">↓</span></a>
 </header>
 
 <!-- 카운트다운 -->
@@ -735,35 +752,8 @@
   </div>
 </div>
 
-<!-- 신뢰 지표 -->
-<section>
-  <div class="sec-head">
-    <div class="kicker">Why this peach</div>
-    <h2>맛은 이미 검증 끝</h2>
-    <p>수상 이력도, <b>당도도 매년 그대로</b>예요.</p>
-  </div>
-  <div class="cred">
-    <div class="cred-card">
-      <div class="big">부문 1위</div>
-      <div class="small">대한민국 대표과일<br>선발대회 복숭아 부문</div>
-    </div>
-    <div class="cred-card">
-      <div class="big">대상 수상</div>
-      <div class="small">조치원 복숭아축제<br>품평회</div>
-    </div>
-    <div class="cred-card">
-      <div class="big">3년 연속</div>
-      <div class="small">단골들이 다시 찾는<br>여름 재주문</div>
-    </div>
-    <div class="cred-card">
-      <div class="big">산지 직송</div>
-      <div class="small">갑부농원에서<br>수확 후 바로 발송</div>
-    </div>
-  </div>
-</section>
-
 <!-- 상품 선택 -->
-<section>
+<section id="order">
   <div class="sec-head">
     <div class="kicker">Select</div>
     <h2>수량을 골라주세요</h2>
@@ -866,6 +856,33 @@
         <span class="num" id="qtyD4">0</span>
         <button type="button" data-item="ddak4" data-d="1" aria-label="딱딱이 4kg 특 수량 늘리기">+</button>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- 신뢰 지표 -->
+<section>
+  <div class="sec-head">
+    <div class="kicker">Why this peach</div>
+    <h2>맛은 이미 검증 끝</h2>
+    <p>수상 이력도, <b>당도도 매년 그대로</b>예요.</p>
+  </div>
+  <div class="cred">
+    <div class="cred-card">
+      <div class="big">부문 1위</div>
+      <div class="small">대한민국 대표과일<br>선발대회 복숭아 부문</div>
+    </div>
+    <div class="cred-card">
+      <div class="big">대상 수상</div>
+      <div class="small">조치원 복숭아축제<br>품평회</div>
+    </div>
+    <div class="cred-card">
+      <div class="big">3년 연속</div>
+      <div class="small">단골들이 다시 찾는<br>여름 재주문</div>
+    </div>
+    <div class="cred-card">
+      <div class="big">산지 직송</div>
+      <div class="small">갑부농원에서<br>수확 후 바로 발송</div>
     </div>
   </div>
 </section>

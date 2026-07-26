@@ -303,33 +303,40 @@
   .order-deadline:empty{display:none;}
   .order-deadline b{font-weight:800;}
 
-  /* ── 신뢰 지표 (수상) · 가로 스크롤 뱃지 ── */
+  /* ── 신뢰 지표 (수상) · 자동으로 흐르는 뱃지(marquee) ── */
   .cred-scroll{
-    display:flex;gap:12px;
-    overflow-x:auto;overflow-y:hidden;
-    margin:0 -24px;padding:4px 24px 10px;   /* 화면 끝까지 흐르게 */
-    scroll-snap-type:x proximity;
-    -webkit-overflow-scrolling:touch;
-    scrollbar-width:none;-ms-overflow-style:none;
+    overflow:hidden;
+    margin:0 -24px;padding:2px 24px 12px;   /* 화면 끝까지 흐르게 */
   }
-  .cred-scroll::-webkit-scrollbar{display:none;}
+  .cred-track{
+    display:flex;width:max-content;
+    animation:credMarquee 30s linear infinite;
+    will-change:transform;
+  }
+  .cred-scroll.paused .cred-track{animation-play-state:paused;}
+  @keyframes credMarquee{ to{ transform:translateX(-50%); } }
   .cred-badge{
-    flex:0 0 auto;scroll-snap-align:start;
-    width:148px;
-    border:1px solid rgba(255,255,255,.9);
-    border-radius:18px;
-    padding:16px 16px 18px;
-    box-shadow:0 6px 22px rgba(70,80,95,.07);
-    -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+    flex:0 0 auto;width:150px;margin-right:12px;
+    background:#fff;border:1px solid #EFEDE8;border-radius:20px;
+    padding:16px;box-shadow:0 8px 24px rgba(70,80,95,.06);
   }
-  .cred-badge .cb-ico{font-size:26px;line-height:1;}
-  .cred-badge .cb-big{font-size:18px;font-weight:800;letter-spacing:-0.02em;margin-top:10px;}
+  .cred-badge .cb-ico{
+    width:44px;height:44px;border-radius:14px;
+    display:flex;align-items:center;justify-content:center;font-size:24px;line-height:1;
+  }
+  .cred-badge .cb-big{font-size:18px;font-weight:800;letter-spacing:-0.02em;margin-top:12px;}
   .cred-badge .cb-small{font-size:12px;color:var(--sub);margin-top:4px;line-height:1.5;}
-  .cred-scroll .cred-badge:nth-child(1){background:rgba(255,235,224,.85);}
-  .cred-scroll .cred-badge:nth-child(2){background:rgba(222,243,232,.85);}
-  .cred-scroll .cred-badge:nth-child(3){background:rgba(233,229,251,.85);}
-  .cred-scroll .cred-badge:nth-child(4){background:rgba(223,237,251,.85);}
-  .cred-scroll .cred-badge:nth-child(5){background:rgba(255,241,236,.9);}
+  /* 아이콘 칩 색(요즘 느낌) — 원본·복제본 모두 적용되게 5n 주기 */
+  .cred-badge:nth-child(5n+1) .cb-ico{background:#FFE7DC;}
+  .cred-badge:nth-child(5n+2) .cb-ico{background:#FFF0C9;}
+  .cred-badge:nth-child(5n+3) .cb-ico{background:#D8F3E6;}
+  .cred-badge:nth-child(5n+4) .cb-ico{background:#DCEBFC;}
+  .cred-badge:nth-child(5n+5) .cb-ico{background:#ECE2FB;}
+  @media (prefers-reduced-motion: reduce){
+    .cred-scroll{overflow-x:auto;scrollbar-width:none;}
+    .cred-scroll::-webkit-scrollbar{display:none;}
+    .cred-track{animation:none;}
+  }
 
   /* ── 상품/주문 ── */
   .item{
@@ -879,31 +886,33 @@
     <h2>맛은 이미 검증 끝</h2>
     <p>수상 이력도, <b>당도도 매년 그대로</b>예요.</p>
   </div>
-  <div class="cred-scroll">
-    <div class="cred-badge">
-      <div class="cb-ico" aria-hidden="true">🥇</div>
-      <div class="cb-big">부문 1위</div>
-      <div class="cb-small">대한민국 대표과일<br>선발대회 복숭아 부문</div>
-    </div>
-    <div class="cred-badge">
-      <div class="cb-ico" aria-hidden="true">🏆</div>
-      <div class="cb-big">대상 수상</div>
-      <div class="cb-small">조치원 복숭아축제<br>품평회</div>
-    </div>
-    <div class="cred-badge">
-      <div class="cb-ico" aria-hidden="true">🔁</div>
-      <div class="cb-big">3년 연속</div>
-      <div class="cb-small">단골들이 다시 찾는<br>여름 재주문</div>
-    </div>
-    <div class="cred-badge">
-      <div class="cb-ico" aria-hidden="true">🚚</div>
-      <div class="cb-big">산지 직송</div>
-      <div class="cb-small">갑부농원 수확 후<br>바로 발송</div>
-    </div>
-    <div class="cred-badge">
-      <div class="cb-ico" aria-hidden="true">🍯</div>
-      <div class="cb-big">당도 대박</div>
-      <div class="cb-small">매년 같은 품질<br>그대로예요</div>
+  <div class="cred-scroll" id="credScroll">
+    <div class="cred-track" id="credTrack">
+      <div class="cred-badge">
+        <div class="cb-ico" aria-hidden="true">🥇</div>
+        <div class="cb-big">부문 1위</div>
+        <div class="cb-small">대한민국 대표과일<br>선발대회 복숭아 부문</div>
+      </div>
+      <div class="cred-badge">
+        <div class="cb-ico" aria-hidden="true">🏆</div>
+        <div class="cb-big">대상 수상</div>
+        <div class="cb-small">조치원 복숭아축제<br>품평회</div>
+      </div>
+      <div class="cred-badge">
+        <div class="cb-ico" aria-hidden="true">🔁</div>
+        <div class="cb-big">3년 연속</div>
+        <div class="cb-small">단골들이 다시 찾는<br>여름 재주문</div>
+      </div>
+      <div class="cred-badge">
+        <div class="cb-ico" aria-hidden="true">🚚</div>
+        <div class="cb-big">산지 직송</div>
+        <div class="cb-small">갑부농원 수확 후<br>바로 발송</div>
+      </div>
+      <div class="cred-badge">
+        <div class="cb-ico" aria-hidden="true">🍯</div>
+        <div class="cb-big">당도 대박</div>
+        <div class="cb-small">매년 같은 품질<br>그대로예요</div>
+      </div>
     </div>
   </div>
 </section>
@@ -1672,6 +1681,22 @@
   });
 
   render();
+
+  /* ── 신뢰 뱃지 자동 흐름(marquee): 복제로 끊김 없이 + 누르면 잠깐 멈춤 ── */
+  (function credMarquee(){
+    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var track = document.getElementById('credTrack');
+    var scroll = document.getElementById('credScroll');
+    if(!track || !scroll || reduce) return;
+    var kids = Array.prototype.slice.call(track.children);
+    kids.forEach(function(k){ var c=k.cloneNode(true); c.setAttribute('aria-hidden','true'); track.appendChild(c); });
+    var t;
+    scroll.addEventListener('pointerdown', function(){ scroll.classList.add('paused'); clearTimeout(t); });
+    var resume = function(){ clearTimeout(t); t = setTimeout(function(){ scroll.classList.remove('paused'); }, 2500); };
+    scroll.addEventListener('pointerup', resume);
+    scroll.addEventListener('pointercancel', resume);
+    scroll.addEventListener('pointerleave', resume);
+  })();
 })();
 </script>
 </body>

@@ -1090,7 +1090,7 @@
      · ddakddak  : 'coming'(오픈 예정) | 'open'(예약 주문). ddakCloseDate 지나면 자동 마감.
      ════════════════════════════════════════════════════════════ */
   var SEASON = {
-    hwangdo:          'open',         /* 황도 말랑이 주문: 'open'(주문중) | 'closed'(마감) */
+    hwangdo:          'closed',       /* 황도 말랑이 주문: 'open'(주문중) | 'closed'(마감) */
     hwangdoCloseDate: '2026-07-29',   /* 황도 주문 마감일(수) — 이 날 지나면 자동 마감 */
     baekdo:           'open',         /* 백도 말랑이 1차: 'open'(주문받는중) | 'closed'(1차 마감) */
     round1Deadline:   '2026-07-15',   /* 1차(백도 말랑이) 주문 마감일 */
@@ -1189,7 +1189,7 @@
     var setTag = function(id, txt){ var el=document.getElementById(id); if(el) el.textContent = txt; };
     setTag('rmBaek', SEASON.baekDelivered ? '2차 주문 마감' : (baekdo2Open ? '추가 주문 중' : (baekdoClosed ? '배송 중' : '주문 받는 중')));
     setTag('rmDdak', ddakOpen ? (ddakPeriodShort+' 주문중') : (ddakEnded ? '1차 주문 마감' : '다음 차수'));
-    setTag('rmHwang', hwangClosed ? '그 다음' : (hwangShort+'까지 주문중'));
+    setTag('rmHwang', hwangClosed ? '1차 주문 마감' : (hwangShort+'까지 주문중'));
     /* 로드맵 수확·발송 일정 안내 */
     var setWhen = function(id, html){ var el=document.getElementById(id); if(el) el.innerHTML = html; };
     setWhen('rmBaekWhen', SEASON.baekDelivered ? '🚚 다음 주 초 도착 예정' : (baekdo2Open ? '🚚 주문 순서대로 배송 예정' : ''));
@@ -1373,7 +1373,7 @@
     if(tag) tag.textContent=badge;
     var qb=el.querySelectorAll('.qty button'); for(var k=0;k<qb.length;k++){ qb[k].disabled=true; }
   }
-  if(hwangClosed) markSoldout('itemH', '주문 마감');
+  if(hwangClosed) markSoldout('itemH', '1차 마감');
   /* 황도 주문 구분선: 주문 중일 때만 노출 + 마감일 표시 */
   (function initHwang(){
     var hd = document.getElementById('hwangDiv'); if(!hd) return;

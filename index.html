@@ -1202,14 +1202,15 @@
   var HWANGDO_LEFT = 10; /* 황도 남은 박스 수(오픈 상태에서만 표시) */
   (function applySeason(){
     var setTag = function(id, txt){ var el=document.getElementById(id); if(el) el.textContent = txt; };
-    setTag('rmBaek', SEASON.baekDelivered ? '2차 주문 마감' : (baekdo2Open ? '추가 주문 중' : (baekdoClosed ? '배송 중' : '주문 받는 중')));
+    /* 딱지·상태줄은 '주문 상태'만(자동 갱신) — 배송/도착 상태는 손으로 안 고치면 낡아서 제거 */
+    setTag('rmBaek', baekdo2Open ? '추가 주문 중' : (baekdoClosed ? '2차 주문 마감' : '주문 받는 중'));
     setTag('rmDdak', ddak2Open ? '2차 주문 중' : (ddakOpen ? (ddakPeriodShort+' 주문중') : (ddakEnded ? '1차 주문 마감' : '다음 차수')));
     setTag('rmHwang', hwangClosed ? '1차 주문 마감' : (hwangShort+'까지 주문중'));
-    /* 로드맵 수확·발송 일정 안내 */
+    /* 로드맵 상태줄: 진행 중인 주문 안내만(주문 기간). 배송 상태는 표시 안 함 */
     var setWhen = function(id, html){ var el=document.getElementById(id); if(el) el.innerHTML = html; };
-    setWhen('rmBaekWhen', SEASON.baekDelivered ? '🚚 다음 주 초 도착 예정' : (baekdo2Open ? '🚚 주문 순서대로 배송 예정' : ''));
-    setWhen('rmDdakWhen', ddak2Open ? ('🛒 2차 '+ddak2LabelShort+'까지 · 30박스') : (SEASON.ddakDelivered ? '✅ 1차 배송 완료' : (ddakEnded ? ('🚚 '+ddakShipFull+' 수확·발송 예정') : '')));
-    setWhen('rmHwangWhen', !hwangClosed ? ('🛒 '+hwangShort+'(수)까지 주문 · 물량 50박스까지') : '');
+    setWhen('rmBaekWhen', baekdo2Open ? ('🛒 '+baekdo2Short+'까지 주문') : '');
+    setWhen('rmDdakWhen', ddak2Open ? ('🛒 2차 '+ddak2LabelShort+'까지 · 30박스') : '');
+    setWhen('rmHwangWhen', !hwangClosed ? ('🛒 '+hwangShort+'(수)까지 주문 · 50박스까지') : '');
     /* 카운트다운 라벨·날짜(진행 중인 차수 기준) 자동 */
     var cdl = document.getElementById('cdLabel'); if(cdl) cdl.innerHTML = cdLabelTxt + '<b id="cdDate">' + cdDateTxt + '</b>';
     /* FAQ '언제 도착해요?'는 날짜 없이 고정 문구(HTML)로 둠 — 발송일이 자주 바뀌어서 */

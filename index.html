@@ -906,7 +906,7 @@
     </div>
   </div>
 
-  <div class="select-div ddak2" id="ddak2Div">🗓 백도 딱딱이 <b>2차 주문</b> — <span id="ddak2Period">8/1 20:00까지</span> · 30박스</div>
+  <div class="select-div ddak2" id="ddak2Div">🗓 백도 딱딱이 <b>딱복 주문</b> — <span id="ddak2Period">8/15까지</span> · 무한정</div>
 
   <div class="item ddak" id="itemDL">
     <div class="row1"><span class="name">딱딱이 3kg <span style="color:var(--sub);font-weight:700">(특특)</span></span><span class="price">35,000원</span></div>
@@ -1157,11 +1157,12 @@
     baekdo2:          'closed',       /* 백도 말랑이 추가 주문(3kg 특만): 'open' | 'closed' */
     baekdo2Deadline:  '2026-07-31',   /* 추가 주문 마감일 — 이 날 지나면 자동 마감('마감'으로 수동 종료 가능) */
     baekDelivered:    true,           /* 백도 말랑이 배송 완료? true면 로드맵에 '배송 완료' 표시 */
-    ddak2:            'open',          /* 백도 딱딱이 2차(3kg 특특만): 'open' | 'closed' */
-    ddak2Deadline:    '2026-08-01T20:00', /* 딱딱이 2차 마감 일시(8/1 20:00) — 이 시각 지나면 자동 마감 */
-    baekdo3:          'open',          /* 백도 말랑이 3차(3kg 특특만·큰 알): 'open' | 'closed' */
+    ddak2:            'open',          /* 백도 딱딱이 2차(3kg 특특만·무한정): 'open' | 'closed' */
+    ddak2Deadline:    '2026-08-15T23:59', /* 딱딱이 2차 마감 일시(8/15) — 이 시각 지나면 자동 마감 */
+    baekdo3:          'closed',        /* 백도 말랑이 3차(3kg 특특만·큰 알): 'open' | 'closed' */
     baekdo3Deadline:  '2026-08-08T20:00', /* 백도 3차 마감 일시(8/8 20:00) — 이 시각 지나면 자동 마감 */
-    nextShipDate:     '2026-08-17'     /* 말랑이 다음 복숭아 발송 예정일(안내용) */
+    nextShipDate:     '2026-08-17',    /* 다음 복숭아(황도) 발송 예정일(안내용) */
+    malangLastDate:   '2026-08-20'     /* 말랑이 마지막 물량 안내일(이후 특별 물량만) */
   };
   /* 오늘 날짜(한국시간 기준, YYYY-MM-DD) */
   var TODAY = new Date(Date.now() + 9*3600000).toISOString().slice(0,10);
@@ -1188,8 +1189,9 @@
   var round1Full=fmtKST(SEASON.round1Deadline,true), round1Short=fmtKST(SEASON.round1Deadline,false);
   var baekdo2Full=fmtKST(SEASON.baekdo2Deadline,true), baekdo2Short=fmtKST(SEASON.baekdo2Deadline,false);
   var ddak2DateISO = SEASON.ddak2Deadline.slice(0,10), ddak2Time = SEASON.ddak2Deadline.slice(11); /* '2026-08-01', '20:00' */
-  var ddak2LabelShort = fmtKST(ddak2DateISO,false)+' '+ddak2Time;  /* 예: 8/1 20:00 */
-  var ddak2LabelFull  = fmtKST(ddak2DateISO,true)+' '+ddak2Time;   /* 예: 8월 1일 (토) 20:00 */
+  var ddak2TimeDisp = (ddak2Time === '23:59') ? '' : (' '+ddak2Time); /* 종일 마감(23:59)이면 시각 생략 */
+  var ddak2LabelShort = fmtKST(ddak2DateISO,false)+ddak2TimeDisp;  /* 예: 8/15 또는 8/1 20:00 */
+  var ddak2LabelFull  = fmtKST(ddak2DateISO,true)+ddak2TimeDisp;   /* 예: 8월 15일 (토) 또는 8월 1일 (토) 20:00 */
   var baekdo3DateISO = SEASON.baekdo3Deadline.slice(0,10), baekdo3Time = SEASON.baekdo3Deadline.slice(11);
   var baekdo3LabelShort = fmtKST(baekdo3DateISO,false)+' '+baekdo3Time; /* 예: 8/4 20:00 */
   var baekdo3LabelFull  = fmtKST(baekdo3DateISO,true)+' '+baekdo3Time;
@@ -1201,7 +1203,8 @@
   var ddakCloseFull=fmtKST(SEASON.ddakCloseDate,true), ddakCloseShort=fmtKST(SEASON.ddakCloseDate,false);
   var ddakPeriodShort = ddakOpenShort+'~'+ddakCloseShort;             /* 예: 7/20~7/22 */
   var ddakShipFull=fmtKST(SEASON.ddakShipDate,true), ddakShipShort=fmtKST(SEASON.ddakShipDate,false); /* 딱딱이 수확·발송 예정일 */
-  var nextShipShort = SEASON.nextShipDate ? fmtKST(SEASON.nextShipDate,false) : ''; /* 말랑이 다음 복숭아 발송 예정일 */
+  var nextShipShort = SEASON.nextShipDate ? fmtKST(SEASON.nextShipDate,false) : ''; /* 다음 복숭아(황도) 발송 예정일 */
+  var malangLastShort = SEASON.malangLastDate ? fmtKST(SEASON.malangLastDate,false) : ''; /* 말랑이 마지막 물량 안내일 */
 
   /* ── 카운트다운: 지금 진행 중인 차수 기준 ──
      · 추가 주문 중  → 추가 주문 마감(baekdo2Deadline)까지
@@ -1214,7 +1217,7 @@
     cdDoneMain = '주문 마감';
     cdDoneSub  = '다음 소식 기다려주세요';
   } else if(ddak2Open){
-    cdLabelTxt = '딱딱이 2차 마감까지';
+    cdLabelTxt = '딱복 주문 마감까지';
     cdDateTxt  = ddak2LabelFull;
     cdTarget   = ddak2CutMs;
     cdDoneMain = '주문 마감';
@@ -1271,13 +1274,13 @@
     var setTag = function(id, txt){ var el=document.getElementById(id); if(el) el.textContent = txt; };
     /* 딱지·상태줄은 '주문 상태'만(자동 갱신) — 배송/도착 상태는 손으로 안 고치면 낡아서 제거 */
     setTag('rmBaek', baekdo3Open ? '3차 주문 중' : (baekdo2Open ? '추가 주문 중' : (baekdoClosed ? '2차 주문 마감' : '주문 받는 중')));
-    setTag('rmDdak', ddak2Open ? '2차 주문 중' : (ddakOpen ? (ddakPeriodShort+' 주문중') : (ddakEnded ? '1차 주문 마감' : '다음 차수')));
-    setTag('rmHwang', hwangClosed ? '1차 주문 마감' : (hwangShort+'까지 주문중'));
+    setTag('rmDdak', ddak2Open ? '딱복 주문 중' : (ddakOpen ? (ddakPeriodShort+' 주문중') : (ddakEnded ? '1차 주문 마감' : '다음 차수')));
+    setTag('rmHwang', hwangClosed ? (nextShipShort ? '다음 발송' : '1차 주문 마감') : (hwangShort+'까지 주문중'));
     /* 로드맵 상태줄: 진행 중인 주문 안내만(주문 기간). 배송 상태는 표시 안 함 */
     var setWhen = function(id, html){ var el=document.getElementById(id); if(el) el.innerHTML = html; };
-    setWhen('rmBaekWhen', baekdo3Open ? ('🛒 3차 '+baekdo3LabelShort+'까지 · 30박스') : (baekdo2Open ? ('🛒 '+baekdo2Short+'까지 주문') : ''));
-    setWhen('rmDdakWhen', ddak2Open ? ('🛒 2차 '+ddak2LabelShort+'까지 · 30박스') : (nextShipShort ? ('📦 '+nextShipShort+' 발송 예정') : ''));
-    setWhen('rmHwangWhen', !hwangClosed ? ('🛒 '+hwangShort+'(수)까지 주문 · 50박스까지') : '');
+    setWhen('rmBaekWhen', baekdo3Open ? ('🛒 3차 '+baekdo3LabelShort+'까지 · 30박스') : (baekdo2Open ? ('🛒 '+baekdo2Short+'까지 주문') : (malangLastShort ? ('🍑 '+malangLastShort+' 이후엔 특별 물량만') : '')));
+    setWhen('rmDdakWhen', ddak2Open ? ('🛒 딱복 '+ddak2LabelShort+'까지 · 무한정') : '');
+    setWhen('rmHwangWhen', !hwangClosed ? ('🛒 '+hwangShort+'(수)까지 주문 · 50박스까지') : (nextShipShort ? ('📦 '+nextShipShort+' 발송 예정') : ''));
     /* 카운트다운 라벨·날짜(진행 중인 차수 기준) 자동 */
     var cdl = document.getElementById('cdLabel'); if(cdl) cdl.innerHTML = cdLabelTxt + '<b id="cdDate">' + cdDateTxt + '</b>';
     /* FAQ '언제 도착해요?'는 날짜 없이 고정 문구(HTML)로 둠 — 발송일이 자주 바뀌어서 */
@@ -1296,7 +1299,7 @@
       tb.innerHTML = baekdo3Open
         ? ('🍑 백도 말랑이 <b>3차 주문</b> · '+baekdo3LabelShort+'까지 · 30박스')
         : (ddak2Open
-        ? ('🗓 백도 딱딱이 <b>2차 주문</b> · '+ddak2LabelShort+'까지 · 30박스')
+        ? ('🗓 백도 딱딱이 <b>딱복 주문</b> · '+ddak2LabelShort+'까지 · 무한정')
         : (!hwangClosed
         ? ('🍑 황도 말랑이 <b>주문</b> · '+hwangShort+'까지 · 물량 50박스까지')
         : (baekdo2Open
@@ -1330,12 +1333,12 @@
       document.getElementById('hwSkip').textContent = '둘러보기';
     } else if(ddak2Open){
       /* 백도 딱딱이 2차 주문 오픈 — 최신 소식 우선 */
-      document.getElementById('hwEyebrow').textContent = '🗓 딱딱이 2차 오픈';
-      document.getElementById('hwTitle').innerHTML = '백도 딱딱이<br>2차 주문 받아요!';
-      document.getElementById('hwSub').innerHTML = '단단한 딱복 · <b>3kg 특특 35,000원</b>';
+      document.getElementById('hwEyebrow').textContent = '🗓 딱복 오픈';
+      document.getElementById('hwTitle').innerHTML = '백도 딱딱이<br>딱복 주문 받아요!';
+      document.getElementById('hwSub').innerHTML = '단단한 딱복 · <b>3kg 특특 35,000원</b> · 무한정';
       document.getElementById('hwPrice').style.display = 'none';
       document.getElementById('hwLeft').style.display = 'inline-block';
-      document.getElementById('hwLeft').innerHTML = '🗓 '+ddak2LabelShort+'까지 · 30박스';
+      document.getElementById('hwLeft').innerHTML = '🗓 '+ddak2LabelShort+'까지 · 무한정';
       document.getElementById('hwNote').innerHTML = '📦 마감 후 순차 발송 · 수확 후 바로 보내드려요';
       document.getElementById('hwCta').textContent = '딱딱이 주문하기';
       document.getElementById('hwSkip').textContent = '둘러보기';

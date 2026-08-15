@@ -875,12 +875,12 @@
     </div>
   </div>
 
-  <div class="select-div baek" id="baekdo3Div">🍑 백도 말랑이 <b>주문</b> — <span id="baekdo3Period">8/16까지</span> · 소량 30박스</div>
+  <div class="select-div baek" id="baekdo3Div">🍑 백도 말랑이 <b>주문</b> — <span id="baekdo3Period">8/16 20:00까지</span> · 소량</div>
 
   <div class="item" id="itemL">
     <div class="row1"><span class="name">백도 말랑이 3kg <span style="color:var(--sub);font-weight:700">(특특)</span></span><span class="price">35,000원</span></div>
     <div class="meta">특보다 큰 알 · 최대 3박스</div>
-    <div class="item-note" id="baek3Note" hidden>🍑 <b>마지막 소량</b> · 17~20일 사이 발송</div>
+    <div class="item-note" id="baek3Note" hidden>🍑 <b>소량 물량</b> · 17일 수확·출하 예정</div>
     <div class="row2">
       <span class="free">무료배송</span>
       <div class="qty">
@@ -1158,12 +1158,12 @@
     baekdo2Deadline:  '2026-07-31',   /* 추가 주문 마감일 — 이 날 지나면 자동 마감('마감'으로 수동 종료 가능) */
     baekDelivered:    true,           /* 백도 말랑이 배송 완료? true면 로드맵에 '배송 완료' 표시 */
     ddak2:            'open',          /* 백도 딱딱이(3kg 특특만·무한정): 'open' | 'closed' */
-    ddak2Deadline:    '2026-08-16T23:59', /* 딱딱이 주문 마감(8/16) — 이 시각 지나면 자동 마감 */
-    ddak2ShipDate:    '2026-08-17',    /* 딱딱이 발송 예정일(아마도) */
-    baekdo3:          'open',          /* 백도 말랑이(3kg 특특만·소량 30박스): 'open' | 'closed' */
-    baekdo3Deadline:  '2026-08-16T23:59', /* 말랑이 주문 마감(8/16) — 이 시각 지나면 자동 마감 */
-    baekdo3ShipText:  '17~20일 사이',  /* 말랑이 발송 예정(범위) */
-    baekdo3Cap:       '30박스'         /* 말랑이 소량 한정 표기 */
+    ddak2Deadline:    '2026-08-16T20:00', /* 딱딱이 주문 마감(8/16 20시) — 이 시각 지나면 자동 마감 */
+    ddak2ShipDate:    '2026-08-17',    /* 딱딱이 수확·출하 예정일 */
+    baekdo3:          'open',          /* 백도 말랑이(3kg 특특만·소량): 'open' | 'closed' */
+    baekdo3Deadline:  '2026-08-16T20:00', /* 말랑이 주문 마감(8/16 20시) — 이 시각 지나면 자동 마감 */
+    baekdo3ShipText:  '17일',          /* 말랑이 수확·출하 예정일 */
+    baekdo3Cap:       '소량'           /* 말랑이 물량 표기(사장님이 조금 더 풀어주심) */
   };
   /* 오늘 날짜(한국시간 기준, YYYY-MM-DD) */
   var TODAY = new Date(Date.now() + 9*3600000).toISOString().slice(0,10);
@@ -1300,7 +1300,7 @@
     var tb = document.getElementById('topbar');
     if(tb){
       tb.innerHTML = baekdo3Open
-        ? ('🍑 백도 말랑이 <b>주문</b> · '+baekdo3LabelShort+'까지 · 소량 30박스')
+        ? ('🍑 백도 말랑이 <b>주문</b> · '+baekdo3LabelShort+'까지 · 소량')
         : (ddak2Open
         ? ('🗓 백도 딱딱이 <b>주문</b> · '+ddak2LabelShort+'까지 · 무한정')
         : (!hwangClosed

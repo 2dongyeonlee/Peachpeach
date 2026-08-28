@@ -765,10 +765,6 @@
   <span class="eyebrow">🍑 조치원 갑부농원 산지직송</span>
   <h1>올해도,<br>그 복숭아<br><span class="grad">진짜 달아요.</span></h1>
   <p class="lede">한 번 먹으면 여름마다 찾는 그 당도 🍑<br>갑부농원 <b>수확 후 바로 발송</b>.</p>
-  <div class="hero-badge">
-    <span class="hb-ico" aria-hidden="true">🍯</span>
-    <span>매년 <b>같은 품질</b> 그대로,<br><b class="hl">당도는 항상 대박</b>이에요 🍑</span>
-  </div>
   <a href="#order" class="hero-cta" id="heroCta">🛒 바로 주문하러 가기 <span class="arw" aria-hidden="true">↓</span></a>
 </header>
 
@@ -783,44 +779,6 @@
     <span>지금까지 <b id="orderCount">0</b>건 주문 접수됐어요</span>
   </div>
 </div>
-
-<!-- 신뢰 지표 -->
-<section>
-  <div class="sec-head">
-    <div class="kicker">Why this peach</div>
-    <h2>맛은 이미 검증 끝</h2>
-    <p>수상 이력도, <b>당도도 매년 그대로</b>예요.</p>
-  </div>
-  <div class="cred-scroll" id="credScroll">
-    <div class="cred-track" id="credTrack">
-      <div class="cred-badge">
-        <div class="cb-ico" aria-hidden="true">🥇</div>
-        <div class="cb-big">부문 1위</div>
-        <div class="cb-small">대한민국 대표과일<br>선발대회 복숭아 부문</div>
-      </div>
-      <div class="cred-badge">
-        <div class="cb-ico" aria-hidden="true">🏆</div>
-        <div class="cb-big">대상 수상</div>
-        <div class="cb-small">조치원 복숭아축제<br>품평회</div>
-      </div>
-      <div class="cred-badge">
-        <div class="cb-ico" aria-hidden="true">🔁</div>
-        <div class="cb-big">3년 연속</div>
-        <div class="cb-small">단골들이 다시 찾는<br>여름 재주문</div>
-      </div>
-      <div class="cred-badge">
-        <div class="cb-ico" aria-hidden="true">🚚</div>
-        <div class="cb-big">산지 직송</div>
-        <div class="cb-small">갑부농원 수확 후<br>바로 발송</div>
-      </div>
-      <div class="cred-badge">
-        <div class="cb-ico" aria-hidden="true">🍯</div>
-        <div class="cb-big">당도 대박</div>
-        <div class="cb-small">매년 같은 품질<br>그대로예요</div>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- 상품 선택 -->
 <section id="order">
@@ -1834,21 +1792,6 @@
 
   render();
 
-  /* ── 신뢰 뱃지 자동 흐름(marquee): 복제로 끊김 없이 + 누르면 잠깐 멈춤 ── */
-  (function credMarquee(){
-    var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    var track = document.getElementById('credTrack');
-    var scroll = document.getElementById('credScroll');
-    if(!track || !scroll || reduce) return;
-    var kids = Array.prototype.slice.call(track.children);
-    kids.forEach(function(k){ var c=k.cloneNode(true); c.setAttribute('aria-hidden','true'); track.appendChild(c); });
-    var t;
-    scroll.addEventListener('pointerdown', function(){ scroll.classList.add('paused'); clearTimeout(t); });
-    var resume = function(){ clearTimeout(t); t = setTimeout(function(){ scroll.classList.remove('paused'); }, 2500); };
-    scroll.addEventListener('pointerup', resume);
-    scroll.addEventListener('pointercancel', resume);
-    scroll.addEventListener('pointerleave', resume);
-  })();
 })();
 </script>
 </body>

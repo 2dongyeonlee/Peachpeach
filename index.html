@@ -875,12 +875,12 @@
     </div>
   </div>
 
-  <div class="select-div baek" id="baekdo3Div">🍑 백도 말랑이 <b>주문</b> — <span id="baekdo3Period">8/16 20:00까지</span> · 소량</div>
+  <div class="select-div baek" id="baekdo3Div">🍑 백도 말랑이 <b>주문</b> — 🔥 10개 한정 · 선착순</div>
 
   <div class="item" id="itemL">
     <div class="row1"><span class="name">백도 말랑이 3kg <span style="color:var(--sub);font-weight:700">(특특)</span></span><span class="price">35,000원</span></div>
     <div class="meta">특보다 큰 알 · 최대 3박스</div>
-    <div class="item-note" id="baek3Note" hidden>🍑 <b>소량 물량</b> · 17일 수확·출하 예정</div>
+    <div class="item-note" id="baek3Note" hidden>🔥 <b>딱 10개만</b> · 선착순 마감이에요</div>
     <div class="row2">
       <span class="free">무료배송</span>
       <div class="qty">
@@ -1104,15 +1104,9 @@
       </label>
       <label>수령인 연락처<input id="fPhone" inputmode="tel" placeholder="010-0000-0000"></label>
       <label>송금인 성함<input id="fPayer" placeholder="카카오페이 보내는 분 이름"></label>
-      <label>입금 받는 분 <span style="color:var(--accent);font-weight:700">(누구에게 보낼지 골라주세요)</span>
-        <div class="pay-to" id="payTo">
-          <button type="button" class="pt-btn" data-pay="이동연">이동연</button>
-          <button type="button" class="pt-btn" data-pay="류태희">류태희</button>
-        </div>
-      </label>
       <div class="pay-line"><span>송금할 금액</span><b id="pAmount">0원</b></div>
       <button class="submit" type="button" id="doOrder">주문 완료</button>
-      <p class="p-hint" id="pHint">주문 완료 후, 위에서 고른 분의 카카오페이로 송금해주세요.<br>송금 확인 후 주문이 확정됩니다.</p>
+      <p class="p-hint" id="pHint">주문 완료 후, 카카오페이로 송금해주세요.<br>송금 확인 후 주문이 확정됩니다.</p>
     </div>
     <div class="p-done" id="pDone" hidden>
       <div class="check">✓</div>
@@ -1160,10 +1154,12 @@
     ddak2:            'closed',        /* 백도 딱딱이(3kg 특특만·무한정): 'open' | 'closed' */
     ddak2Deadline:    '2026-08-16T20:00', /* 딱딱이 주문 마감(8/16 20시) — 이 시각 지나면 자동 마감 */
     ddak2ShipDate:    '2026-08-17',    /* 딱딱이 수확·출하 예정일 */
-    baekdo3:          'closed',        /* 백도 말랑이(3kg 특특만·소량): 'open' | 'closed' */
-    baekdo3Deadline:  '2026-08-16T20:00', /* 말랑이 주문 마감(8/16 20시) — 이 시각 지나면 자동 마감 */
-    baekdo3ShipText:  '17일',          /* 말랑이 수확·출하 예정일 */
-    baekdo3Cap:       '소량'           /* 말랑이 물량 표기(사장님이 조금 더 풀어주심) */
+    baekdo3:          'open',          /* 백도 말랑이(3kg 특특만·10개 선착순): 'open' | 'closed' */
+    baekdo3Deadline:  '2026-09-30T23:59', /* 백스톱 날짜(실제 마감은 아래 10개 선착순) */
+    baekdo3ShipText:  '',              /* 말랑이 발송일 미정 */
+    baekdo3Cap:       '10개 한정',      /* 선착순 한정 표기 */
+    baekdo3Limit:     10,              /* 선착순 수량 — 아래 집계 링크 연결 시 이 수량에서 자동 마감 */
+    baekdo3CountUrl:  ''               /* 구글시트 '말랑이 누적수량' 셀 퍼블리시 CSV 링크(넣으면 10개 자동 마감) */
   };
   /* 오늘 날짜(한국시간 기준, YYYY-MM-DD) */
   var TODAY = new Date(Date.now() + 9*3600000).toISOString().slice(0,10);
@@ -1199,6 +1195,8 @@
   var baekdo3LabelFull  = fmtKST(baekdo3DateISO,true)+baekdo3TimeDisp;
   var baekdo3ShipText = SEASON.baekdo3ShipText || ''; /* 말랑이 발송 예정(범위) */
   var baekdo3Cap = SEASON.baekdo3Cap || '';           /* 말랑이 소량 한정 표기 */
+  var baekdo3Limit = SEASON.baekdo3Limit || 0;        /* 말랑이 선착순 수량 */
+  var baekdo3CapMode = baekdo3Open && baekdo3Limit > 0; /* 선착순(수량 기준) 모드? */
   var ddak2ShipShort = SEASON.ddak2ShipDate ? fmtKST(SEASON.ddak2ShipDate,false) : '';        /* 딱딱이 발송 예정일 */
   var hwangFull=fmtKST(SEASON.hwangdoCloseDate,true), hwangShort=fmtKST(SEASON.hwangdoCloseDate,false);
   /* 도착 예정일 = 발송일 + 1일 (예: 월 발송 → 화 도착) */
@@ -1214,11 +1212,19 @@
      · 그 외          → 백도 발송 시작일까지 (지나면 '발송 중') */
   var cdLabelTxt, cdDateTxt, cdTarget, cdDoneMain, cdDoneSub;
   if(baekdo3Open){
-    cdLabelTxt = '말랑이 주문 마감까지';
-    cdDateTxt  = baekdo3LabelFull;
-    cdTarget   = baekdo3CutMs;
-    cdDoneMain = '주문 마감';
-    cdDoneSub  = '다음 소식 기다려주세요';
+    if(baekdo3CapMode){
+      cdLabelTxt = '🔥 백도 말랑이 ';
+      cdDateTxt  = baekdo3Limit + '개 선착순';
+      cdTarget   = -1;                    /* 날짜 타이머 없음(선착순) */
+      cdDoneMain = '주문 받는 중';
+      cdDoneSub  = '선착순 ' + baekdo3Limit + '개 🍑';
+    } else {
+      cdLabelTxt = '말랑이 주문 마감까지';
+      cdDateTxt  = baekdo3LabelFull;
+      cdTarget   = baekdo3CutMs;
+      cdDoneMain = '주문 마감';
+      cdDoneSub  = '다음 소식 기다려주세요';
+    }
   } else if(ddak2Open){
     cdLabelTxt = '딱딱이 주문 마감까지';
     cdDateTxt  = ddak2LabelFull;
@@ -1255,6 +1261,7 @@
   var hms = document.getElementById('hms');
   function pad(n){return n<10?'0'+n:''+n;}
   function tick(){
+    if(target < 0){ if(dday) dday.textContent = cdDoneMain; if(hms) hms.textContent = cdDoneSub; return; } /* 선착순 모드: 타이머 없이 문구만 */
     var diff = target - Date.now();
     if(diff <= 0){
       dday.textContent = cdDoneMain;
@@ -1281,7 +1288,7 @@
     setTag('rmHwang', !hwangClosed ? (hwangShort+'까지 주문중') : '미정');
     /* 로드맵 상태줄: 진행 중인 주문 안내만(주문 기간). 배송 상태는 표시 안 함 */
     var setWhen = function(id, html){ var el=document.getElementById(id); if(el) el.innerHTML = html; };
-    setWhen('rmBaekWhen', baekdo3Open ? ('🛒 '+baekdo3LabelShort+'까지 · '+(baekdo3Cap||'소량')+(baekdo3ShipText?(' · '+baekdo3ShipText+' 발송'):'')) : '');
+    setWhen('rmBaekWhen', baekdo3Open ? (baekdo3CapMode ? ('🔥 '+baekdo3Cap+' · 선착순') : ('🛒 '+baekdo3LabelShort+'까지 · '+(baekdo3Cap||'소량')+(baekdo3ShipText?(' · '+baekdo3ShipText+' 발송'):''))) : '');
     setWhen('rmDdakWhen', ddak2Open ? ('🛒 '+ddak2LabelShort+'까지 · 무한정'+(ddak2ShipShort?(' · '+ddak2ShipShort+' 발송'):'')) : '');
     setWhen('rmHwangWhen', !hwangClosed ? ('🛒 '+hwangShort+'(수)까지 주문 · 50박스까지') : '');
     /* 카운트다운 라벨·날짜(진행 중인 차수 기준) 자동 */
@@ -1300,7 +1307,7 @@
     var tb = document.getElementById('topbar');
     if(tb){
       tb.innerHTML = baekdo3Open
-        ? ('🍑 백도 말랑이 <b>주문</b> · '+baekdo3LabelShort+'까지 · 소량')
+        ? ('🍑 백도 말랑이 <b>주문</b> · 🔥 '+baekdo3Limit+'개 선착순')
         : (ddak2Open
         ? ('🗓 백도 딱딱이 <b>주문</b> · '+ddak2LabelShort+'까지 · 무한정')
         : (!hwangClosed
@@ -1324,13 +1331,13 @@
     var seen = false;
     try { seen = sessionStorage.getItem('hwPopSeen') === '1'; } catch(e){} /* 세션(탭)마다 다시 노출 */
     if(baekdo3Open){
-      /* 백도 말랑이 소량 주문 — 최신 소식 우선 */
-      document.getElementById('hwEyebrow').textContent = '🍑 말랑이 소량 오픈';
-      document.getElementById('hwTitle').innerHTML = '백도 말랑이<br>소량 주문 받아요!';
+      /* 백도 말랑이 선착순 주문 — 최신 소식 우선 */
+      document.getElementById('hwEyebrow').textContent = '🔥 말랑이 '+baekdo3Limit+'개 선착순';
+      document.getElementById('hwTitle').innerHTML = '백도 말랑이<br>딱 '+baekdo3Limit+'개 선착순!';
       document.getElementById('hwSub').innerHTML = '알 굵은 <b>3kg 특특</b> · 35,000원';
       document.getElementById('hwPrice').style.display = 'none';
       document.getElementById('hwLeft').style.display = 'inline-block';
-      document.getElementById('hwLeft').innerHTML = '🗓 '+baekdo3LabelShort+'까지'+(baekdo3ShipText?(' · '+baekdo3ShipText+' 발송'):'');
+      document.getElementById('hwLeft').innerHTML = baekdo3CapMode ? ('🔥 딱 '+baekdo3Limit+'개 · 선착순 마감') : ('🗓 '+baekdo3LabelShort+'까지'+(baekdo3ShipText?(' · '+baekdo3ShipText+' 발송'):''));
       document.getElementById('hwNote').innerHTML = ddak2Open ? ('🗓 딱딱이도 주문 중 (~'+ddak2LabelShort+') · 아래에서 함께 담기') : '📦 수확 후 바로 보내드려요';
       document.getElementById('hwCta').textContent = '주문하러 가기';
       document.getElementById('hwSkip').textContent = '둘러보기';
@@ -1548,6 +1555,32 @@
     det.appendChild(body);
     sec.appendChild(det);                               /* 활성 상품 아래에 배치 */
   })();
+  /* ── 말랑이 선착순 자동 마감 ──
+     구글시트에 '말랑이 누적수량' 셀을 만들고 그 셀만 '웹에 게시(CSV)'해서
+     그 링크를 SEASON.baekdo3CountUrl 에 넣으면, 수량이 baekdo3Limit(10) 이상일 때 자동으로 창을 닫아요.
+     링크가 비어있으면 아무 동작 안 함(수동 관리). */
+  function selloutMalang(){
+    var bd = document.getElementById('baekdo3Div');
+    if(bd){ bd.style.display=''; bd.innerHTML = '🍑 백도 말랑이 <b>선착순 '+baekdo3Limit+'개 마감</b> — 다음 기회에! 🙏'; }
+    var itemL = document.getElementById('itemL');
+    if(itemL){
+      var qb = itemL.querySelectorAll('.qty button'); for(var k=0;k<qb.length;k++){ qb[k].disabled=true; }
+      itemL.classList.add('soldout');
+    }
+    var note = document.getElementById('baek3Note'); if(note){ note.hidden=false; note.innerHTML='🙏 <b>선착순 마감</b>됐어요 — 찾아주셔서 감사해요!'; }
+    var dday=document.getElementById('dday'), hms=document.getElementById('hms');
+    if(dday) dday.textContent='선착순 마감'; if(hms) hms.textContent='다음 소식 기다려주세요 🍑';
+    var tb=document.getElementById('topbar'); if(tb) tb.innerHTML='✅ 말랑이 선착순 '+baekdo3Limit+'개 마감 · <b>다음 소식 곧 공지</b>';
+  }
+  (function initMalangCap(){
+    if(!baekdo3CapMode || !SEASON.baekdo3CountUrl) return;
+    try{
+      fetch(SEASON.baekdo3CountUrl, {cache:'no-store'})
+        .then(function(r){ return r.text(); })
+        .then(function(t){ var m=String(t).match(/\d+/); var n=m?parseInt(m[0],10):NaN; if(!isNaN(n) && n>=baekdo3Limit){ selloutMalang(); } })
+        .catch(function(){});
+    }catch(e){}
+  })();
   var totalPrice = document.getElementById('totalPrice');
   var totalLabel = document.getElementById('totalLabel');
   var goForm = document.getElementById('goForm');
@@ -1715,7 +1748,6 @@
     for(var i=0;i<need.length;i++){
       if(!val(need[i][0])){ alert(need[i][1] + '을(를) 입력해주세요!'); document.getElementById(need[i][0]).focus(); return; }
     }
-    if(!selectedPay){ alert('입금 받는 분(이동연/류태희)을 골라주세요!'); var pt=document.getElementById('payTo'); if(pt) pt.scrollIntoView({behavior:'smooth',block:'center'}); return; }
     if(ENTRY.buyer){
       /* 완전 자동: 구글폼 응답 시트로 직접 제출 */
       var p = new URLSearchParams();
@@ -1764,37 +1796,22 @@
     }
   });
 
-  /* ── 입금 받는 분(카카오페이 계정) ── */
-  var PAY_ACCOUNTS = {
-    '이동연':'https://qr.kakaopay.com/Ej8om8541',
-    '류태희':'https://qr.kakaopay.com/Fes2Wef26'
-  };
-  var selectedPay = '';
-  var payToBtns = document.querySelectorAll('#payTo .pt-btn');
-  for(var pi=0; pi<payToBtns.length; pi++){
-    payToBtns[pi].addEventListener('click', function(){
-      selectedPay = this.getAttribute('data-pay');
-      for(var j=0;j<payToBtns.length;j++){ payToBtns[j].classList.toggle('sel', payToBtns[j]===this); }
-    });
-  }
+  /* ── 입금 받는 분(카카오페이 계정) — 류태희 계정으로 통일, 이름은 노출 안 함 ── */
+  var PAY_URL = 'https://qr.kakaopay.com/Fes2Wef26';
+  var selectedPay = '류태희'; /* 폼 기록용(고객에게는 이름 노출 안 됨) */
   function renderKakaoBtn(){
     var wrap = document.getElementById('kakaoBtns');
     if(!wrap) return;
     wrap.innerHTML = '';
-    /* 선택하면 그 한 명, 안 하면 두 명 모두 표시 (카카오페이 안 쓰면 그냥 무시) */
-    var names = selectedPay ? [selectedPay] : Object.keys(PAY_ACCOUNTS);
-    names.forEach(function(name){
-      var url = PAY_ACCOUNTS[name];
-      var a = document.createElement('a');
-      a.className = 'kakao-send';
-      a.href = url; a.target = '_blank'; a.rel = 'noopener';
-      a.textContent = '💛 ' + name + '님에게 카카오페이 송금';
-      a.addEventListener('click', function(){
-        /* 카카오페이엔 금액이 자동 입력되지 않으므로 먼저 복사해 둠 */
-        if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(String(sum())); }
-      });
-      wrap.appendChild(a);
+    var a = document.createElement('a');
+    a.className = 'kakao-send';
+    a.href = PAY_URL; a.target = '_blank'; a.rel = 'noopener';
+    a.textContent = '💛 카카오페이 송금하기';
+    a.addEventListener('click', function(){
+      /* 카카오페이엔 금액이 자동 입력되지 않으므로 먼저 복사해 둠 */
+      if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(String(sum())); }
     });
+    wrap.appendChild(a);
   }
 
   /* 단톡방 공유용 복사 */

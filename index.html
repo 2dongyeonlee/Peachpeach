@@ -1096,6 +1096,7 @@
      · ddakddak  : 'coming'(오픈 예정) | 'open'(예약 주문). ddakCloseDate 지나면 자동 마감.
      ════════════════════════════════════════════════════════════ */
   var SEASON = {
+    seasonEnded:      true,           /* 올해 시즌 종료? true면 '내년에 뵐게요' 안내로 전환(주문 영역 숨김) */
     hwangdo:          'closed',       /* 황도 말랑이 주문: 'open'(주문중) | 'closed'(마감) */
     hwangdoCloseDate: '2026-09-30',   /* 백스톱 마감일 — 실제 마감은 수동('닫아줘') */
     hwangShipText:    '다음주 중',      /* 황도 발송 예정(안내용) */
@@ -1793,6 +1794,27 @@
   });
 
   render();
+
+  /* ── 올해 시즌 종료 안내: SEASON.seasonEnded=true 일 때 '내년에 뵐게요'로 전환 ── */
+  (function seasonEnd(){
+    if(!SEASON.seasonEnded) return;
+    /* 히어로 문구 */
+    var eb=document.querySelector('.hero .eyebrow'); if(eb) eb.textContent='🍑 조치원 갑부농원';
+    var h1=document.querySelector('.hero h1'); if(h1) h1.innerHTML='올해 복숭아는<br><span class="grad">끝났어요 🍑</span>';
+    var lede=document.querySelector('.hero .lede'); if(lede) lede.innerHTML='올여름도 갑부농원 복숭아 찾아주셔서 감사해요.<br><b>내년 여름에 또 만나요!</b> 🙏';
+    var cta=document.getElementById('heroCta'); if(cta) cta.style.display='none';
+    /* 상단바 */
+    var tb=document.getElementById('topbar'); if(tb) tb.innerHTML='🍑 올해 복숭아는 끝났어요 · <b>내년에 또 만나요!</b>';
+    /* 카운트다운 */
+    var cdl=document.getElementById('cdLabel'); if(cdl) cdl.innerHTML='🍑 올해 시즌 종료';
+    var dday=document.getElementById('dday'); if(dday) dday.textContent='내년에 봬요';
+    var hms=document.getElementById('hms'); if(hms) hms.textContent='그동안 감사했어요 🙏';
+    /* 주문 영역·로드맵·하단 주문바 숨김 */
+    ['order','seasonSec'].forEach(function(id){ var s=document.getElementById(id); if(s) s.style.display='none'; });
+    var ob=document.querySelector('.orderbar'); if(ob) ob.style.display='none';
+    /* 첫방문 팝업 숨김 */
+    var pop=document.getElementById('hwPop'); if(pop) pop.hidden=true;
+  })();
 
 })();
 </script>

@@ -1792,12 +1792,10 @@
     var cta=document.getElementById('heroCta'); if(cta) cta.style.display='none';
     /* 상단바 */
     var tb=document.getElementById('topbar'); if(tb) tb.innerHTML='🍑 올해 복숭아는 끝났어요 · <b>내년에 또 만나요!</b>';
-    /* 카운트다운 */
-    var cdl=document.getElementById('cdLabel'); if(cdl) cdl.innerHTML='🍑 올해 시즌 종료';
-    var dday=document.getElementById('dday'); if(dday) dday.textContent='내년에 봬요';
-    var hms=document.getElementById('hms'); if(hms) hms.textContent='그동안 감사했어요 🙏';
-    /* 주문 영역·로드맵·하단 주문바 숨김 */
+    /* 히어로 '올해 끝났어요' 안내만 남기고 나머지는 모두 숨김 */
     ['order','seasonSec'].forEach(function(id){ var s=document.getElementById(id); if(s) s.style.display='none'; });
+    var cw=document.querySelector('.count-wrap'); if(cw) cw.style.display='none';   /* 카운트다운 숨김 */
+    document.querySelectorAll('.faq').forEach(function(s){ s.style.display='none'; }); /* FAQ 숨김 */
     var ob=document.querySelector('.orderbar'); if(ob) ob.style.display='none';
     /* 첫방문 팝업 숨김 */
     var pop=document.getElementById('hwPop'); if(pop) pop.hidden=true;
